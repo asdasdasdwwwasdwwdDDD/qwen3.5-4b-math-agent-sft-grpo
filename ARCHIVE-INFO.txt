@@ -1,0 +1,31 @@
+# 项目封存说明（2026-10-24）
+
+本压缩包是「Qwen3.5-4B 数学智能体 SFT+GRPO（自研训练循环）」的完整封存，
+冻结于 TRL 框架迁移动工之前。此包可完整复现本阶段全部工作。
+
+## 冻结时的最终成果（100 题持出集，4bit 部署口径）
+
+| 模型 | 总正确率 | L1 | L2 | L3 | L4 | L5 | 位置 |
+|---|---|---|---|---|---|---|---|
+| base Qwen3.5-4B | ~0% | - | - | - | - | - | models/Qwen3.5-4B（junction，不入包） |
+| SFT (ckpt-2000) | 37.0% | 90.9% | 55.0% | 57.1% | 4.5% | 11.5% | outputs/qlora-tora/checkpoint-2000 |
+| GRPO (best=step-20) | 44.0% | 90.9% | 50.0% | 66.7% | 18.2% | 23.1% | outputs/grpo-tora/best |
+
+- SFT：6000 步计划，~4900 步过拟合提前终止，eval_loss 谷底 ckpt-2000 双指标选优
+- GRPO：60 步课程化（难度层轮转交织）+ T=0.8，组内优势 + PPO 裁剪 + KL(beta=0.025)
+- 附加收益：执行报错率 37.7%→24.3%，未终答 6%→0%
+- 排除项：outputs/merged-tora（8.5GB，可用 scripts/merge_lora.py 从 ckpt-2000 十分钟复现）
+
+## 关键文档
+
+- AGENTS.md / README.md：方案、显存红线、已知坑
+- logs/sft_tora.log、logs/grpo_tora_run.log：训练全程
+- logs/grpo_log_math.jsonl、grpo_trajs_math.jsonl：GRPO 步级/轨迹审计
+- outputs/eval/math_summary.md：全部评测汇总
+
+## 复现要点
+
+1. conda 环境 pytorch（torch 2.10+cu128 / transformers 5.12.1 / peft 0.19.1 / bnb 0.50.0）
+2. 顺序：convert_tora.py → split_grpo_pool.py → check_mask.py → train_qlora.py →
+   merge_lora.py → train_grpo.py --mode math → eval_math.py
+3. 8GB 显存红线与六项修复见 AGENTS.md（bs=1、非 paged adamw_8bit、分块 CE、摘视觉塔等，勿回退）

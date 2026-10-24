@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Qwen3.5-4B 智能体微调 · 全链路数据流</title>
+<style>
+  html,body{ margin:0; padding:0; background:#0b101c; }
+  body{ box-sizing:border-box; padding:24px 16px 40px; }
+</style>
+</head>
+<body>
+<script>
+window.zcode = {
+  widgetState: { privateContent: null },
+  setWidgetState: function(s){
+    try{ localStorage.setItem('qwen-flow-state', JSON.stringify(s)); }catch(e){}
+    return Promise.resolve();
+  }
+};
+try{
+  var raw = localStorage.getItem('qwen-flow-state');
+  if(raw) window.zcode.widgetState = JSON.parse(raw);
+}catch(e){}
+</script>
+<div id="qwen-flow">
+  <div class="qf-head">
+    <h2>Qwen3.5-4B 智能体微调 · 全链路数据流</h2>
+    <div class="qf-sub">QLoRA(AdaLoRA) SFT → 合并 → 整条链路 GRPO → 闭环评估 · RTX 5070 Laptop 8GB · Windows/WDDM · 数字均来自 README 实测与 logs/grpo_log.jsonl</div>
+  </div>
+
+  <nav class="qf-trace" aria-label="流水线阶段导航(点击跳转)">
+    <button type="button" class="qf-pill" data-goto="0"><i class="st done"></i>数据生成</button>
+    <span class="sep" aria-hidden="true">→</span>
+    <button type="button" class="qf-pill" data-goto="1"><i class="st done"></i>SFT 训练</button>
+    <span class="sep" aria-hidden="true">→</span>
+    <button type="button" class="qf-pill" data-goto="2"><i class="st done"></i>评估 · 合并</button>
+    <span class="sep" aria-hidden="true">→</span>
+    <button type="button" class="qf-pill" data-goto="3"><i class="st done"></i>GRPO ×100</button>
+    <span class="sep" aria-hidden="true">→</span>
+    <button type="button" class="qf-pill" data-goto="4"><i class="st todo"></i>闭环评估</button>
+    <span class="sep" aria-hidden="true">→</span>
+    <button type="button" class="qf-pill" data-goto="5"><i class="st opt"></i>演示</button>
+  </nav>
+
+  <ol class="qf-stages">
+
+    <!-- ======== 0 数据生成 ======== -->
+    <li class="qf-stage done">
+      <div class="qf-rail"><span class="qf-dot">0</span></div>
+      <div class="qf-body">
+        <h3 class="qf-h"><button type="button" class="qf-toggle" aria-expanded="true" aria-controls="qf-d0">
+          <span class="t">数据生成</span><span class="sub">seed=42 · 900 条</span>
+          <code class="f">data/build_dataset.py</code>
+          <span class="qf-badge bdone">✓ 已完成</span>
+          <span class="chev" aria-hidden="true">▾</span>
+        </button></h3>
+        <div class="qf-detail" id="qf-d0"><div>
+          <p class="lead">脚本合成 900 条工具调用轨迹,可复现(seed=42),6 类场景混比——训练目标全部程序化可验证。</p>
+          <div class="items">
+            <div><b>20 个内置工具</b><span>TOOL_DEFS:天气 / 计算 / 汇率 / 股票 / IP / 餐厅…</span></div>
+            <div><b>原生 XML 调用格式</b><span>&lt;tool_call&gt;&lt;function=…&gt;,chat template 渲染即训练目标</span></div>
+            <div><b>划分</b><span>train 855 · val 45</span></div>
+            <div><b>token 长度</b><span>p50 619 · p95 850 · max 896(--max-len 1024 不截断)</span></div>
+          </div>
+          <div class="qf-card">
+            <div class="qf-clabel">6 类场景配比(共 900 条)</div>
+            <div class="qf-mixbar" role="img" aria-label="900 条训练轨迹按场景配比:single_call 240 条,chained 180 条,parallel 150 条,error_retry 120 条,no_tool 120 条,clarify 90 条">
+              <span class="qf-seg" data-cat="single_call" data-tooltip="single_call · 240 条(26.7%)" style="width:26.7%;background:var(--qf-c1)"></span>
+              <span class="qf-seg" data-cat="chained" data-tooltip="chained · 180 条(20.0%)" style="width:20%;background:var(--qf-c2)"></span>
+              <span class="qf-seg" data-cat="parallel" data-tooltip="parallel · 150 条(16.7%)" style="width:16.7%;background:var(--qf-c3)"></span>
+              <span class="qf-seg" data-cat="error_retry" data-tooltip="error_retry · 120 条(13.3%)" style="width:13.3%;background:var(--qf-c4)"></span>
+              <span class="qf-seg" data-cat="no_tool" data-tooltip="no_tool · 120 条(13.3%)" style="width:13.3%;background:var(--qf-c5)"></span>
+              <span class="qf-seg" data-cat="clarify" data-tooltip="clarify · 90 条(10.0%)" style="width:10%;background:var(--qf-c6)"></span>
+            </div>
+            <div class="qf-mixlegend">
+              <div data-cat="single_call"><i style="background:var(--qf-c1)"></i><div><b>single_call <span>240</span></b><span class="d">单轮单工具调用</span></div></div>
+              <div data-cat="chained"><i style="background:var(--qf-c2)"></i><div><b>chained <span>180</span></b><span class="d">多步链式调用</span></div></div>
+              <div data-cat="parallel"><i style="background:var(--qf-c3)"></i><div><b>parallel <span>150</span></b><span class="d">一轮并行多调用</span></div></div>
+              <div data-cat="error_retry"><i style="background:var(--qf-c4)"></i><div><b>error_retry <span>120</span></b><span class="d">报错→分析→修正重试</span></div></div>
+              <div data-cat="no_tool"><i style="background:var(--qf-c5)"></i><div><b>no_tool <span>120</span></b><span class="d">负样本:直接答 / 拒绝危险</span></div></div>
+              <div data-cat="clarify"><i style="background:var(--qf-c6)"></i><div><b>clarify <span>90</span></b><span class="d">必填参数缺失先澄清</span></div></div>
+            </div>
+          </div>
+          <p class="flag orange">◆ Loss mask 只对 assistant 生成内容算损失:系统提示、工具定义、用户消息、工具返回全部 −100(公共前缀对齐算法,check_mask.py 可人工校验)。</p>
+          <div class="qf-art">产出 → <code>data/train.jsonl</code> · <code>data/val.jsonl</code></div>
+        </div></div>
+      </div>
+    </li>
+
+    <!-- ======== 1 SFT ======== -->
+    <li class="qf-stage done">
+      <div class="qf-rail"><span class="qf-dot">1</span></div>
+      <div class="qf-body">
+        <h3 class="qf-h"><button type="button" class="qf-toggle" aria-expanded="true" aria-controls="qf-d1">
+          <span class="t">SFT · QLoRA(AdaLoRA)</span><span class="sub">216 步 · 峰值 5.57 GB</span>
+          <code class="f">scripts/train_qlora.py</code>
+          <span class="qf-badge bdone">✓ 已完成</span>
+          <span class="chev" aria-hidden="true">▾</span>
+        </button></h3>
+        <div class="qf-detail" id="qf-d1"><div>
+          <p class="lead">NF4 4bit 量化底座 + 自适应秩 LoRA,按步驱动 216 步(≈2 epochs),每 27 步存档并评估。</p>
+          <div class="items">
+            <div><b>加载即摘视觉塔</b><span>必须用 Qwen3_5ForConditionalGeneration——AutoModelForCausalLM 会静默随机初始化文本层;摘除 168.9M 视觉塔</span></div>
+            <div><b>AdaLoRA</b><span>init_r 16 → target 8 自适应秩重分配,alpha 32,12 类线性层,可训练 32.5M(0.77%)</span></div>
+            <div><b>优化器</b><span>adamw_8bit(非 paged)· lr 1e-4 cosine + warmup · bs 1 × accum 8</span></div>
+            <div><b>3:1 混合注意力</b><span>24 层 GatedDeltaNet 线性注意力 + 8 层全注意力;SDPA torch 回退属正常</span></div>
+          </div>
+          <div class="qf-duo">
+            <div class="qf-card">
+              <div class="qf-clabel">8GB 显存红线 · 六项修复前后(30 步 smoke 同机同数据)</div>
+              <div class="qf-vram">
+                <div class="qf-vrow">
+                  <div class="qf-vhead"><b>峰值 allocated</b></div>
+                  <div class="qf-vbar"><div class="track"><span class="fill before" style="width:69%"></span></div><em>7.59</em></div>
+                  <div class="qf-vbar"><div class="track"><span class="fill after" style="width:50.6%"></span></div><em>5.57</em></div>
+                </div>
+                <div class="qf-vrow">
+                  <div class="qf-vhead"><b>分配器 reserved</b></div>
+                  <div class="qf-vbar"><div class="track"><span class="fill before" style="width:98%"></span></div><em>10.78</em></div>
+                  <div class="qf-vbar"><div class="track"><span class="fill after" style="width:62.6%"></span></div><em>6.89</em></div>
+                </div>
+                <div class="qf-vlegend"><span><i class="sw before"></i>修复前(GB)</span><span><i class="sw after"></i>修复后(GB)</span></div>
+              </div>
+              <p class="mini">共享显存 1.71GB → ≈0.1GB,全程零换页;每步 empty_cache 让 reserved 贴近真实用量。</p>
+            </div>
+            <div class="qf-card">
+              <div class="qf-clabel">eval_loss 曲线(留出 45 条,每 27 步评估一次)</div>
+              <div id="qf-evalchart" class="qf-chart"></div>
+              <p class="mini">1.866 → 0.823,收尾仍在下探;评估只算 loss(prediction_loss_only)防 248k 词表 logits 撑爆。</p>
+            </div>
+          </div>
+          <p class="flag red">● 单实例锁 outputs/.train.lock:双进程互相挤进共享显存必假死——利用率 100% 但功耗 ~30W、每步几分钟。</p>
+          <p class="flag orange">◆ peft 0.19 AdaLoRA 收尾 reset_ipt() KeyError 已捕获、沿用上次秩分配,勿删该 try/except。</p>
+          <div class="qf-art">产出 → <code>outputs/qlora-adapter/final</code>(eval_loss 0.823)</div>
+        </div></div>
+      </div>
+    </li>
+
+    <!-- ======== 2 评估+合并 ======== -->
+    <li class="qf-stage done">
+      <div class="qf-rail"><span class="qf-dot">2</span></div>
+      <div class="qf-body">
+        <h3 class="qf-h"><button type="button" class="qf-toggle" aria-expanded="true" aria-controls="qf-d2">
+          <span class="t">评估 · 合并</span><span class="sub">底座就绪</span>
+          <code class="f">eval_agent.py / merge_lora.py</code>
+          <span class="qf-badge bdone">✓ 已完成</span>
+          <span class="chev" aria-hidden="true">▾</span>
+        </button></h3>
+        <div class="qf-detail" id="qf-d2"><div>
+          <p class="lead">用同一把尺(rewards.py + agent_env.py)测基线与微调后,再把 adapter 合并成完整模型——它同时是 GRPO 的训练底座与 KL 参考策略。</p>
+          <div class="items">
+            <div><b>双口径评估</b><span>闭环整条链路(默认)+ 逐轮步进 --mode step</span></div>
+            <div><b>闭环指标</b><span>task_success_rate · call_f1 · answer_score · avg_turns · fmt_valid_rate</span></div>
+            <div><b>合并</b><span>CPU bf16,合并后独立可部署 → outputs/merged</span></div>
+            <div><b>KL 零开销</b><span>disable_adapter() 现场算参考策略,不占额外显存</span></div>
+          </div>
+          <div class="qf-art">产出 → <code>outputs/merged</code></div>
+        </div></div>
+      </div>
+    </li>
+
+    <!-- ======== 3 GRPO ======== -->
+    <li class="qf-stage done">
+      <div class="qf-rail"><span class="qf-dot">3</span></div>
+      <div class="qf-body">
+        <h3 class="qf-h"><button type="button" class="qf-toggle" aria-expanded="true" aria-controls="qf-d3">
+          <span class="t">GRPO · 整条链路</span><span class="sub">100 步 · 峰值 5.66 GB</span>
+          <code class="f">scripts/train_grpo.py</code>
+          <span class="qf-badge bdone">✓ 已完成</span>
+          <span class="chev" aria-hidden="true">▾</span>
+        </button></h3>
+        <div class="qf-detail" id="qf-d3"><div>
+          <p class="lead">每步 1 个任务,同一任务采样 G=4 条完整轨迹成组——模型从用户问题出发自己走完「调工具 → 真拿返回 → 继续 → 终答」,按整条轨迹结果做组内对齐。不依赖人工偏好与外部奖励模型。</p>
+          <div class="qf-card">
+            <div class="qf-looprow"><span class="qf-tag">×4 轨迹</span><span class="qf-tag2">×4 回合</span><span class="qf-tmini">rollout 一次参数更新 = 1 个任务 1 个组</span></div>
+            <div class="qf-flow">
+              <div class="step">生成一轮<em>T=0.9 · 记 prompt / gen ids</em></div>
+              <span class="arr" aria-hidden="true">→</span>
+              <div class="step">解析 XML 调用<em>同时记格式错误</em></div>
+              <span class="arr" aria-hidden="true">→</span>
+              <div class="step">执行工具<em>闸门 1 真值回放 / 闸门 2 沙箱兜底</em></div>
+            </div>
+            <div class="qf-gates">
+              <div><span class="gtag">闸门 1</span>参数与 GT 等价(执行验证等价,如 35**3 ≡ pow(35,3))→ 回放数据集记录的返回,<strong>该卡一次性核销</strong></div>
+              <div><span class="gtag">闸门 2</span>无卡可发 → 按参数哈希现编稳定返回(calculator 除外,真算);错误语义与合成数据一致</div>
+            </div>
+            <p class="mini">↺ 带工具返回 / 用户追问渲染下一轮 · 4 条轨迹生成完 empty_cache · 用户模拟器按 GT 回放追问</p>
+          </div>
+          <p class="formula">base = 0.55 × 调用覆盖 + 0.45 × 回答事实　·　覆盖按乘性:命中占比 × (0.4×名称F1 + 0.6×参数软匹配)<br>纪律乘项:该澄清未澄清 ×0.5 ｜ 无需工具却误发调用 ×0.5 ｜ 格式门槛 ×(0.5+0.5×可解析回合占比)</p>
+          <div class="qf-card">
+            <div class="qf-clabel">更新 · 沿轨迹逐回合反传</div>
+            <div class="qf-forwards">
+              <div><span class="gtag">old</span>当前权重,PPO 裁剪基准</div>
+              <div><span class="gtag">ref</span>关掉 LoRA 的 SFT 模型,现场算 KL(β 0.04)</div>
+              <div><span class="gtag">act</span>带梯度,真正反传的一次</div>
+            </div>
+            <p class="mini">组内优势 adv = (r − 组均值) / 组标准差 → PPO 裁剪策略梯度 · logits_to_keep 只对补全段出 logits(省 ~1.5GB)· 回合损失按 token 加权 → 每 4 条轨迹优化一步 → 梯度裁剪 1.0</p>
+          </div>
+          <div class="qf-card">
+            <div class="qf-clabel">100 步 reward 趋势 · 来自 logs/grpo_log.jsonl</div>
+            <div class="qf-series" role="group" aria-label="曲线显示开关">
+              <button type="button" class="qf-sbtn" data-s="raw" aria-pressed="true"><i style="background:var(--qf-muted)"></i>reward 逐步</button>
+              <button type="button" class="qf-sbtn" data-s="roll" aria-pressed="true"><i style="background:var(--qf-accent)"></i>reward · 20 步窗口</button>
+              <button type="button" class="qf-sbtn" data-s="succ" aria-pressed="false"><i style="background:var(--qf-green)"></i>success · 20 步窗口</button>
+            </div>
+            <div id="qf-trendchart" class="qf-chart"></div>
+            <p class="mini">峰值显存恒稳 5.66GB · 单步 p50 ≈59s(3 回合长任务 ~66s)· 每 10 步存 checkpoint,末尾存 final</p>
+          </div>
+          <p class="flag red">● 每任务 1 个 env 供 4 条轨迹共用:答案卡被第 1 条用光,后 3 条同样的调用落到 sandbox,拿到的事实与真值不同。</p>
+          <p class="flag red">● 组内全同分 → 优势全 0:实测 19/100 步零梯度;日志里 loss/kl 恒 ≈0 属正常,学习信号看 grad_norm 与 success_rate。</p>
+          <p class="flag red">● old 与 act 同一时刻同一权重,ratio 恒为 1、裁剪从不触发;grad_norm 2–5.5 每步被剪到 1.0,等效学习率降 2–5 倍。</p>
+          <div class="qf-art">产出 → <code>outputs/grpo-adapter/final</code> · <code>logs/grpo_log.jsonl</code> · <code>logs/grpo_trajs.jsonl</code></div>
+        </div></div>
+      </div>
+    </li>
+
+    <!-- ======== 4 闭环评估 ======== -->
+    <li class="qf-stage todo">
+      <div class="qf-rail"><span class="qf-dot">4</span></div>
+      <div class="qf-body">
+        <h3 class="qf-h"><button type="button" class="qf-toggle" aria-expanded="true" aria-controls="qf-d4">
+          <span class="t">闭环评估 + 报告</span><span class="sub">outputs/eval 为空</span>
+          <code class="f">eval_agent / check_forgetting / grpo_report</code>
+          <span class="qf-badge btodo">⏳ 待办</span>
+          <span class="chev" aria-hidden="true">▾</span>
+        </button></h3>
+        <div class="qf-detail" id="qf-d4"><div>
+          <p class="lead">GRPO 之后的三道收尾,全部尚未运行——GRPO 有没有用,目前没有裁决数据。</p>
+          <div class="items">
+            <div><b>闭环评估</b><span>--model outputs/merged --adapter outputs/grpo-adapter/final --tag grpo</span></div>
+            <div><b>遗忘检测</b><span>check_forgetting.py → outputs/forgetting_grpo</span></div>
+            <div><b>对比报告</b><span>grpo_report.py → base / SFT / SFT+GRPO 三方对比表</span></div>
+          </div>
+          <div class="qf-art">产出(待生成)→ <code>outputs/eval/grpo_report.md</code></div>
+        </div></div>
+      </div>
+    </li>
+
+    <!-- ======== 5 演示 ======== -->
+    <li class="qf-stage opt">
+      <div class="qf-rail"><span class="qf-dot">5</span></div>
+      <div class="qf-body">
+        <h3 class="qf-h"><button type="button" class="qf-toggle" aria-expanded="true" aria-controls="qf-d5">
+          <span class="t">交互演示</span>
+          <code class="f">scripts/demo_inference.py</code>
+          <span class="qf-badge bopt">◦ 可选</span>
+          <span class="chev" aria-hidden="true">▾</span>
+        </button></h3>
+        <div class="qf-detail" id="qf-d5"><div>
+          <p class="lead">完整闭环对话演示:真解析 XML、沙箱真执行、多轮追问,与训练 / 评估共用 agent_env.py 口径一致。</p>
+          <p class="flag red">● 安全红线:run_python 一律拒绝执行——模型生成的代码绝不落地运行。</p>
+          <div class="qf-art">终端交互,无落盘产物</div>
+        </div></div>
+      </div>
+    </li>
+  </ol>
+
+  <p class="qf-tail">SFT:eval_loss 1.866 → 0.823 仍在下探。GRPO:reward 20 步窗口均值在 0.76–0.87 窄幅波动、未见明确趋势,success 窗口末段曾抬至 0.66 后回落——整体仍属噪声区间,下一道闸门是第 4 步的闭环对比评估。</p>
+</div>
+
+<style>
+#qwen-flow{
+  --qf-bg1:#0d1424; --qf-bg2:#0b101c;
+  --qf-card:#131b2f; --qf-card2:#0e1526; --qf-inset:#0a0f1b;
+  --qf-fg:#e8edf7; --qf-muted:#93a3bd; --qf-border:#24334f; --qf-border2:#324668;
+  --qf-accent:#6aa5ff; --qf-green:#42d392; --qf-red:#ff8585; --qf-orange:#ffc06e;
+  --qf-c1:#6aa5ff; --qf-c2:#4cc9d4; --qf-c3:#a78bfa; --qf-c4:#ffb45e; --qf-c5:#8296b4; --qf-c6:#ef7fb2;
+  background:linear-gradient(180deg,var(--qf-bg1),var(--qf-bg2));
+  color:var(--qf-fg);
+  max-width:920px; margin:0 auto; padding:20px 22px 16px;
+  border:1px solid #1c2a45; border-radius:14px;
+  font-size:14px; line-height:1.55;
+}
+#qwen-flow h2{ margin:0 0 2px; font-size:18px; font-weight:500; color:var(--qf-fg); }
+#qwen-flow .qf-sub{ font-size:12px; color:var(--qf-muted); }
+#qwen-flow button{ font:inherit; color:inherit; background:none; border:none; padding:0; cursor:pointer; text-align:left; }
+#qwen-flow button:focus-visible{ outline:2px solid var(--qf-accent); outline-offset:2px; border-radius:6px; }
+#qwen-flow code{
+  font-family:ui-monospace,Consolas,"Cascadia Mono",monospace; font-size:11.5px;
+  background:var(--qf-card2); border:1px solid var(--qf-border); border-radius:5px;
+  padding:1px 5px; color:#bcd3f5;
+}
+
+/* ---- trace ---- */
+#qwen-flow .qf-trace{ display:flex; flex-wrap:wrap; align-items:center; gap:6px; margin:14px 0 20px; }
+#qwen-flow .qf-pill{
+  display:inline-flex; align-items:center; gap:6px;
+  font-size:12px; color:var(--qf-muted);
+  background:var(--qf-card2); border:1px solid var(--qf-border); border-radius:999px;
+  padding:3px 10px; transition:color .15s,border-color .15s;
+}
+#qwen-flow .qf-pill:hover{ color:var(--qf-fg); border-color:var(--qf-border2); }
+#qwen-flow .qf-pill .st{ width:7px; height:7px; border-radius:50%; flex:none; }
+#qwen-flow .st.done{ background:var(--qf-green); }
+#qwen-flow .st.todo{ background:transparent; border:1.5px solid var(--qf-orange); }
+#qwen-flow .st.opt{ background:transparent; border:1.5px solid var(--qf-muted); }
+#qwen-flow .qf-trace .sep{ color:var(--qf-border2); }
+
+/* ---- stages rail ---- */
+#qwen-flow .qf-stages{ list-style:none; margin:0; padding:0; }
+#qwen-flow .qf-stage{ display:grid; grid-template-columns:34px minmax(0,1fr); gap:14px; scroll-margin-top:12px; }
+#qwen-flow .qf-rail{ position:relative; display:flex; justify-content:center; }
+#qwen-flow .qf-rail::before{
+  content:""; position:absolute; top:30px; bottom:-8px; left:50%; width:2px; translate:-50% 0;
+  background:var(--qf-border); border-radius:2px;
+}
+#qwen-flow .qf-stage:last-child .qf-rail::before{ display:none; }
+#qwen-flow .qf-stage:hover .qf-rail::before{
+  background:linear-gradient(180deg,var(--qf-accent) 0 7px,transparent 7px 13px);
+  background-size:2px 13px; background-repeat:repeat-y;
+  animation:qfflow .6s linear 3;
+}
+@keyframes qfflow{ to{ background-position:0 13px; } }
+#qwen-flow .qf-dot{
+  position:relative; z-index:1; width:24px; height:24px; border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  font-size:12px; font-variant-numeric:tabular-nums;
+  background:var(--qf-card); color:var(--qf-muted); border:1px solid var(--qf-border);
+  transition:box-shadow .15s;
+}
+#qwen-flow .qf-stage.done .qf-dot{ color:var(--qf-accent); border-color:color-mix(in srgb,var(--qf-accent) 40%,transparent); background:color-mix(in srgb,var(--qf-accent) 14%,transparent); }
+#qwen-flow .qf-stage.todo .qf-dot{ color:var(--qf-orange); border-color:color-mix(in srgb,var(--qf-orange) 45%,transparent); background:color-mix(in srgb,var(--qf-orange) 12%,transparent); }
+#qwen-flow .qf-stage:hover .qf-dot{ box-shadow:0 0 0 4px color-mix(in srgb,var(--qf-accent) 16%,transparent); }
+#qwen-flow .qf-body{ padding-bottom:24px; min-width:0; }
+
+/* ---- stage header ---- */
+#qwen-flow .qf-h{ margin:2px 0 6px; font-size:14px; font-weight:500; }
+#qwen-flow .qf-toggle{ display:flex; flex-wrap:wrap; align-items:baseline; gap:8px; width:100%; border-radius:8px; padding:2px 4px; margin:-2px -4px; }
+#qwen-flow .qf-toggle:hover .t{ color:var(--qf-accent); }
+#qwen-flow .qf-toggle .t{ font-size:15px; font-weight:500; transition:color .15s; }
+#qwen-flow .qf-toggle .sub{ font-size:12px; font-weight:400; color:var(--qf-muted); }
+#qwen-flow .qf-toggle .f{ margin-left:auto; }
+#qwen-flow .qf-badge{ font-size:11px; border-radius:999px; padding:1px 8px; white-space:nowrap; }
+#qwen-flow .bdone{ background:color-mix(in srgb,var(--qf-green) 14%,transparent); color:var(--qf-green); }
+#qwen-flow .btodo{ background:color-mix(in srgb,var(--qf-orange) 14%,transparent); color:var(--qf-orange); }
+#qwen-flow .bopt{ background:var(--qf-card2); color:var(--qf-muted); border:1px solid var(--qf-border); }
+#qwen-flow .chev{ font-size:11px; color:var(--qf-muted); transition:transform .2s; }
+#qwen-flow .qf-stage.collapsed .chev{ transform:rotate(-90deg); }
+
+/* ---- collapsible detail ---- */
+#qwen-flow .qf-detail{ display:grid; grid-template-rows:1fr; transition:grid-template-rows .28s ease; }
+#qwen-flow .qf-stage.collapsed .qf-detail{ grid-template-rows:0fr; }
+#qwen-flow .qf-detail > div{ overflow:hidden; min-height:0; }
+#qwen-flow .lead{ margin:0 0 8px; }
+
+/* ---- items / flags / formula ---- */
+#qwen-flow .items{ display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:5px 20px; margin:0 0 6px; }
+#qwen-flow .items div{ display:flex; gap:8px; align-items:baseline; min-width:0; }
+#qwen-flow .items b{ font-weight:500; flex:none; }
+#qwen-flow .items span{ color:var(--qf-muted); font-size:12px; }
+#qwen-flow .flag{ font-size:12px; margin:4px 0 0; }
+#qwen-flow .flag.red{ color:var(--qf-red); }
+#qwen-flow .flag.orange{ color:var(--qf-orange); }
+#qwen-flow .mini{ font-size:12px; color:var(--qf-muted); margin:6px 0 0; }
+#qwen-flow .formula{
+  font-family:ui-monospace,Consolas,monospace; font-size:11.5px; color:var(--qf-muted);
+  background:var(--qf-inset); border:1px solid var(--qf-border); border-radius:8px;
+  padding:8px 12px; margin:10px 0;
+}
+
+/* ---- card ---- */
+#qwen-flow .qf-card{
+  background:var(--qf-card); border:1px solid var(--qf-border); border-radius:10px;
+  padding:12px 14px; margin:10px 0;
+}
+#qwen-flow .qf-clabel{ font-size:12px; color:var(--qf-muted); margin-bottom:8px; }
+#qwen-flow .qf-duo{ display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+@media (max-width:700px){ #qwen-flow .qf-duo{ grid-template-columns:1fr; } }
+
+/* ---- rollout loop card ---- */
+#qwen-flow .qf-looprow{ display:flex; align-items:center; gap:8px; margin-bottom:8px; flex-wrap:wrap; }
+#qwen-flow .qf-tag,#qwen-flow .qf-tag2{ font-size:11px; border-radius:999px; padding:1px 8px; }
+#qwen-flow .qf-tag{ background:color-mix(in srgb,var(--qf-accent) 16%,transparent); color:var(--qf-accent); }
+#qwen-flow .qf-tag2{ background:var(--qf-card2); color:var(--qf-muted); border:1px solid var(--qf-border); }
+#qwen-flow .qf-tmini{ font-size:11px; color:var(--qf-muted); margin-left:auto; }
+#qwen-flow .qf-flow{ display:flex; align-items:stretch; gap:8px; flex-wrap:wrap; margin-bottom:8px; }
+#qwen-flow .qf-flow .step{
+  flex:1 1 150px; min-width:130px;
+  background:var(--qf-card2); border:1px solid var(--qf-border); border-radius:8px;
+  padding:7px 10px; display:flex; flex-direction:column; gap:2px; font-size:12.5px;
+}
+#qwen-flow .qf-flow .step em{ font-style:normal; font-size:11px; color:var(--qf-muted); }
+#qwen-flow .qf-flow .arr{ align-self:center; color:var(--qf-border2); }
+#qwen-flow .qf-gates{ display:grid; gap:4px; font-size:12px; color:var(--qf-muted); }
+#qwen-flow .qf-gates strong{ color:var(--qf-fg); font-weight:500; }
+#qwen-flow .gtag{
+  display:inline-block; min-width:44px; margin-right:6px;
+  font-size:11px; color:var(--qf-fg); background:var(--qf-card2);
+  border:1px solid var(--qf-border); border-radius:4px; padding:0 6px; text-align:center;
+}
+#qwen-flow .qf-forwards{ display:grid; gap:4px; font-size:12px; color:var(--qf-muted); margin-bottom:4px; }
+
+/* ---- data mix bar ---- */
+#qwen-flow .qf-mixbar{
+  display:flex; gap:2px; height:18px; padding:2px;
+  background:var(--qf-inset); border-radius:7px; margin-bottom:10px;
+}
+#qwen-flow .qf-seg{ border-radius:4px; min-width:4px; transition:filter .15s,opacity .15s; }
+#qwen-flow .qf-seg.hot{ filter:brightness(1.35); }
+#qwen-flow .qf-seg.dim{ opacity:.35; }
+#qwen-flow .qf-mixlegend{ display:grid; grid-template-columns:repeat(3,1fr); gap:6px 14px; }
+@media (max-width:560px){ #qwen-flow .qf-mixlegend{ grid-template-columns:repeat(2,1fr); } }
+#qwen-flow .qf-mixlegend > div{ display:flex; gap:8px; align-items:flex-start; padding:3px 6px; border-radius:6px; transition:background .15s; }
+#qwen-flow .qf-mixlegend > div.hot{ background:var(--qf-card2); }
+#qwen-flow .qf-mixlegend i{ width:10px; height:10px; border-radius:3px; flex:none; margin-top:4px; }
+#qwen-flow .qf-mixlegend b{ font-size:12px; font-weight:500; display:block; }
+#qwen-flow .qf-mixlegend b span{ color:var(--qf-accent); font-variant-numeric:tabular-nums; margin-left:4px; }
+#qwen-flow .qf-mixlegend .d{ font-size:11px; color:var(--qf-muted); display:block; }
+
+/* ---- vram bars ---- */
+#qwen-flow .qf-vrow{ margin-bottom:7px; }
+#qwen-flow .qf-vhead{ font-size:12px; margin-bottom:3px; }
+#qwen-flow .qf-vbar{ display:flex; align-items:center; gap:8px; margin-bottom:3px; }
+#qwen-flow .qf-vbar .track{ flex:1; height:11px; background:var(--qf-inset); border-radius:6px; overflow:hidden; }
+#qwen-flow .qf-vbar .fill{ display:block; height:100%; border-radius:6px; }
+#qwen-flow .fill.before{ background:color-mix(in srgb,var(--qf-red) 55%,transparent); }
+#qwen-flow .fill.after{ background:var(--qf-green); }
+#qwen-flow .qf-vbar em{ font-style:normal; font-size:11px; color:var(--qf-muted); min-width:38px; font-variant-numeric:tabular-nums; }
+#qwen-flow .qf-vlegend{ display:flex; gap:14px; font-size:11px; color:var(--qf-muted); margin-top:2px; }
+#qwen-flow .qf-vlegend .sw{ display:inline-block; width:10px; height:6px; border-radius:3px; margin-right:5px; }
+#qwen-flow .sw.before{ background:color-mix(in srgb,var(--qf-red) 55%,transparent); }
+#qwen-flow .sw.after{ background:var(--qf-green); }
+
+/* ---- charts ---- */
+#qwen-flow .qf-chart{ width:100%; }
+#qwen-flow .qf-chart svg{ display:block; max-width:100%; }
+#qwen-flow .qf-series{ display:flex; flex-wrap:wrap; gap:4px 14px; margin-bottom:4px; }
+#qwen-flow .qf-sbtn{ display:inline-flex; align-items:center; gap:6px; font-size:12px; color:var(--qf-muted); padding:2px 0; }
+#qwen-flow .qf-sbtn:hover{ color:var(--qf-fg); }
+#qwen-flow .qf-sbtn[aria-pressed="true"]{ color:var(--qf-fg); }
+#qwen-flow .qf-sbtn i{ width:14px; height:4px; border-radius:2px; opacity:.4; }
+#qwen-flow .qf-sbtn[aria-pressed="true"] i{ opacity:1; }
+
+/* ---- artifacts / tail ---- */
+#qwen-flow .qf-art{
+  margin-top:10px; padding-top:8px; border-top:1px dashed var(--qf-border);
+  font-size:12px; color:var(--qf-muted);
+}
+#qwen-flow .qf-tail{
+  margin:4px 0 0; padding-top:10px; border-top:1px solid var(--qf-border);
+  font-size:12px; color:var(--qf-muted);
+}
+@media (max-width:560px){
+  #qwen-flow{ padding:16px 14px 12px; }
+  #qwen-flow .qf-stage{ grid-template-columns:26px minmax(0,1fr); gap:10px; }
+  #qwen-flow .items{ grid-template-columns:1fr; }
+  #qwen-flow .qf-toggle .f{ margin-left:0; }
+}
+@media (prefers-reduced-motion:reduce){
+  #qwen-flow *{ transition:none !important; animation:none !important; }
+}
+</style>
+
+<script>
+(function(){
+  var root = document.getElementById('qwen-flow');
+  if(!root) return;
+  var stages = [].slice.call(root.querySelectorAll('.qf-stage'));
+
+  /* ---------- 数据(实测) ---------- */
+  var EVAL_LOSS = [[27,1.866],[54,1.481],[81,1.193],[108,1.011],[135,0.903],[162,0.848],[189,0.828],[216,0.823]];
+  var GRPO_REWARD = [
+1.0,0.949,0.865,0.245,0.633,1.0,0.73,0.949,0.899,0.95,
+0.33,0.865,0.529,0.899,0.949,0.761,0.876,1.0,0.906,0.865,
+0.39,0.613,0.932,0.956,0.848,0.854,0.511,0.802,0.745,0.813,
+0.861,0.922,0.655,0.932,0.875,0.485,0.957,0.932,0.73,0.929,
+0.647,0.748,0.97,0.932,0.797,0.757,0.743,1.0,0.929,0.826,
+0.775,0.817,1.0,0.355,0.797,0.966,0.983,0.966,0.776,0.91,
+0.799,0.459,0.899,0.797,0.797,0.978,1.0,0.922,0.72,1.0,
+0.453,0.984,0.855,0.797,0.732,0.611,0.797,0.91,1.0,1.0,
+0.92,1.0,0.944,0.966,0.654,0.76,0.872,0.604,0.97,0.94,
+0.289,0.934,0.782,1.0,0.804,1.0,0.882,1.0,0.423,0.817];
+  var GRPO_ROLL = [
+1.0,0.975,0.938,0.765,0.739,0.782,0.775,0.797,0.808,0.822,
+0.777,0.785,0.765,0.775,0.786,0.785,0.79,0.802,0.807,0.81,
+0.78,0.763,0.766,0.802,0.812,0.805,0.794,0.787,0.779,0.772,
+0.799,0.802,0.808,0.81,0.806,0.792,0.796,0.793,0.784,0.787,
+0.8,0.807,0.809,0.807,0.805,0.8,0.812,0.822,0.831,0.831,
+0.827,0.822,0.839,0.81,0.806,0.83,0.832,0.834,0.836,0.835,
+0.842,0.828,0.824,0.818,0.818,0.829,0.842,0.838,0.827,0.836,
+0.82,0.828,0.821,0.843,0.84,0.822,0.813,0.81,0.821,0.825,
+0.832,0.859,0.861,0.869,0.862,0.851,0.845,0.829,0.841,0.838,
+0.83,0.828,0.824,0.834,0.838,0.857,0.862,0.866,0.837,0.828];
+  var SUCC_ROLL = [
+1.0,0.875,0.667,0.5,0.45,0.542,0.464,0.5,0.5,0.525,
+0.477,0.458,0.423,0.429,0.45,0.469,0.471,0.5,0.513,0.5,
+0.45,0.412,0.45,0.487,0.512,0.487,0.487,0.487,0.463,0.425,
+0.45,0.475,0.475,0.475,0.475,0.438,0.463,0.45,0.412,0.45,
+0.45,0.463,0.45,0.45,0.425,0.412,0.412,0.425,0.463,0.487,
+0.463,0.425,0.475,0.45,0.425,0.475,0.475,0.487,0.487,0.487,
+0.487,0.475,0.45,0.425,0.425,0.463,0.512,0.5,0.475,0.5,
+0.5,0.55,0.537,0.55,0.55,0.5,0.463,0.45,0.5,0.5,
+0.537,0.588,0.625,0.662,0.65,0.613,0.6,0.562,0.6,0.588,
+0.588,0.588,0.55,0.588,0.575,0.625,0.637,0.65,0.6,0.55];
+
+  var SERIES = { raw:true, roll:true, succ:false };
+
+  /* ---------- 状态持久化 ---------- */
+  function applyState(st){
+    if(!st) return;
+    if(st.open && st.open.length === stages.length){
+      stages.forEach(function(li,i){
+        var open = !!st.open[i];
+        li.classList.toggle('collapsed', !open);
+        var b = li.querySelector('.qf-toggle');
+        if(b) b.setAttribute('aria-expanded', open ? 'true' : 'false');
+      });
+    }
+    if(st.series){
+      SERIES.raw = st.series.raw !== false;
+      SERIES.roll = st.series.roll !== false;
+      SERIES.succ = !!st.series.succ;
+      syncSeriesBtns(); drawTrend();
+    }
+  }
+  function save(){
+    try{
+      if(window.zcode && window.zcode.setWidgetState){
+        window.zcode.setWidgetState({ privateContent:{
+          open: stages.map(function(li){ return !li.classList.contains('collapsed'); }),
+          series: { raw:SERIES.raw, roll:SERIES.roll, succ:SERIES.succ }
+        }}).catch(function(){});
+      }
+    }catch(e){}
+  }
+  try{ if(window.zcode && window.zcode.widgetState) applyState(window.zcode.widgetState.privateContent); }catch(e){}
+  window.addEventListener('zcode:set_globals', function(e){
+    try{
+      var g = e && e.detail && e.detail.globals;
+      if(g && g.widgetState) applyState(g.widgetState.privateContent);
+    }catch(err){}
+  });
+
+  /* ---------- 展开 / 收起 ---------- */
+  stages.forEach(function(li){
+    var btn = li.querySelector('.qf-toggle');
+    if(!btn) return;
+    btn.addEventListener('click', function(){
+      var open = !li.classList.toggle('collapsed');
+      btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+      save();
+    });
+  });
+
+  /* ---------- 顶部流水线导航 ---------- */
+  [].slice.call(root.querySelectorAll('.qf-pill')).forEach(function(p){
+    p.addEventListener('click', function(){
+      var li = stages[+p.getAttribute('data-goto')];
+      if(!li) return;
+      li.classList.remove('collapsed');
+      var b = li.querySelector('.qf-toggle');
+      if(b) b.setAttribute('aria-expanded','true');
+      save();
+      /* 内嵌 webview 中 smooth 滚动可能被静默忽略,这里用即时滚动保证跳转可靠 */
+      li.scrollIntoView({ block:'start' });
+    });
+  });
+
+  /* ---------- 数据配比:扇区 ↔ 图例联动 ---------- */
+  var segs = [].slice.call(root.querySelectorAll('.qf-seg'));
+  var legItems = [].slice.call(root.querySelectorAll('.qf-mixlegend [data-cat]'));
+  function hot(cat, on){
+    segs.forEach(function(s){
+      var hit = on && s.getAttribute('data-cat') === cat;
+      s.classList.toggle('hot', hit);
+      s.classList.toggle('dim', on && !hit);
+    });
+    legItems.forEach(function(l){
+      l.classList.toggle('hot', on && l.getAttribute('data-cat') === cat);
+    });
+  }
+  segs.concat(legItems).forEach(function(el){
+    var cat = el.getAttribute('data-cat');
+    el.addEventListener('mouseenter', function(){ hot(cat, true); });
+    el.addEventListener('mouseleave', function(){ hot(null, false); });
+  });
+
+  /* ---------- SVG 工具 ---------- */
+  function svgEl(tag, attrs){
+    var el = document.createElementNS('http://www.w3.org/2000/svg', tag);
+    for(var k in attrs) el.setAttribute(k, attrs[k]);
+    return el;
+  }
+  function svgText(svg, x, y, str, opts){
+    opts = opts || {};
+    var t = svgEl('text', { x:x, y:y, 'font-size':opts.size||11, fill:opts.fill||'var(--qf-muted)',
+      'text-anchor':opts.anchor||'start', 'font-weight':opts.weight||400 });
+    t.textContent = str;
+    svg.appendChild(t);
+    return t;
+  }
+
+  /* ---------- eval_loss 曲线 ---------- */
+  function drawEval(){
+    var box = document.getElementById('qf-evalchart');
+    if(!box) return;
+    var W = box.clientWidth;
+    if(!W) return;
+    box.innerHTML = '';
+    var H = 168, m = { t:20, r:16, b:26, l:40 };
+    var iw = W - m.l - m.r, ih = H - m.t - m.b;
+    var x0 = 27, x1 = 216, y0 = 0.72, y1 = 1.98;
+    function X(v){ return m.l + (v - x0) / (x1 - x0) * iw; }
+    function Y(v){ return m.t + (1 - (v - y0) / (y1 - y0)) * ih; }
+    var svg = svgEl('svg', { viewBox:'0 0 '+W+' '+H, width:W, height:H, role:'img',
+      'aria-label':'SFT 评估损失曲线:step 27 为 1.866,逐级降至 step 216 的 0.823' });
+    [1.0, 1.5].forEach(function(v){
+      svg.appendChild(svgEl('line', { x1:m.l, x2:W-m.r, y1:Y(v), y2:Y(v), stroke:'var(--qf-border)', 'stroke-width':1 }));
+      svgText(svg, m.l-6, Y(v)+4, v.toFixed(1), { anchor:'end' });
+    });
+    svgText(svg, X(27)-14, H-8, 'step 27', { anchor:'start' });
+    svgText(svg, X(108), H-8, '108', { anchor:'middle' });
+    svgText(svg, X(216), H-8, '216', { anchor:'end' });
+    var d = EVAL_LOSS.map(function(p,i){ return (i?'L':'M') + X(p[0]).toFixed(1) + ' ' + Y(p[1]).toFixed(1); }).join(' ');
+    svg.appendChild(svgEl('path', { d:d, fill:'none', stroke:'var(--qf-accent)', 'stroke-width':2,
+      'stroke-linecap':'round', 'stroke-linejoin':'round' }));
+    EVAL_LOSS.forEach(function(p){
+      var c = svgEl('circle', { cx:X(p[0]), cy:Y(p[1]), r:3.2, fill:'var(--qf-bg2)',
+        stroke:'var(--qf-accent)', 'stroke-width':1.6 });
+      c.setAttribute('data-tooltip', 'step '+p[0]+' · eval_loss '+p[1].toFixed(3));
+      svg.appendChild(c);
+    });
+    svgText(svg, X(27)+7, Y(1.866)-8, '1.866', { size:12, fill:'var(--qf-fg)' });
+    svgText(svg, X(216)-2, Y(0.823)-10, '0.823', { size:12, fill:'var(--qf-accent)', anchor:'end', weight:500 });
+    svgText(svg, W-m.r, m.t-6, 'eval_loss', { anchor:'end' });
+    box.appendChild(svg);
+  }
+
+  /* ---------- GRPO reward 趋势 ---------- */
+  function drawTrend(){
+    var box = document.getElementById('qf-trendchart');
+    if(!box) return;
+    var W = box.clientWidth;
+    if(!W) return;
+    box.innerHTML = '';
+    var H = 176, m = { t:16, r:40, b:26, l:34 };
+    var iw = W - m.l - m.r, ih = H - m.t - m.b;
+    var x0 = 1, x1 = 100, y0 = 0.15, y1 = 1.03;
+    function X(i){ return m.l + (i - x0) / (x1 - x0) * iw; }
+    function Y(v){ return m.t + (1 - (v - y0) / (y1 - y0)) * ih; }
+    var svg = svgEl('svg', { viewBox:'0 0 '+W+' '+H, width:W, height:H, role:'img',
+      'aria-label':'GRPO 100 步 reward 曲线:逐步值噪声大,20 步窗口均值在 0.76 至 0.87 之间窄幅波动' });
+    [0.4, 0.7, 1.0].forEach(function(v){
+      svg.appendChild(svgEl('line', { x1:m.l, x2:W-m.r, y1:Y(v), y2:Y(v), stroke:'var(--qf-border)', 'stroke-width':1 }));
+      svgText(svg, m.l-6, Y(v)+4, v.toFixed(1), { anchor:'end' });
+    });
+    svgText(svg, X(1), H-8, '步 1', { anchor:'start' });
+    [25, 50, 75].forEach(function(v){
+      svgText(svg, X(v), H-8, String(v), { anchor:'middle' });
+    });
+    svgText(svg, X(100), H-8, '100', { anchor:'end' });
+    function path(arr, color, width, opacity, dash){
+      var a = svgEl('path', { d: arr.map(function(v,i){ return (i?'L':'M') + X(i+1).toFixed(1) + ' ' + Y(v).toFixed(1); }).join(' '),
+        fill:'none', stroke:color, 'stroke-width':width, 'stroke-linecap':'round', 'stroke-linejoin':'round' });
+      if(opacity) a.setAttribute('opacity', opacity);
+      if(dash) a.setAttribute('stroke-dasharray', dash);
+      svg.appendChild(a);
+      return a;
+    }
+    if(SERIES.raw)  path(GRPO_REWARD, 'var(--qf-muted)', 1, 0.45);
+    if(SERIES.roll) path(GRPO_ROLL, 'var(--qf-accent)', 2);
+    if(SERIES.succ) path(SUCC_ROLL, 'var(--qf-green)', 1.6, null, '5 3');
+    /* 端点直标 */
+    if(SERIES.roll){
+      var dot = svgEl('circle', { cx:X(100), cy:Y(GRPO_ROLL[99]), r:3, fill:'var(--qf-accent)' });
+      dot.setAttribute('data-tooltip','第 100 步 · 窗口均值 0.828');
+      svg.appendChild(dot);
+      svgText(svg, X(100)+6, Y(GRPO_ROLL[99])+4, '0.83', { size:11, fill:'var(--qf-accent)', weight:500 });
+    }
+    if(SERIES.succ){
+      svgText(svg, X(100)+6, Y(SUCC_ROLL[99])+4, '0.55', { size:11, fill:'var(--qf-green)', weight:500 });
+    }
+    box.appendChild(svg);
+  }
+
+  /* ---------- 曲线开关 ---------- */
+  var sbtns = [].slice.call(root.querySelectorAll('.qf-sbtn'));
+  function syncSeriesBtns(){
+    sbtns.forEach(function(b){
+      b.setAttribute('aria-pressed', SERIES[b.getAttribute('data-s')] ? 'true' : 'false');
+    });
+  }
+  sbtns.forEach(function(b){
+    b.addEventListener('click', function(){
+      var k = b.getAttribute('data-s');
+      SERIES[k] = !SERIES[k];
+      syncSeriesBtns(); drawTrend(); save();
+    });
+  });
+
+  /* ---------- 初始化与自适应重绘 ---------- */
+  syncSeriesBtns();
+  drawEval();
+  drawTrend();
+  /* 重绘只在宽度真正变化时进行:innerHTML 置空会瞬时改变容器高度,
+     若按尺寸变化触发会形成 RO 反馈循环(布局持续抖动) */
+  var lastW = {};
+  function drawIfWider(id, fn){
+    var el = document.getElementById(id);
+    if(!el) return;
+    var w = el.clientWidth;
+    if(!w || lastW[id] === w) return;
+    lastW[id] = w;
+    fn();
+  }
+  if(window.ResizeObserver){
+    var ro = new ResizeObserver(function(){
+      drawIfWider('qf-evalchart', drawEval);
+      drawIfWider('qf-trendchart', drawTrend);
+    });
+    ['qf-evalchart','qf-trendchart'].forEach(function(id){
+      var el = document.getElementById(id);
+      if(el) ro.observe(el);
+    });
+  } else {
+    window.addEventListener('resize', function(){
+      drawIfWider('qf-evalchart', drawEval);
+      drawIfWider('qf-trendchart', drawTrend);
+    });
+  }
+})();
+</script>
+
+<script>
+(function(){
+  var tip = document.createElement('div');
+  tip.style.cssText = 'position:fixed;pointer-events:none;z-index:9;background:#1b2436;color:#e8edf7;border:1px solid #324668;border-radius:6px;padding:4px 8px;font:12px/1.4 system-ui,sans-serif;opacity:0;transition:opacity .12s;max-width:280px;box-shadow:0 4px 14px rgba(0,0,0,.4)';
+  document.body.appendChild(tip);
+  function move(e){
+    var x = e.clientX + 12, y = e.clientY + 14;
+    var r = tip.getBoundingClientRect();
+    if(x + r.width > innerWidth - 8) x = e.clientX - r.width - 10;
+    if(y + r.height > innerHeight - 8) y = e.clientY - r.height - 12;
+    tip.style.left = x + 'px'; tip.style.top = y + 'px';
+  }
+  document.addEventListener('mouseover', function(e){
+    var t = e.target.closest && e.target.closest('[data-tooltip]');
+    if(!t) return;
+    tip.textContent = t.getAttribute('data-tooltip');
+    tip.style.opacity = 1; move(e);
+  });
+  document.addEventListener('mousemove', function(e){ if(tip.style.opacity === '1') move(e); });
+  document.addEventListener('mouseout', function(e){
+    if(e.target.closest && e.target.closest('[data-tooltip]')) tip.style.opacity = 0;
+  });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,80 @@
+加载 NF4 量化 merged 模型 ...
+[transformers] The fast path is not available because one of the required library is not installed. Falling back to torch implementation. To install follow https://github.com/fla-org/flash-linear-attention#installation and https://github.com/Dao-AILab/causal-conv1d
+Loading weights:   0%|          | 0/723 [00:00<?, ?it/s]Loading weights:   0%|          | 1/723 [00:00<10:16,  1.17it/s]Loading weights:   1%|          | 6/723 [00:00<01:28,  8.12it/s]Loading weights:   2%|▏         | 13/723 [00:01<00:39, 17.82it/s]Loading weights:   4%|▎         | 26/723 [00:01<00:18, 37.04it/s]Loading weights:   6%|▌         | 40/723 [00:01<00:12, 56.79it/s]Loading weights:   7%|▋         | 53/723 [00:01<00:09, 71.70it/s]Loading weights:  11%|█         | 76/723 [00:01<00:05, 108.17it/s]Loading weights:  13%|█▎        | 94/723 [00:01<00:05, 124.55it/s]Loading weights:  16%|█▌        | 117/723 [00:01<00:04, 146.92it/s]Loading weights:  19%|█▊        | 134/723 [00:01<00:04, 144.10it/s]Loading weights:  21%|██        | 150/723 [00:02<00:04, 125.06it/s]Loading weights:  23%|██▎       | 164/723 [00:02<00:04, 112.65it/s]Loading weights:  24%|██▍       | 177/723 [00:02<00:05, 99.22it/s] Loading weights:  26%|██▌       | 188/723 [00:02<00:05, 89.62it/s]Loading weights:  28%|██▊       | 200/723 [00:02<00:05, 90.50it/s]Loading weights:  29%|██▉       | 210/723 [00:02<00:06, 82.98it/s]Loading weights:  31%|███       | 224/723 [00:02<00:05, 89.49it/s]Loading weights:  32%|███▏      | 234/723 [00:03<00:05, 91.77it/s]Loading weights:  34%|███▎      | 244/723 [00:03<00:05, 84.86it/s]Loading weights:  35%|███▍      | 253/723 [00:03<00:06, 77.75it/s]Loading weights:  36%|███▌      | 261/723 [00:03<00:06, 70.87it/s]Loading weights:  38%|███▊      | 274/723 [00:03<00:05, 83.33it/s]Loading weights:  39%|███▉      | 283/723 [00:03<00:05, 80.79it/s]Loading weights:  40%|████      | 292/723 [00:03<00:05, 75.78it/s]Loading weights:  42%|████▏     | 304/723 [00:03<00:04, 85.91it/s]Loading weights:  43%|████▎     | 313/723 [00:04<00:06, 67.07it/s]Loading weights:  45%|████▌     | 327/723 [00:04<00:04, 80.80it/s]Loading weights:  46%|████▋     | 336/723 [00:04<00:04, 77.81it/s]Loading weights:  48%|████▊     | 345/723 [00:04<00:05, 72.34it/s]Loading weights:  49%|████▉     | 357/723 [00:04<00:04, 83.25it/s]Loading weights:  51%|█████     | 366/723 [00:04<00:05, 65.45it/s]Loading weights:  53%|█████▎    | 380/723 [00:04<00:04, 80.46it/s]Loading weights:  54%|█████▍    | 390/723 [00:05<00:04, 81.01it/s]Loading weights:  55%|█████▌    | 399/723 [00:05<00:04, 70.21it/s]Loading weights:  57%|█████▋    | 411/723 [00:05<00:03, 79.87it/s]Loading weights:  58%|█████▊    | 420/723 [00:05<00:04, 68.27it/s]Loading weights:  61%|██████▏   | 444/723 [00:05<00:02, 105.31it/s]Loading weights:  69%|██████▉   | 500/723 [00:05<00:01, 213.00it/s]Loading weights:  76%|███████▋  | 552/723 [00:05<00:00, 288.96it/s]Loading weights:  85%|████████▍ | 612/723 [00:05<00:00, 361.58it/s]Loading weights:  93%|█████████▎| 670/723 [00:06<00:00, 415.50it/s]Loading weights:  99%|█████████▉| 716/723 [00:06<00:00, 421.28it/s]Loading weights: 100%|██████████| 723/723 [00:06<00:00, 116.06it/s]
+已移除视觉塔 | 当前显存 2.90GB
+冻结 fp32 权重压回 bf16: 178 个张量 | 当前显存 2.90GB
+trainable params: 32,464,896 || all params: 4,238,216,192 || trainable%: 0.7660
+可用任务 3196（初始 prompt <= 600 tokens）
+训练中闭环评估: 16 个任务（data/tora_sft/eval_set.jsonl），每 20 步一次
+[step   1/60] reward=1.000 success=100% turns=2.0 cov=0% kl=0.0000 loss=0.0000 gnorm=0.00 lr=0.00e+00 mem=5.66GB (155.2s)
+[step   2/60] reward=0.188 success=0% turns=2.25 cov=0% kl=0.0000 loss=-0.0000 gnorm=2.32 lr=6.00e-06 mem=5.66GB (368.7s)
+[step   3/60] reward=0.600 success=50% turns=2.0 cov=0% kl=0.0000 loss=0.0000 gnorm=0.00 lr=6.00e-06 mem=5.66GB (178.9s)
+[step   4/60] reward=0.475 success=38% turns=2.75 cov=0% kl=0.0000 loss=0.0003 gnorm=4.44 lr=1.20e-05 mem=6.75GB (486.0s)
+[step   5/60] reward=0.475 success=38% turns=2.0 cov=0% kl=0.0002 loss=-0.0002 gnorm=4.24 lr=1.80e-05 mem=6.75GB (218.2s)
+[step   6/60] reward=0.600 success=50% turns=2.25 cov=0% kl=0.0001 loss=-0.0000 gnorm=4.81 lr=2.40e-05 mem=6.75GB (229.5s)
+[step   7/60] reward=0.475 success=38% turns=3.0 cov=0% kl=0.0006 loss=0.0002 gnorm=6.28 lr=3.00e-05 mem=6.75GB (353.7s)
+[step   8/60] reward=0.600 success=50% turns=2.12 cov=0% kl=0.0002 loss=-0.0002 gnorm=6.48 lr=3.00e-05 mem=6.75GB (187.1s)
+[step   9/60] reward=0.600 success=50% turns=2.25 cov=0% kl=0.0000 loss=0.0000 gnorm=0.00 lr=3.00e-05 mem=6.75GB (226.9s)
+[step  10/60] reward=0.700 success=62% turns=2.5 cov=0% kl=0.0006 loss=0.0006 gnorm=4.83 lr=2.99e-05 mem=6.75GB (276.7s)
+  已保存 outputs/grpo-tora\checkpoint-10
+[step  11/60] reward=0.800 success=75% turns=2.0 cov=0% kl=0.0011 loss=-0.0003 gnorm=4.46 lr=2.98e-05 mem=6.75GB (161.4s)
+[step  12/60] reward=0.500 success=38% turns=2.0 cov=0% kl=0.0013 loss=0.0018 gnorm=13.12 lr=2.96e-05 mem=6.75GB (139.5s)
+[step  13/60] reward=0.225 success=12% turns=1.62 cov=0% kl=0.0001 loss=0.0002 gnorm=2.92 lr=2.94e-05 mem=6.75GB (323.9s)
+[step  14/60] reward=0.600 success=50% turns=2.25 cov=0% kl=0.0005 loss=-0.0001 gnorm=3.49 lr=2.91e-05 mem=6.75GB (284.2s)
+[step  15/60] reward=0.200 success=0% turns=2.12 cov=0% kl=0.0000 loss=0.0000 gnorm=0.00 lr=2.91e-05 mem=6.75GB (296.4s)
+[step  16/60] reward=0.500 success=38% turns=2.0 cov=0% kl=0.0020 loss=-0.0001 gnorm=7.92 lr=2.88e-05 mem=6.75GB (178.5s)
+[step  17/60] reward=0.250 success=12% turns=3.0 cov=0% kl=0.0003 loss=-0.0000 gnorm=3.27 lr=2.85e-05 mem=6.75GB (569.7s)
+[step  18/60] reward=0.700 success=62% turns=2.0 cov=0% kl=0.0007 loss=-0.0004 gnorm=3.97 lr=2.81e-05 mem=6.75GB (174.2s)
+[step  19/60] reward=0.500 success=38% turns=2.12 cov=0% kl=0.0008 loss=-0.0003 gnorm=3.69 lr=2.76e-05 mem=6.75GB (237.4s)
+  [eval@ 20] success=0.500 reward=0.600
+  当前评估最优，已保存 -> outputs/grpo-tora\best
+[step  20/60] reward=0.600 success=50% turns=2.0 cov=0% kl=0.0022 loss=0.0001 gnorm=9.08 lr=2.71e-05 mem=6.75GB (658.5s)
+  已保存 outputs/grpo-tora\checkpoint-20
+[step  21/60] reward=0.500 success=38% turns=2.0 cov=0% kl=0.0008 loss=-0.0001 gnorm=4.30 lr=2.66e-05 mem=6.75GB (192.0s)
+[step  22/60] reward=0.500 success=38% turns=2.25 cov=0% kl=0.0008 loss=-0.0001 gnorm=3.88 lr=2.61e-05 mem=6.75GB (337.1s)
+[step  23/60] reward=0.588 success=50% turns=2.12 cov=0% kl=0.0044 loss=0.0001 gnorm=2.60 lr=2.55e-05 mem=6.75GB (318.8s)
+[step  24/60] reward=0.500 success=38% turns=2.0 cov=0% kl=0.0022 loss=0.0005 gnorm=3.36 lr=2.48e-05 mem=6.75GB (183.6s)
+[step  25/60] reward=0.600 success=50% turns=2.0 cov=0% kl=0.0000 loss=0.0000 gnorm=0.00 lr=2.48e-05 mem=6.75GB (166.5s)
+[step  26/60] reward=0.900 success=88% turns=2.12 cov=0% kl=0.0019 loss=0.0007 gnorm=9.90 lr=2.42e-05 mem=6.75GB (163.7s)
+[step  27/60] reward=0.575 success=50% turns=2.5 cov=0% kl=0.0026 loss=-0.0001 gnorm=4.01 lr=2.35e-05 mem=6.75GB (505.5s)
+[step  28/60] reward=0.588 success=50% turns=2.12 cov=0% kl=0.0008 loss=-0.0003 gnorm=1.78 lr=2.27e-05 mem=6.75GB (301.5s)
+[step  29/60] reward=0.188 success=0% turns=2.62 cov=0% kl=0.0032 loss=0.0002 gnorm=1.98 lr=2.20e-05 mem=6.75GB (499.6s)
+[step  30/60] reward=0.600 success=50% turns=2.12 cov=0% kl=0.0000 loss=0.0000 gnorm=0.00 lr=2.20e-05 mem=6.75GB (189.9s)
+  已保存 outputs/grpo-tora\checkpoint-30
+[step  31/60] reward=1.000 success=100% turns=2.0 cov=0% kl=0.0000 loss=0.0000 gnorm=0.00 lr=2.20e-05 mem=6.75GB (148.5s)
+[step  32/60] reward=0.400 success=25% turns=2.0 cov=0% kl=0.0010 loss=0.0004 gnorm=3.87 lr=2.12e-05 mem=6.75GB (264.1s)
+[step  33/60] reward=0.400 success=25% turns=2.12 cov=0% kl=0.0023 loss=0.0001 gnorm=3.58 lr=2.04e-05 mem=6.75GB (282.7s)
+[step  34/60] reward=0.700 success=62% turns=2.12 cov=0% kl=0.0005 loss=-0.0000 gnorm=3.34 lr=1.96e-05 mem=6.75GB (206.2s)
+[step  35/60] reward=0.400 success=25% turns=2.38 cov=0% kl=0.0038 loss=0.0003 gnorm=5.34 lr=1.88e-05 mem=6.75GB (320.5s)
+[step  36/60] reward=0.900 success=88% turns=2.0 cov=0% kl=0.0031 loss=0.0002 gnorm=4.83 lr=1.80e-05 mem=6.75GB (135.6s)
+[step  37/60] reward=0.487 success=38% turns=2.0 cov=0% kl=0.0029 loss=0.0008 gnorm=8.40 lr=1.71e-05 mem=6.75GB (202.5s)
+[step  38/60] reward=0.588 success=50% turns=2.38 cov=0% kl=0.0016 loss=-0.0001 gnorm=3.65 lr=1.63e-05 mem=6.75GB (273.4s)
+[step  39/60] reward=1.000 success=100% turns=2.0 cov=0% kl=0.0000 loss=0.0000 gnorm=0.00 lr=1.63e-05 mem=6.75GB (144.9s)
+  [eval@ 40] success=0.500 reward=0.600
+[step  40/60] reward=0.362 success=25% turns=2.12 cov=0% kl=0.0039 loss=0.0000 gnorm=5.72 lr=1.54e-05 mem=6.75GB (687.3s)
+  已保存 outputs/grpo-tora\checkpoint-40
+[step  41/60] reward=0.600 success=50% turns=2.12 cov=0% kl=0.0000 loss=0.0000 gnorm=0.00 lr=1.54e-05 mem=6.75GB (272.5s)
+[step  42/60] reward=0.500 success=38% turns=2.12 cov=0% kl=0.0026 loss=0.0003 gnorm=3.84 lr=1.46e-05 mem=6.75GB (274.4s)
+[step  43/60] reward=1.000 success=100% turns=2.25 cov=0% kl=0.0000 loss=0.0000 gnorm=0.00 lr=1.46e-05 mem=6.75GB (236.0s)
+[step  44/60] reward=0.900 success=88% turns=2.0 cov=0% kl=0.0013 loss=-0.0002 gnorm=5.70 lr=1.37e-05 mem=6.75GB (225.8s)
+[step  45/60] reward=0.600 success=50% turns=2.0 cov=0% kl=0.0000 loss=0.0000 gnorm=0.00 lr=1.37e-05 mem=6.75GB (271.3s)
+[step  46/60] reward=0.800 success=75% turns=2.25 cov=0% kl=0.0033 loss=-0.0001 gnorm=5.12 lr=1.29e-05 mem=6.75GB (178.7s)
+[step  47/60] reward=0.463 success=38% turns=2.12 cov=0% kl=0.0024 loss=0.0001 gnorm=3.21 lr=1.20e-05 mem=6.75GB (331.0s)
+[step  48/60] reward=0.600 success=50% turns=2.0 cov=0% kl=0.0000 loss=0.0000 gnorm=0.00 lr=1.20e-05 mem=6.75GB (126.6s)
+[step  49/60] reward=0.800 success=75% turns=2.0 cov=0% kl=0.0011 loss=-0.0001 gnorm=3.55 lr=1.12e-05 mem=6.75GB (167.8s)
+[step  50/60] reward=0.287 success=12% turns=2.0 cov=0% kl=0.0020 loss=-0.0001 gnorm=4.12 lr=1.04e-05 mem=6.75GB (239.5s)
+  已保存 outputs/grpo-tora\checkpoint-50
+[step  51/60] reward=1.000 success=100% turns=2.0 cov=0% kl=0.0000 loss=0.0000 gnorm=0.00 lr=1.04e-05 mem=6.75GB (97.9s)
+[step  52/60] reward=0.575 success=50% turns=2.12 cov=0% kl=0.0030 loss=-0.0002 gnorm=2.52 lr=9.56e-06 mem=6.75GB (377.9s)
+[step  53/60] reward=0.600 success=50% turns=2.25 cov=0% kl=0.0000 loss=0.0000 gnorm=0.00 lr=9.56e-06 mem=6.75GB (334.4s)
+[step  54/60] reward=0.500 success=38% turns=2.12 cov=0% kl=0.0038 loss=-0.0000 gnorm=7.24 lr=8.77e-06 mem=6.75GB (228.9s)
+[step  55/60] reward=0.487 success=38% turns=2.0 cov=0% kl=0.0044 loss=0.0003 gnorm=6.41 lr=8.00e-06 mem=6.75GB (231.0s)
+[step  56/60] reward=0.900 success=88% turns=2.25 cov=0% kl=0.0032 loss=0.0004 gnorm=7.75 lr=7.25e-06 mem=6.75GB (198.8s)
+[step  57/60] reward=0.900 success=88% turns=2.12 cov=0% kl=0.0023 loss=-0.0003 gnorm=2.95 lr=6.53e-06 mem=6.75GB (210.8s)
+[step  58/60] reward=0.300 success=12% turns=2.12 cov=0% kl=0.0027 loss=0.0006 gnorm=2.59 lr=5.84e-06 mem=6.75GB (323.1s)
+[step  59/60] reward=0.600 success=50% turns=2.0 cov=0% kl=0.0000 loss=0.0000 gnorm=0.00 lr=5.84e-06 mem=6.75GB (161.9s)
+  [eval@ 60] success=0.438 reward=0.550
+[step  60/60] reward=0.800 success=75% turns=2.0 cov=0% kl=0.0022 loss=-0.0003 gnorm=3.09 lr=5.18e-06 mem=6.75GB (520.5s)
+  已保存 outputs/grpo-tora\checkpoint-60
+闭环评估最优: step 20 success=0.500 reward=0.600 -> outputs/grpo-tora\best
+GRPO 完成 -> outputs/grpo-tora\final

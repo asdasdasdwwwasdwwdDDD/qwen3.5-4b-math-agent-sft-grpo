@@ -1,0 +1,47 @@
+[transformers] The fast path is not available because one of the required library is not installed. Falling back to torch implementation. To install follow https://github.com/fla-org/flash-linear-attention#installation and https://github.com/Dao-AILab/causal-conv1d
+Loading weights:   0%|          | 0/723 [00:00<?, ?it/s]Loading weights:   0%|          | 1/723 [00:00<11:00,  1.09it/s]Loading weights:   1%|          | 6/723 [00:01<01:42,  7.01it/s]Loading weights:   2%|▏         | 12/723 [00:01<00:48, 14.72it/s]Loading weights:   3%|▎         | 22/723 [00:01<00:23, 29.39it/s]Loading weights:   4%|▍         | 28/723 [00:01<00:21, 32.86it/s]Loading weights:   6%|▌         | 40/723 [00:01<00:13, 50.55it/s]Loading weights:   7%|▋         | 48/723 [00:01<00:13, 48.24it/s]Loading weights:   8%|▊         | 61/723 [00:01<00:10, 65.50it/s]Loading weights:  10%|▉         | 70/723 [00:01<00:10, 64.08it/s]Loading weights:  11%|█         | 79/723 [00:02<00:09, 69.46it/s]Loading weights:  12%|█▏        | 89/723 [00:02<00:08, 75.86it/s]Loading weights:  14%|█▎        | 98/723 [00:02<00:09, 66.68it/s]Loading weights:  15%|█▍        | 106/723 [00:02<00:09, 66.19it/s]Loading weights:  16%|█▋        | 118/723 [00:02<00:07, 78.89it/s]Loading weights:  18%|█▊        | 128/723 [00:02<00:07, 83.90it/s]Loading weights:  19%|█▉        | 137/723 [00:02<00:07, 77.22it/s]Loading weights:  20%|██        | 146/723 [00:02<00:07, 78.89it/s]Loading weights:  21%|██▏       | 155/723 [00:03<00:08, 65.39it/s]Loading weights:  23%|██▎       | 168/723 [00:03<00:07, 78.30it/s]Loading weights:  24%|██▍       | 177/723 [00:03<00:07, 75.81it/s]Loading weights:  26%|██▌       | 186/723 [00:03<00:07, 72.10it/s]Loading weights:  27%|██▋       | 198/723 [00:03<00:06, 83.17it/s]Loading weights:  29%|██▊       | 207/723 [00:03<00:07, 65.26it/s]Loading weights:  31%|███       | 221/723 [00:03<00:06, 79.33it/s]Loading weights:  32%|███▏      | 230/723 [00:04<00:06, 75.63it/s]Loading weights:  33%|███▎      | 239/723 [00:04<00:06, 72.03it/s]Loading weights:  35%|███▍      | 251/723 [00:04<00:05, 81.37it/s]Loading weights:  36%|███▌      | 260/723 [00:04<00:07, 60.96it/s]Loading weights:  38%|███▊      | 273/723 [00:04<00:06, 73.39it/s]Loading weights:  39%|███▉      | 282/723 [00:04<00:06, 66.31it/s]Loading weights:  40%|████      | 291/723 [00:04<00:06, 69.47it/s]Loading weights:  42%|████▏     | 301/723 [00:05<00:06, 69.41it/s]Loading weights:  43%|████▎     | 309/723 [00:05<00:06, 62.79it/s]Loading weights:  44%|████▎     | 316/723 [00:05<00:06, 60.44it/s]Loading weights:  46%|████▌     | 329/723 [00:05<00:05, 75.22it/s]Loading weights:  47%|████▋     | 338/723 [00:05<00:04, 78.10it/s]Loading weights:  48%|████▊     | 347/723 [00:05<00:05, 68.43it/s]Loading weights:  50%|████▉     | 358/723 [00:05<00:04, 78.12it/s]Loading weights:  51%|█████     | 367/723 [00:06<00:05, 66.05it/s]Loading weights:  52%|█████▏    | 379/723 [00:06<00:04, 72.15it/s]Loading weights:  54%|█████▎    | 387/723 [00:06<00:10, 32.60it/s]Loading weights:  55%|█████▍    | 397/723 [00:07<00:08, 39.54it/s]Loading weights:  56%|█████▋    | 407/723 [00:07<00:06, 46.00it/s]Loading weights:  57%|█████▋    | 414/723 [00:07<00:06, 44.34it/s]Loading weights:  58%|█████▊    | 420/723 [00:07<00:06, 44.41it/s]Loading weights:  60%|██████    | 434/723 [00:07<00:04, 62.27it/s]Loading weights:  66%|██████▋   | 480/723 [00:07<00:01, 144.54it/s]Loading weights:  73%|███████▎  | 526/723 [00:07<00:00, 214.53it/s]Loading weights:  79%|███████▉  | 572/723 [00:07<00:00, 273.19it/s]Loading weights:  85%|████████▍ | 614/723 [00:07<00:00, 310.16it/s]Loading weights:  92%|█████████▏| 662/723 [00:08<00:00, 354.01it/s]Loading weights:  99%|█████████▉| 716/723 [00:08<00:00, 385.40it/s]Loading weights: 100%|██████████| 723/723 [00:08<00:00, 87.95it/s] 
+闭环数学评测: 100 题（data/tora_sft/eval_set.jsonl）tag=sft
+  [10/100] 累计正确率 90.0% (76s)
+  [20/100] 累计正确率 70.0% (222s)
+  [30/100] 累计正确率 66.7% (388s)
+  [40/100] 累计正确率 70.0% (503s)
+  [50/100] 累计正确率 66.0% (659s)
+  [60/100] 累计正确率 55.0% (997s)
+  [70/100] 累计正确率 47.1% (1219s)
+  [80/100] 累计正确率 42.5% (1526s)
+  [90/100] 累计正确率 38.9% (1725s)
+  [100/100] 累计正确率 37.0% (2057s)
+
+==== 数学闭环评测 [sft] n=100 (2056.9s) ====
+正确率 37.0% | 平均回合 2.26 | 执行 1.3 次/题 (报错率 37.7%) | 未终答 6.0%
+  Level 1: 90.9% (11 题)
+  Level 2: 55.0% (20 题)
+  Level 3: 57.1% (21 题)
+  Level 4: 4.5% (22 题)
+  Level 5: 11.5% (26 题)
+结果 -> outputs/eval\math_sft.json
+== SFT DONE ==
+[transformers] The fast path is not available because one of the required library is not installed. Falling back to torch implementation. To install follow https://github.com/fla-org/flash-linear-attention#installation and https://github.com/Dao-AILab/causal-conv1d
+Loading weights:   0%|          | 0/723 [00:00<?, ?it/s]Loading weights:   0%|          | 1/723 [00:00<10:01,  1.20it/s]Loading weights:   1%|          | 6/723 [00:00<01:31,  7.84it/s]Loading weights:   2%|▏         | 13/723 [00:01<00:40, 17.38it/s]Loading weights:   3%|▎         | 25/723 [00:01<00:19, 36.19it/s]Loading weights:   5%|▍         | 35/723 [00:01<00:13, 49.26it/s]Loading weights:   6%|▌         | 43/723 [00:01<00:13, 50.01it/s]Loading weights:   7%|▋         | 51/723 [00:01<00:12, 54.91it/s]Loading weights:   9%|▉         | 65/723 [00:01<00:09, 70.71it/s]Loading weights:  11%|█         | 76/723 [00:01<00:08, 78.02it/s]Loading weights:  12%|█▏        | 85/723 [00:01<00:08, 78.56it/s]Loading weights:  13%|█▎        | 94/723 [00:02<00:08, 76.85it/s]Loading weights:  14%|█▍        | 103/723 [00:02<00:08, 73.66it/s]Loading weights:  16%|█▌        | 117/723 [00:02<00:06, 90.36it/s]Loading weights:  18%|█▊        | 127/723 [00:02<00:06, 92.73it/s]Loading weights:  19%|█▉        | 137/723 [00:02<00:07, 80.80it/s]Loading weights:  20%|██        | 147/723 [00:02<00:07, 80.65it/s]Loading weights:  22%|██▏       | 156/723 [00:02<00:07, 76.16it/s]Loading weights:  24%|██▎       | 170/723 [00:02<00:06, 88.96it/s]Loading weights:  25%|██▍       | 180/723 [00:03<00:05, 91.39it/s]Loading weights:  26%|██▋       | 190/723 [00:03<00:06, 80.69it/s]Loading weights:  28%|██▊       | 200/723 [00:03<00:06, 79.04it/s]Loading weights:  29%|██▉       | 209/723 [00:03<00:06, 73.70it/s]Loading weights:  31%|███       | 223/723 [00:03<00:05, 87.53it/s]Loading weights:  32%|███▏      | 233/723 [00:03<00:05, 90.11it/s]Loading weights:  34%|███▎      | 243/723 [00:03<00:06, 79.82it/s]Loading weights:  35%|███▍      | 253/723 [00:03<00:05, 78.89it/s]Loading weights:  36%|███▌      | 262/723 [00:04<00:06, 74.93it/s]Loading weights:  38%|███▊      | 274/723 [00:04<00:05, 85.71it/s]Loading weights:  39%|███▉      | 283/723 [00:04<00:05, 83.77it/s]Loading weights:  40%|████      | 292/723 [00:04<00:05, 79.35it/s]Loading weights:  42%|████▏     | 305/723 [00:04<00:04, 85.43it/s]Loading weights:  43%|████▎     | 314/723 [00:04<00:05, 72.51it/s]Loading weights:  45%|████▌     | 327/723 [00:04<00:04, 83.93it/s]Loading weights:  46%|████▋     | 336/723 [00:05<00:05, 77.29it/s]Loading weights:  48%|████▊     | 345/723 [00:05<00:05, 70.87it/s]Loading weights:  49%|████▉     | 355/723 [00:05<00:04, 77.23it/s]Loading weights:  50%|█████     | 364/723 [00:05<00:05, 60.36it/s]Loading weights:  51%|█████▏    | 371/723 [00:05<00:05, 62.15it/s]Loading weights:  53%|█████▎    | 383/723 [00:05<00:04, 73.36it/s]Loading weights:  54%|█████▍    | 393/723 [00:05<00:04, 78.45it/s]Loading weights:  56%|█████▌    | 402/723 [00:05<00:04, 72.91it/s]Loading weights:  57%|█████▋    | 411/723 [00:06<00:04, 75.96it/s]Loading weights:  58%|█████▊    | 419/723 [00:06<00:04, 61.32it/s]Loading weights:  61%|██████    | 442/723 [00:06<00:02, 98.96it/s]Loading weights:  67%|██████▋   | 482/723 [00:06<00:01, 170.79it/s]Loading weights:  73%|███████▎  | 528/723 [00:06<00:00, 243.43it/s]Loading weights:  79%|███████▉  | 574/723 [00:06<00:00, 300.07it/s]Loading weights:  85%|████████▍ | 614/723 [00:06<00:00, 327.45it/s]Loading weights:  91%|█████████▏| 660/723 [00:06<00:00, 363.07it/s]Loading weights:  98%|█████████▊| 708/723 [00:06<00:00, 393.80it/s]Loading weights: 100%|██████████| 723/723 [00:07<00:00, 102.55it/s]
+已加载 adapter: outputs/grpo-tora/best
+闭环数学评测: 100 题（data/tora_sft/eval_set.jsonl）tag=grpo
+  [10/100] 累计正确率 90.0% (129s)
+  [20/100] 累计正确率 75.0% (345s)
+  [30/100] 累计正确率 66.7% (558s)
+  [40/100] 累计正确率 67.5% (758s)
+  [50/100] 累计正确率 66.0% (1018s)
+  [60/100] 累计正确率 56.7% (1331s)
+  [70/100] 累计正确率 52.9% (1650s)
+  [80/100] 累计正确率 47.5% (1983s)
+  [90/100] 累计正确率 45.6% (2252s)
+  [100/100] 累计正确率 44.0% (2705s)
+
+==== 数学闭环评测 [grpo] n=100 (2705.0s) ====
+正确率 44.0% | 平均回合 2.07 | 执行 1.07 次/题 (报错率 24.3%) | 未终答 0.0%
+  Level 1: 90.9% (11 题)
+  Level 2: 50.0% (20 题)
+  Level 3: 66.7% (21 题)
+  Level 4: 18.2% (22 题)
+  Level 5: 23.1% (26 题)
+结果 -> outputs/eval\math_grpo.json
+== GRPO DONE ==

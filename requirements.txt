@@ -1,0 +1,17 @@
+# Qwen-QLora 智能体微调环境（conda: pytorch = D:\anaconda\envs\pytorch, Python 3.12）
+# 已验证的版本组合（该环境实际版本）：
+torch==2.10.0+cu128
+transformers==5.12.1
+peft==0.19.1
+accelerate==1.14.0
+bitsandbytes==0.50.0
+datasets==5.0.1
+trl==1.10.0
+modelscope>=1.39
+tensorboard>=2.20
+# Qwen3.5 线性注意力（GatedDeltaNet）的 triton 快路径可选依赖：
+# 本机缺 causal-conv1d，transformers 会自动回退到 torch eager 实现（功能一致，稍慢）
+fla-core>=0.5.2
+sentencepiece
+protobuf
+safetensors

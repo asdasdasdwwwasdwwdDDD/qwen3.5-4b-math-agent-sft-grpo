@@ -1,0 +1,191 @@
+<div id="grpo-flow">
+  <div class="head">
+    <h2>GRPO 训练流程</h2>
+    <div class="text-small muted">scripts/train_grpo.py --mode trajectory · 实测每步 ≈60 秒 · 峰值显存 5.66 GB</div>
+  </div>
+
+  <div class="trace text-small" aria-label="流水线位置">
+    <span>数据生成</span>
+    <span class="sep" aria-hidden="true">→</span>
+    <span>SFT</span>
+    <span class="sep" aria-hidden="true">→</span>
+    <span>合并模型</span>
+    <span class="sep" aria-hidden="true">→</span>
+    <span class="here">GRPO ×100 步</span>
+    <span class="sep" aria-hidden="true">→</span>
+    <span class="undone">评估</span>
+  </div>
+
+  <ol class="stages">
+    <li class="stage">
+      <div class="rail"><span class="dot">0</span></div>
+      <div class="body">
+        <h3>启动<span class="sub">训练前跑一次</span></h3>
+        <div class="items">
+          <div><b>单实例锁</b><span>outputs/.train.lock，双开必假死</span></div>
+          <div><b>载入 merged 模型</b><span>NF4 4bit，同时充当 KL 参考策略</span></div>
+          <div><b>摘视觉塔 · 冻结权重压 bf16</b><span>纯文本用不到，省 ≈2 GB</span></div>
+          <div><b>挂 LoRA r=16</b><span>12 类线性层，可训练 32.5 M</span></div>
+          <div><b>读 train.jsonl</b><span>预渲染首条 prompt</span></div>
+          <div><b>AdamW8bit + cosine</b><span>非 paged，lr 1e-5</span></div>
+        </div>
+        <p class="flag orange">◆ 已缓解：build_dataset.py 新增 --seed，GRPO 改用 data/grpo_tasks（seed=2026）全新任务，与 SFT 数据隔离（chained 调用序列新颖度 81%）。</p>
+      </div>
+    </li>
+
+    <li class="stage">
+      <div class="rail"><span class="dot">1</span></div>
+      <div class="body">
+        <h3>取任务</h3>
+        <p>打乱队列依次取 1 个任务，取完重洗。</p>
+        <p class="flag orange">◆ 已调整：--prompts-per-step 默认 2，一次更新含两个组，方差减半（耗时约翻倍）。</p>
+      </div>
+    </li>
+
+    <li class="stage">
+      <div class="rail"><span class="dot">2</span></div>
+      <div class="body">
+        <h3>采样 Rollout<span class="sub">同一任务做 4 遍，每遍最多 4 回合</span></h3>
+        <div class="card">
+          <div class="loop">
+            <span class="tag">×4 轨迹</span>
+            <span class="tag2">×4 回合</span>
+          </div>
+          <div class="flow">
+            <div class="step">生成一轮<em>T=0.9 · 记 prompt/gen ids</em></div>
+            <span class="arr" aria-hidden="true">→</span>
+            <div class="step">解析 XML 调用<em>同时记格式错误</em></div>
+            <span class="arr" aria-hidden="true">→</span>
+            <div class="step">有调用 → 执行工具<em>无调用 → 交付追问或终局</em></div>
+          </div>
+          <div class="gates">
+            <div><span class="gtag">闸门 1</span>真值回放：参数与 GT 等价 → 发数据集记录的返回，<strong>该卡一次性核销</strong></div>
+            <div><span class="gtag">闸门 2</span>sandbox 兜底：无卡可发 → 按参数哈希现编一个稳定返回（calculator 除外，真算）</div>
+          </div>
+          <p class="mini">↺ 带着工具返回 / 用户追问渲染下一轮，回到生成 · 4 条轨迹生成完 empty_cache</p>
+        </div>
+        <p class="flag red">● 已修复（2026-10-24）：每条轨迹独立 TaskEnv。旧版 G 条轨迹共用 1 个 env，答案卡被第 1 条用光，后 3 条拿到的事实与真值不同（46 个可比组中 31 组不一致）。</p>
+      </div>
+    </li>
+
+    <li class="stage">
+      <div class="rail"><span class="dot">3</span></div>
+      <div class="body">
+        <h3>打分</h3>
+        <p>0.55 × 调用覆盖 + 0.45 × 回答事实命中；该澄清未澄清、无需工具却调用 → ×0.5；格式不合格 → 再打折。</p>
+        <p class="mini">判卷对照的始终是 GT 记录的标准答案。</p>
+      </div>
+    </li>
+
+    <li class="stage">
+      <div class="rail"><span class="dot">4</span></div>
+      <div class="body">
+        <h3>组内优势</h3>
+        <p><code>adv = (r − 组均值) / 组标准差</code>　比组内平均好为正，差为负。</p>
+        <p class="flag red">● 出场顺序污染已随 env 修复消除（旧版实测：第 1 条回答分 0.857 vs 后 3 条 0.74–0.76，纯顺序差）。</p>
+        <p class="flag red">● 旧版实测 19/100 步组内全同分、优势全 0；换新 seed 数据后有望减少。</p>
+      </div>
+    </li>
+
+    <li class="stage">
+      <div class="rail"><span class="dot">5</span></div>
+      <div class="body">
+        <h3>更新<span class="sub">沿轨迹逐回合反传</span></h3>
+        <div class="card">
+          <div class="forwards">
+            <div><span class="gtag">old</span>当前权重，PPO 裁剪基准</div>
+            <div><span class="gtag">ref</span>关掉 LoRA 的 SFT 模型，算 KL</div>
+            <div><span class="gtag">act</span>带梯度，真正反传的一次</div>
+          </div>
+          <p class="mini">回合损失按 token 数加权 → backward → 每 4 条轨迹优化一步 → 梯度裁剪 1.0</p>
+        </div>
+        <p class="flag red">● 旧版单任务/步时 ratio 恒为 1、裁剪从不触发；现在每步 2 任务、累积中途即更新，后半桶轨迹的 ratio 开始起作用，old 前向不再白算。</p>
+        <p class="flag red">● 已调整：裁剪上限 1.0→2.0（--max-grad-norm）、lr 1e-5→3e-5（旧版实测范数 2–5.5 每步都被硬剪）。</p>
+      </div>
+    </li>
+
+    <li class="stage">
+      <div class="rail"><span class="dot">6</span></div>
+      <div class="body">
+        <h3>记录与保存</h3>
+        <p>每步写 logs/grpo_log.jsonl 与 TensorBoard；每 10 步存 checkpoint，末尾存 final。</p>
+        <p class="flag orange">◆ 已加 --eval-every 20：训练中定期 greedy 闭环评估（固定 16 任务子集），最优存 out/best——final 之外多一个选择依据。</p>
+      </div>
+    </li>
+  </ol>
+
+  <p class="tail text-small">修复前基线（旧版 100 步实测，信号受 env bug 污染）：reward 0.822→0.793，success 0.525→0.450，均在噪声区间。修复后需重跑验证。</p>
+</div>
+
+<style>
+#grpo-flow { max-width: 880px; }
+#grpo-flow .head h2 { margin: 0 0 2px; }
+#grpo-flow .muted { color: var(--muted-foreground); }
+#grpo-flow .trace {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 6px;
+  margin: 14px 0 22px; color: var(--muted-foreground);
+}
+#grpo-flow .trace .sep { color: var(--muted-foreground); opacity: 0.55; }
+#grpo-flow .trace .here { color: var(--viz-series-1); font-weight: 500; }
+#grpo-flow .trace .undone { opacity: 0.55; text-decoration: line-through; }
+
+#grpo-flow .stages { list-style: none; margin: 0; padding: 0; }
+#grpo-flow .stage { display: grid; grid-template-columns: 34px minmax(0, 1fr); gap: 14px; }
+#grpo-flow .rail { position: relative; display: flex; justify-content: center; }
+#grpo-flow .rail::before {
+  content: ""; position: absolute; top: 26px; bottom: -8px; width: 1px; background: var(--border);
+}
+#grpo-flow .stage:last-child .rail::before { display: none; }
+#grpo-flow .dot {
+  position: relative; z-index: 1; width: 24px; height: 24px; border-radius: 50%;
+  background: var(--muted); color: var(--muted-foreground);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-variant-numeric: tabular-nums;
+}
+#grpo-flow .body { padding-bottom: 26px; min-width: 0; }
+#grpo-flow h3 { margin: 2px 0 6px; font-weight: 500; }
+#grpo-flow .sub { margin-left: 8px; font-size: 12px; font-weight: 400; color: var(--muted-foreground); }
+#grpo-flow .body p { margin: 0 0 4px; }
+
+#grpo-flow .items { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 4px 20px; }
+#grpo-flow .items div { display: flex; gap: 8px; align-items: baseline; min-width: 0; }
+#grpo-flow .items b { font-weight: 500; flex: none; }
+#grpo-flow .items span { color: var(--muted-foreground); font-size: 12px; }
+
+#grpo-flow .flag { font-size: 12px; margin: 3px 0 0; }
+#grpo-flow .red { color: var(--destructive); }
+#grpo-flow .orange { color: var(--orange); }
+#grpo-flow .mini { font-size: 12px; color: var(--muted-foreground); }
+
+#grpo-flow .card .loop { display: flex; gap: 8px; margin-bottom: 8px; }
+#grpo-flow .tag, #grpo-flow .tag2 {
+  font-size: 11px; border-radius: 999px; padding: 1px 8px;
+  background: color-mix(in srgb, var(--viz-series-1) 14%, transparent);
+  color: var(--foreground);
+}
+#grpo-flow .tag2 { background: var(--muted); color: var(--muted-foreground); }
+
+#grpo-flow .flow { display: flex; align-items: stretch; gap: 8px; flex-wrap: wrap; margin-bottom: 8px; }
+#grpo-flow .step {
+  flex: 1 1 150px; min-width: 130px;
+  display: flex; flex-direction: column; gap: 2px;
+}
+#grpo-flow .step em { font-style: normal; font-size: 11px; color: var(--muted-foreground); }
+#grpo-flow .arr { align-self: center; color: var(--border); }
+
+#grpo-flow .gates { display: grid; gap: 4px; font-size: 12px; color: var(--muted-foreground); }
+#grpo-flow .gates strong { color: var(--foreground); font-weight: 500; }
+#grpo-flow .gtag {
+  display: inline-block; min-width: 44px; margin-right: 6px;
+  font-size: 11px; color: var(--foreground); background: var(--muted);
+  border-radius: 4px; padding: 0 6px; text-align: center;
+}
+#grpo-flow .forwards { display: grid; gap: 4px; font-size: 12px; color: var(--muted-foreground); }
+
+#grpo-flow .tail { margin-top: 6px; color: var(--muted-foreground); border-top: 1px solid var(--border); padding-top: 10px; }
+
+@media (max-width: 560px) {
+  #grpo-flow .stage { grid-template-columns: 26px minmax(0, 1fr); gap: 10px; }
+  #grpo-flow .items { grid-template-columns: 1fr; }
+}
+</style>

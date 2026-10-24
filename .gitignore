@@ -1,0 +1,25 @@
+# Python
+__pycache__/
+*.pyc
+
+# 本地编辑器/agent 会话文件
+.zcode/
+.vscode/
+
+# 训练 checkpoint 权重不入 git：
+# - 单文件 58~124MB，grpo-tora/best 124MB 超 GitHub 单文件 100MB 硬上限
+# - outputs/ 总计 2.3GB，进 git 会让仓库不可用
+# 关键 adapter（qlora-tora/checkpoint-2000、grpo-tora/best）建议走 GitHub Release 附件分发
+outputs/qlora-tora/checkpoint-*/
+outputs/grpo-tora/checkpoint-*/
+outputs/grpo-tora/best/
+outputs/grpo-tora/final/
+optimizer.pt
+*.safetensors
+
+# 合并后的整模型（8.5GB，本地可再生）与基座 junction（本地才有）
+outputs/merged*/
+models/
+
+# 单实例训练锁
+outputs/.train.lock

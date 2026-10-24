@@ -1,0 +1,7 @@
+[transformers] The fast path is not available because one of the required library is not installed. Falling back to torch implementation. To install follow https://github.com/fla-org/flash-linear-attention#installation and https://github.com/Dao-AILab/causal-conv1d
+加载底座模型（bf16, CPU）...
+Loading weights:   0%|          | 0/723 [00:00<?, ?it/s]Loading weights: 100%|██████████| 723/723 [00:00<00:00, 10291.71it/s]
+加载并合并 LoRA adapter ...
+保存合并后的模型到 outputs/merged-tora ...
+Writing model shards:   0%|          | 0/1 [00:00<?, ?it/s]Writing model shards: 100%|██████████| 1/1 [00:13<00:00, 13.98s/it]Writing model shards: 100%|██████████| 1/1 [00:13<00:00, 13.98s/it]
+合并完成。
