@@ -2,7 +2,7 @@
 """
 将训练好的 LoRA adapter 合并回底座模型，输出可独立部署的完整模型
 用法:
-  python scripts/merge_lora.py --model models/Qwen3.5-4B \
+  python -m scripts.training.merge_lora --model models/Qwen3.5-4B \
       --adapter outputs/qlora-adapter/final --out outputs/merged
 """
 import argparse

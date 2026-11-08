@@ -1,14 +1,11 @@
 # -*- coding: utf-8 -*-
 """验证 loss mask：解码出所有被训练的 token，人工检查是否恰好覆盖 assistant 回复区间
-用法: python scripts/check_mask.py [--data data/tora_sft/val.jsonl]"""
+用法（仓库根运行）: python -m scripts.tools.check_mask [--data data/tora_sft/val.jsonl]"""
 import json
-import sys
-import os
 import argparse
 
-sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from transformers import AutoTokenizer
-from train_qlora import AgentTrajectoryDataset
+from scripts.training.train_qlora import AgentTrajectoryDataset
 
 MODEL = "models/Qwen3.5-4B"
 

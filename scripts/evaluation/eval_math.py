@@ -2,21 +2,43 @@
 """闭环数学评测：模型自己做题（```python → 受限执行 → ```output 回填 → \boxed 终答），
 按 boxed 答案与 gt 等价性判正确率。base / SFT / GRPO 用同一把尺子（math_env.py）。
 
-用法:
-  python scripts/eval_math.py --model models/Qwen3.5-4B --tag base
-  python scripts/eval_math.py --model outputs/merged-tora --adapter outputs/grpo-tora/final --tag grpo
-模型加载与 eval_agent.py 同口径（4bit 底座 + adapter 直挂，不合并）。
+用法（仓库根运行）:
+  python -m scripts.evaluation.eval_math --model models/Qwen3.5-4B --tag base
+  python -m scripts.evaluation.eval_math --model outputs/merged-tora --adapter outputs/grpo-tora/final --tag grpo
+模型加载口径：4bit NF4 量化底座 + adapter 直挂推理（不合并，量化权重不可 merge）。
 """
 import argparse
 import json
-import os
-import sys
 import time
 
-sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import torch
-from eval_agent import load_model
-from math_env import MathEnv, rollout, score_trajectory, load_tasks
+from transformers import AutoTokenizer
+
+from scripts.envs.math_env import MathEnv, rollout, score_trajectory, load_tasks
+
+
+def load_model(model_path, adapter=None):
+    """4bit 量化加载底座模型；adapter 可选直挂（与训练/评测全程同一口径）。"""
+    from transformers import BitsAndBytesConfig
+    # 加载必须用 VL 架构类：AutoModelForCausalLM 会静默随机初始化文本层（见 AGENTS.md）
+    from transformers import Qwen3_5ForConditionalGeneration
+    bnb = BitsAndBytesConfig(
+        load_in_4bit=True,
+        bnb_4bit_quant_type="nf4",
+        bnb_4bit_use_double_quant=True,
+        bnb_4bit_compute_dtype=torch.bfloat16,
+    )
+    tok = AutoTokenizer.from_pretrained(model_path, trust_remote_code=True)
+    model = Qwen3_5ForConditionalGeneration.from_pretrained(
+        model_path, quantization_config=bnb, dtype=torch.bfloat16,
+        device_map={"": 0}, attn_implementation="sdpa", trust_remote_code=True)
+    if adapter:
+        from peft import PeftModel
+        # 4bit 量化底座上直接挂载 adapter 推理（不合并，量化权重不可 merge）
+        model = PeftModel.from_pretrained(model, adapter)
+        print(f"已加载 adapter: {adapter}")
+    model.eval()
+    return model, tok
 
 
 def main():

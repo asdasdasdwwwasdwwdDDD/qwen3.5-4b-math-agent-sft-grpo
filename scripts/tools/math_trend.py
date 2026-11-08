@@ -11,7 +11,7 @@
   3) [eval@N] 闭卷考试序列（eval_set 前缀切片，注明难度构成再解读）
   --tb：把逐层曲线写成独立 TensorBoard run（outputs/grpo-tora/runs_derived），
   与原 run 并存，浏览器刷新即可按层折叠查看。
-用法: python scripts/math_trend.py [--tb]
+用法（仓库根运行）: python -m scripts.tools.math_trend [--tb]
 """
 import argparse
 import collections
@@ -19,7 +19,7 @@ import json
 import os
 from statistics import mean
 
-ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")
+ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..")
 
 
 def load_jsonl(path):

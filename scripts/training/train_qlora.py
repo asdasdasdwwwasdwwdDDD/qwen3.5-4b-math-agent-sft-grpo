@@ -7,7 +7,7 @@ QLoRA(AdaLoRA) 微调 Qwen3.5-4B 增强智能体（工具调用）能力
 - 8GB 显存适配：bf16 + 梯度检查点 + 8bit AdamW + 分块交叉熵 + 冻结权重压回 bf16 +
   评估只算 loss —— 避免 Windows/WDDM 显存打满后换页到内存（换页会让每步从秒级变分钟级）
 用法:
-  python scripts/train_qlora.py --model models/Qwen3.5-4B --train data/train.jsonl --val data/val.jsonl --out outputs/qlora-adapter
+  python -m scripts.training.train_qlora --model models/Qwen3.5-4B --train data/tora_sft/train.jsonl --val data/tora_sft/val.jsonl --out outputs/qlora-tora
 """
 import argparse
 import atexit
@@ -180,12 +180,9 @@ class AgentTrajectoryDataset(Dataset):
         （整体渲染与前缀渲染在 BPE 边界可能有一个 token 的合并差异，
         取公共前缀可保证 mask 永不越过边界错位。）"""
         tok = self.tok
-        # 工具定义可选：老智能体数据带 tools 字段（渲染进 system 提示）；
-        # ToRA 数学链路数据无工具，直接按纯对话渲染
-        if sample.get("tools"):
-            tools = [TOOL_DEFS[t] for t in sample["tools"]]
-        else:
-            tools = None
+        # 本项目只保留数学轨迹链路：ToRA 数据无 tools 字段，恒按纯对话渲染
+        # （apply_chat_template 的 tools 参数传 None 即可）
+        tools = None
         msgs = sample["messages"]
 
         full_ids = tok.apply_chat_template(msgs, tools=tools, tokenize=True,
@@ -243,12 +240,7 @@ def make_collator(pad_id):
     return collate
 
 
-# 工具定义由数据生成脚本统一维护；训练时从 build_dataset.py 导入
-sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "data"))
-from build_dataset import TOOL_DEFS  # noqa: E402
-
-
-LOCK_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "outputs", ".train.lock")
+LOCK_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "outputs", ".train.lock")
 
 
 def acquire_lock():
@@ -313,7 +305,7 @@ def main():
                     choices=["adamw_8bit", "paged_adamw_8bit", "adamw_torch"],
                     help="8bit AdamW；不要用 paged 版：Qwen3.5 的词表是 248k，"
                          "logits/交叉熵的瞬时显存把 8GB 卡顶满，paged 优化器会把状态页"
-                         "在 CPU/GPU 之间来回搬运（GPU 100% 占用但只有 30W，每步几分钟）")
+                         "在 CPU/GPU 之间来回搬运（GPU 100%% 占用但只有 30W，每步几分钟）")
     ap.add_argument("--seed", type=int, default=42)
     args = ap.parse_args()
     acquire_lock()

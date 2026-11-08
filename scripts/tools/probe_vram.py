@@ -5,17 +5,16 @@
 """
 import argparse
 import os
-import sys
 
 os.environ.setdefault("PYTORCH_CUDA_ALLOC_CONF", "garbage_collection_threshold:0.6")
 
 import torch
 
-sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from transformers import AutoTokenizer, BitsAndBytesConfig
 from transformers.models.qwen3_5.modeling_qwen3_5 import Qwen3_5ForConditionalGeneration
 from peft import AdaLoraConfig, get_peft_model, prepare_model_for_kbit_training
-from train_qlora import TARGET_MODULES, drop_vision_tower, shrink_frozen_fp32, make_chunked_ce_loss
+from scripts.training.train_qlora import (TARGET_MODULES, drop_vision_tower,
+                                          shrink_frozen_fp32, make_chunked_ce_loss)
 
 
 def main():

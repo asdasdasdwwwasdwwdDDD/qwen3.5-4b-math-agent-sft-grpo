@@ -1,17 +1,15 @@
 # -*- coding: utf-8 -*-
 """math_env.rollout 离线集成测试：用 mock 模型按剧本吐 assistant 文本，
-验证多轮消息流（代码→受限执行→tool 回填→终答）、模板渲染与打分。不需要 GPU。"""
+验证多轮消息流（代码→受限执行→tool 回填→终答）、模板渲染与打分。不需要 GPU。
+用法（仓库根运行）: python -m scripts.tests.test_math_rollout"""
 import json
-import os
-import sys
 from types import SimpleNamespace
 
-sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import torch
 from transformers import AutoTokenizer
 
-from agent_env import render_ids
-from math_env import MathEnv, rollout, score_trajectory
+from scripts.envs.math_env import (MathEnv, render_ids, rollout,
+                                   score_trajectory)
 
 
 class MockModel:

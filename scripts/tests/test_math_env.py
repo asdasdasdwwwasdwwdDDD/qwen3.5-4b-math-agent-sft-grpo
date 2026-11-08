@@ -1,11 +1,8 @@
 # -*- coding: utf-8 -*-
-"""math_env 纯函数自测：受限执行 / boxed 提取 / 答案等价 / 代码块提取。"""
-import sys
-import os
-
-sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from math_env import (run_python_code, extract_boxed, normalize_answer,
-                      answers_equal, extract_last_python_block)
+"""math_env 纯函数自测：受限执行 / boxed 提取 / 答案等价 / 代码块提取。
+用法（仓库根运行）: python -m scripts.tests.test_math_env"""
+from scripts.envs.math_env import (run_python_code, extract_boxed, normalize_answer,
+                                   answers_equal, extract_last_python_block)
 
 # ---- run_python_code ----
 out, ok = run_python_code("from sympy import Rational\nprint(Rational(4,5)+Rational(1,5))")

@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 """数学智能体闭环环境（ToRA 链路）：题目 → 写 Python → 受限执行 → 回填输出 → 最终 boxed 作答。
 
-与 agent_env.py 同构的接口（鸭子类型），供 train_grpo.py --env math / eval_math.py 共用：
+本项目唯一的闭环环境，供 train_grpo.py（整条链路 GRPO）与 eval_math.py（闭环评测）共用，
+两者走同一套接口（鸭子类型）：
   MathEnv(task) / rollout(model, tok, env, ...) / score_trajectory(ro, env) /
   format_trajectory(env, ro) / load_tasks(path, tok, max_prompt_len)
 
@@ -11,8 +12,7 @@
 中间 assistant 轮才能带上与生成提示一致的空 <think> 块——详见 convert_tora.py 注释）。
 
 安全说明：这里真实执行模型生成的 Python（隔离子进程 + 超时 + 截断），因为"代码解释器"
-就是本链路的训练目标；这与旧 agent_env 沙箱中 run_python 工具"一律拒绝执行"的安全红线
-是两套环境（旧沙箱模拟的是天气/订票等假工具，无执行必要）。残余风险为 TIR 训练通行做法。
+就是本链路的训练目标，这是用户指定的方向；残余风险为 TIR 训练通行做法。
 """
 import json
 import os
@@ -24,8 +24,38 @@ import tempfile
 
 import torch
 
-sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from agent_env import generate_once, render_ids  # noqa: E402  复用同一套生成/渲染原语
+# 与 training/train_qlora.py 的 CHAT_TMPL_KW 一致；此处本地定义而不是 import，
+# 避免把训练栈（transformers/bnb/peft）拖进推理路径
+CHAT_TMPL_KW = {"enable_thinking": False}
+
+
+def render_ids(tok, msgs, tools):
+    """消息列表 → 生成提示 token 序列（非思考模式；return_dict=False 拿纯 id 列表）。"""
+    return tok.apply_chat_template(msgs, tools=tools, tokenize=True,
+                                   add_generation_prompt=True, return_dict=False,
+                                   **CHAT_TMPL_KW)
+
+
+@torch.no_grad()
+def generate_once(model, tok, enc, max_new_tokens, temperature, top_p, do_sample, grad_ckpt):
+    """生成期间临时切到推理模式（采样必须开 kv cache / 关梯度检查点），结束恢复。"""
+    was_training = model.training
+    model.eval()
+    model.gradient_checkpointing_disable()
+    model.config.use_cache = True
+    try:
+        return model.generate(
+            enc, max_new_tokens=max_new_tokens, do_sample=do_sample,
+            temperature=temperature, top_p=top_p,
+            pad_token_id=tok.pad_token_id, eos_token_id=tok.eos_token_id, use_cache=True)
+    finally:
+        model.config.use_cache = False
+        if was_training:
+            model.train()
+            if grad_ckpt:
+                model.gradient_checkpointing_enable(
+                    gradient_checkpointing_kwargs={"use_reentrant": False})
+
 
 # 成对竖线的特殊 token 一律拼接构造（与 train_grpo.py 同理，防工具序列化截断）
 PIPE = chr(124)

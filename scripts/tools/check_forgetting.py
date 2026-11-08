@@ -5,7 +5,7 @@
 3) 过度特化探测：prompt 中不含任何工具定义时问天气，统计模型是否仍输出工具调用标记
 
 用法:
-  python scripts/check_forgetting.py --model models/Qwen3.5-4B \
+  python -m scripts.tools.check_forgetting --model models/Qwen3.5-4B \
       --adapter outputs/qlora-adapter/final
 """
 import argparse

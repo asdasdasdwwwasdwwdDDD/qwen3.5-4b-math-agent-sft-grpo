@@ -1,17 +1,17 @@
 # -*- coding: utf-8 -*-
-"""训练中途看趋势：读 logs/grpo_log.jsonl（每步）与 logs/grpo_trajs.jsonl（每组明细），
+"""训练中途看趋势：读 logs/grpo_log_math.jsonl（每步）与 logs/grpo_trajs_math.jsonl（每组明细），
 输出窗口均值、前后对比、健康检查与任务类型拆分，回答一个问题——"模型在有效学习吗？"
 
 单步日志只有 1 个任务 × G 个样本，噪声极大，必须看窗口/前后段的均值方向。
 判读要点：
-  - success / coverage / call_f1 的窗口均值逐窗上移（至少看 20-30 步）；
+  - success_rate 的窗口均值逐窗上移（至少看 20-30 步）；
   - kl 均值应远小于 kl_clip=0.05 且不为恒 0（恒 0 = 一直没更新过）；
   - 空步率（gnorm=0，组内全同分）不要长期 >1/3；
-  - 分类别看：chained / error_retry 这类多步任务涨了，才叫"整条链路在学"。
+  - 分难度层看：高难度层的 success 涨了，才叫"整条链路在学"。
 
 用法（在仓库根目录）:
-  python scripts/grpo_trend.py
-  python scripts/grpo_trend.py --window 20 --max-steps 100
+  python -m scripts.tools.grpo_trend
+  python -m scripts.tools.grpo_trend --window 20 --max-steps 100
 """
 import argparse
 import json
