@@ -5,6 +5,14 @@
 """
 import argparse
 import os
+import sys
+
+# 兼容两种运行方式：除文档用法 `python -m scripts.tools.probe_vram` 外，直接以文件
+# 方式运行（如 VS Code「运行 Python 文件」）时 sys.path 里没有仓库根，包导入会
+# ModuleNotFoundError；此处把仓库根补进 sys.path（前者场景下该路径已存在，无副作用）
+_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
+if _ROOT not in sys.path:
+    sys.path.insert(0, _ROOT)
 
 os.environ.setdefault("PYTORCH_CUDA_ALLOC_CONF", "garbage_collection_threshold:0.6")
 
@@ -56,7 +64,7 @@ def main():
 
     # 最坏 batch：优先用真实数据最长样本（真实标签分布，约 70% 被 mask）；
     # 未给 --data 时用随机满标签批（比真实数据更狠——全算 loss）
-    from train_qlora import AgentTrajectoryDataset, make_collator
+    from scripts.training.train_qlora import AgentTrajectoryDataset, make_collator
     if args.data:
         ds = AgentTrajectoryDataset(args.data, tok, args.max_len)
         cache = sorted(ds._cache, key=lambda x: len(x["input_ids"]), reverse=True)

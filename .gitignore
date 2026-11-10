@@ -2,9 +2,11 @@
 __pycache__/
 *.pyc
 
-# 本地编辑器/agent 会话文件
+# 本地编辑器/agent 会话文件（PyCharm 的 .idea 曾误入库，2026-11-10 清理）
 .zcode/
 .vscode/
+.idea/
+.workbuddy/
 
 # 训练 checkpoint 权重不入 git：
 # - 单文件 58~124MB，grpo-tora/best 124MB 超 GitHub 单文件 100MB 硬上限
@@ -20,6 +22,18 @@ optimizer.pt
 # 合并后的整模型（8.5GB，本地可再生）与基座 junction（本地才有）
 outputs/merged*/
 models/
+
+# 运行产物：任意 run 的 adapter/事件/审计目录（评测汇总 outputs/eval/*.json 仍入库）
+outputs/*/best/
+outputs/*/final/
+outputs/*/checkpoint-*/
+outputs/*/runs/
+outputs/*/runs_derived/
+outputs/*/logs/
+
+# TensorBoard 事件是二进制可再生产物，不入库（历史上误入的 3 个已清理）
+events.out.tfevents.*
+logs/tensorboard*.log
 
 # 单实例训练锁
 outputs/.train.lock

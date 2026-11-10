@@ -18,7 +18,7 @@ Qwen3.5-4B 智能体微调：QLoRA(AdaLoRA) SFT + 整条链路 GRPO。全部流�
 - `scripts/` — **包结构**（各子包有 `__init__.py`，跨模块 import 一律 `from scripts.xxx import`）：
   - `envs/math_env.py` — 唯一闭环环境（受限 Python 执行 + rollout + boxed 打分 + `render_ids`/`generate_once` 生成原语），被训练与评测共用
   - `training/train_qlora.py` — SFT 主脚本（同时是工具函数枢纽：CHAT_TMPL_KW/TARGET_MODULES/训练锁/摘视觉塔/冻结权重压缩/公共前缀 loss mask）
-  - `training/train_grpo.py` — 整条链路 GRPO（只有 trajectory 模式；PPO 裁剪 + KL）
+  - `training/train_grpo.py` — 整条链路 GRPO（只有 trajectory 模式；μ 轮重放的 PPO 裁剪 + KL，`--epochs` 默认 1=封存口径；主干拆为 generate_scored_group/group_advantages/train_step_update/log_step 四个函数）
   - `training/merge_lora.py` — adapter 合并
   - `evaluation/eval_math.py` — 闭环做题评测（内联 4bit 加载）
   - `tests/` — 离线自测（不占 GPU）：`test_math_env.py`（纯函数）、`test_math_rollout.py`（mock 模型走多轮）
@@ -60,6 +60,10 @@ python -m scripts.evaluation.eval_math --model outputs/merged-tora --tag sft
 # 整条链路 GRPO（P=2×G=4，~3-4 分钟/步；训练中每 20 步 greedy 闭环评估存 best）
 python -m scripts.training.train_grpo --model outputs/merged-tora \
     --out outputs/grpo-tora --max-steps 60 --num-generations 4 --save-steps 10
+# PPO μ=4 重放 + 首回合组批量采样（新口径：同批数据重放 4 遍，ratio 偏离 1、裁剪上岗；
+# 每训练步参数移动量 ≈×4，想保持总量可比可用 --max-steps 20。勿覆写封存的 grpo-tora，写新目录）
+python -m scripts.training.train_grpo --model outputs/merged-tora \
+    --out outputs/grpo-rerun --max-steps 60 --num-generations 4 --epochs 4 --gen-batch 4
 python -m scripts.evaluation.eval_math --model outputs/merged-tora --adapter outputs/grpo-tora/best --tag grpo
 cat outputs/eval/math_summary.md                                  # 三方对比表
 tensorboard --logdir outputs/qlora-tora                           # 或 outputs/grpo-tora
@@ -82,16 +86,16 @@ tensorboard --logdir outputs/qlora-tora                           # 或 outputs/
 - 3:1 混合注意力（24 层 GatedDeltaNet 线性注意力 + 8 层全注意力）；LoRA 目标模块按**带父前缀的 endswith** 匹配（12 类），前缀用于避免误命中视觉塔同名层。
 - 智能体轨迹全部走非思考模式（`enable_thinking=False`，即 `CHAT_TMPL_KW`；math_env 本地定义一份避免拖入训练栈）；解析必须 `skip_special_tokens=False`；`apply_chat_template` 必须传 `return_dict=False`。
 - **数学链路的模板约定（关键）**：执行结果必须以 `role="tool"` 回填（渲染成 `<tool_response>` 包裹的 user 轮）。Qwen3.5 模板只给"最后一条真实 user 消息之后"的 assistant 轮插 `<think>`：若用裸 user 轮回填 ```output，中间的 assistant 代码轮会被剥 think，与生成提示渲染分叉，公共前缀 mask 算法会把**代码轮整个 mask 掉**（只训终答不训代码）。ToRA 数据转换时踩过（2026-10-24 修复，`convert_tora.py` 有详注）。
-- `math_env.py` 被 `train_grpo.py` 与 `eval_math.py` 共用（同名同签名接口：`MathEnv`/`rollout`/`score_trajectory`/`format_trajectory`/`load_tasks`），改打分逻辑同时影响训练与评测口径。
+- `math_env.py` 被 `train_grpo.py` 与 `eval_math.py` 共用（同名同签名接口：`MathEnv`/`rollout`/`rollout_group`/`score_trajectory`/`format_trajectory`/`load_tasks`），改打分逻辑同时影响训练与评测口径。
 - **安全线**：`math_env.run_python_code` **真实执行**模型生成的 Python（隔离子进程 `-I` + 临时目录 + 超时 20s + 输出截断）——代码解释器是数学链路的训练目标，这是用户指定的方向，残余风险为 TIR 训练通行做法。
 - Loss mask 只对 assistant 生成内容计算（公共前缀对齐算法，`train_qlora.py::AgentTrajectoryDataset._encode`；数学数据无 tools 字段，恒按纯对话渲染）。
 
 ## 已知坑
 
 - peft 0.19.1 AdaLoRA 收尾会因 `reset_ipt()` 抛 KeyError，训练脚本已捕获并沿用上次秩分配——勿删该 try/except；AdaLoRA 要求 `tinit < total_step - tfinal`，`--max-steps` 至少 ~25。
-- GRPO 日志里 `loss`/`kl` 恒为 0 是正常现象（组内优势之和为 0）；学习信号看 `grad_norm` 与 `success_rate`，判断趋势用 20-30 步窗口，别看相邻两步。
+- GRPO 日志里 `loss`/`kl` 恒为 0 是正常现象（组内优势之和为 0；`--epochs` 默认 1 时 ratio 恒 1）；学习信号看 `grad_norm` 与 `success_rate`，判断趋势用 20-30 步窗口，别看相邻两步。μ>1 时 ratio 偏离 1，loss 不再恒 0，`clip_tokens` 非零即裁剪在工作。
 - 数学链路同理鼓励"报错→读 Traceback→修正"（执行错误文本会回填给模型）。
-- 闭环评估/GRPO 轨迹逐条生成（回合间长度不同无法批处理），数学链路 ~20-30s/条属正常。
+- 闭环评估/GRPO 轨迹的**第 2 回合起**逐条生成（回合间长度不同无法批处理）；首回合可批量（`--gen-batch`，同题 G 条 prompt 相同），默认 1=逐条封存口径。数学链路 ~20-30s/条属正常。
 - GRPO 的环境对象必须**每条 rollout 新建一个**（`MathEnv` 同理，2026-10-24 修复，勿回退）。
 - **bash 传参层会折叠反斜杠**：经 `bash -c "python -c '...\\boxed...'"` 或（个别情况下）heredoc 传 python 代码时 `\\` 会变 `\`，导致正则/字符串悄悄变形——复杂分析一律写成 .py 文件再运行，别用内联 python。
 - 正则匹配字面 `\boxed` 必须写 `r"\\boxed"`：单个 `\b` 是词边界断言，在 `\boxed` 文本里永不匹配（math_env 踩过）。

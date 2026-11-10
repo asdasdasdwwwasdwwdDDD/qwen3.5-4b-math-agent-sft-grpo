@@ -18,7 +18,7 @@ GRPO 的收益集中在高难度层（L4 4.5%→18.2%、L5 11.5%→23.1%）与�
 ## 方案
 
 - **SFT**：官方 ToRA 轨迹（题目 → ```python → 真实执行结果 → \boxed 终答）1901 条，QLoRA(AdaLoRA init_r=16→8) + NF4 4bit + 分块交叉熵，assistant 区间 loss mask（公共前缀对齐算法）；6000 步计划，按 eval_loss 谷底 + 30 题生成评测双指标选定 checkpoint-2000。
-- **GRPO**：从 merged 模型出发，每任务采样 G=4 条完整轨迹成组，reward = 0.8×答案正确 + 0.1×boxed 格式 + 0.1×执行无误，组内归一化优势 + PPO 裁剪 + KL 锚定（参考策略 = 关掉 LoRA，零额外显存）；60 步课程化（难度层轮转交织），训练中每 20 步 greedy 闭环评估存 best。
+- **GRPO**：从 merged 模型出发，每任务采样 G=4 条完整轨迹成组，reward = 0.8×答案正确 + 0.1×boxed 格式 + 0.1×执行无误，组内归一化优势 + PPO 裁剪 + KL 锚定（参考策略 = 关掉 LoRA，零额外显存）；60 步课程化（难度层轮转交织），训练中每 20 步 greedy 闭环评估存 best。`--epochs`（μ）控制同批数据重放遍数：默认 1=封存口径（ratio 恒 1，裁剪为保险丝），`--epochs 4` 即 PPO μ=4（第 2 遍起 ratio 偏离 1、裁剪真正工作，每训练步移动量 ≈×4）；`--gen-batch` 支持首回合组内批量采样（同题 prompt 相同，提效不加批）。
 - **环境与评测同一把尺子**：`scripts/envs/math_env.py` 同时被训练与评测调用（受限执行：隔离子进程 `-I` + 临时目录 + 超时 20s + 输出截断；执行报错文本回填给模型，鼓励「报错→读 Traceback→修正」）。
 
 ## 硬件与训练配置
@@ -47,7 +47,7 @@ scripts/
   envs/math_env.py       # 数学闭环环境：受限执行 + rollout + boxed 打分（训练/评测共用）
   training/
     train_qlora.py       # QLoRA(AdaLoRA) SFT（含 loss mask、8GB 显存适配全套）
-    train_grpo.py        # 整条链路 GRPO（组内优势 + PPO 裁剪 + KL）
+    train_grpo.py        # 整条链路 GRPO（组内优势 + μ 轮重放的 PPO 裁剪 + KL）
     merge_lora.py        # adapter 合并回底座
   evaluation/eval_math.py # 闭环做题评测（100 题 boxed 正确率）
   tests/                 # 离线自测（不占 GPU）：纯函数 + mock rollout
@@ -82,6 +82,7 @@ python -m scripts.evaluation.eval_math --model outputs/merged-tora --tag sft
 # 4. 整条链路 GRPO（P=2×G=4，~3-4 分钟/步；每 20 步 greedy 闭环评估存 best）
 python -m scripts.training.train_grpo --model outputs/merged-tora \
     --out outputs/grpo-tora --max-steps 60 --num-generations 4 --save-steps 10
+# （可选）PPO μ=4 重放 + 首回合批量采样：--epochs 4 --gen-batch 4，写新目录勿覆写封存结果
 python -m scripts.evaluation.eval_math --model outputs/merged-tora \
     --adapter outputs/grpo-tora/best --tag grpo
 cat outputs/eval/math_summary.md                          # 三方对比表

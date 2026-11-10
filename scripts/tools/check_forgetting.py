@@ -6,7 +6,7 @@
 
 用法:
   python -m scripts.tools.check_forgetting --model models/Qwen3.5-4B \
-      --adapter outputs/qlora-adapter/final
+      --adapter outputs/qlora-tora/checkpoint-2000
 """
 import argparse
 import json

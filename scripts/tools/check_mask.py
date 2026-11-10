@@ -3,14 +3,24 @@
 用法（仓库根运行）: python -m scripts.tools.check_mask [--data data/tora_sft/val.jsonl]"""
 import json
 import argparse
+import os
+import sys
 
 from transformers import AutoTokenizer
+
+# 兼容两种运行方式：除文档用法 `python -m scripts.tools.check_mask` 外，直接以文件
+# 方式运行（如 VS Code「运行 Python 文件」）时 sys.path 里没有仓库根，包导入会
+# ModuleNotFoundError；此处把仓库根补进 sys.path（前者场景下该路径已存在，无副作用）
+_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
+if _ROOT not in sys.path:
+    sys.path.insert(0, _ROOT)
+
 from scripts.training.train_qlora import AgentTrajectoryDataset
 
 MODEL = "models/Qwen3.5-4B"
 
 ap = argparse.ArgumentParser()
-ap.add_argument("--data", type=str, default="data/val.jsonl")
+ap.add_argument("--data", type=str, default="data/tora_sft/val.jsonl")
 ap.add_argument("--n", type=int, default=3)
 ap.add_argument("--max-len", type=int, default=2048)
 args = ap.parse_args()

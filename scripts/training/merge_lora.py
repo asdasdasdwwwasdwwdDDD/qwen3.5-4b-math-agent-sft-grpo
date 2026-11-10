@@ -3,7 +3,7 @@
 将训练好的 LoRA adapter 合并回底座模型，输出可独立部署的完整模型
 用法:
   python -m scripts.training.merge_lora --model models/Qwen3.5-4B \
-      --adapter outputs/qlora-adapter/final --out outputs/merged
+      --adapter outputs/qlora-tora/checkpoint-2000 --out outputs/merged-tora
 """
 import argparse
 import os
@@ -17,8 +17,8 @@ from peft import PeftModel
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--model", type=str, default="models/Qwen3.5-4B")
-    ap.add_argument("--adapter", type=str, default="outputs/qlora-adapter/final")
-    ap.add_argument("--out", type=str, default="outputs/merged")
+    ap.add_argument("--adapter", type=str, default="outputs/qlora-tora/checkpoint-2000")
+    ap.add_argument("--out", type=str, default="outputs/merged-tora")
     args = ap.parse_args()
 
     print("加载底座模型（bf16, CPU）...")

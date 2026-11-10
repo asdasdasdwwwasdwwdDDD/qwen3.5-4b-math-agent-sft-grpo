@@ -1,6 +1,15 @@
 # -*- coding: utf-8 -*-
 """math_env 纯函数自测：受限执行 / boxed 提取 / 答案等价 / 代码块提取。
-用法（仓库根运行）: python -m scripts.tests.test_math_env"""
+用法（仓库根运行）: python -m scripts.tests.test_math_env 或 python scripts/tests/test_math_env.py"""
+import os
+import sys
+
+# 兼容两种运行方式：`python -m` 之外直接以文件方式运行时 sys.path 里没有仓库根，
+# 包导入会 ModuleNotFoundError；补进仓库根后两种方式都可用（前者该路径已存在，无副作用）
+_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
+if _ROOT not in sys.path:
+    sys.path.insert(0, _ROOT)
+
 from scripts.envs.math_env import (run_python_code, extract_boxed, normalize_answer,
                                    answers_equal, extract_last_python_block)
 

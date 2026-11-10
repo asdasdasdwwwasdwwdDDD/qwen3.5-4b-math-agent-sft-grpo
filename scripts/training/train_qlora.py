@@ -280,9 +280,9 @@ def acquire_lock():
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--model", type=str, default="models/Qwen3.5-4B")
-    ap.add_argument("--train", type=str, default="data/train.jsonl")
-    ap.add_argument("--val", type=str, default="data/val.jsonl")
-    ap.add_argument("--out", type=str, default="outputs/qlora-adapter")
+    ap.add_argument("--train", type=str, default="data/tora_sft/train.jsonl")
+    ap.add_argument("--val", type=str, default="data/tora_sft/val.jsonl")
+    ap.add_argument("--out", type=str, default="outputs/qlora-tora")
     ap.add_argument("--max-len", type=int, default=1024)
     ap.add_argument("--max-steps", type=int, default=216, help="总训练步数（按步驱动训练）")
     ap.add_argument("--logging-steps", type=int, default=1, help="按步记录 loss")
