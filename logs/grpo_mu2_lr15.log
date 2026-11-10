@@ -1,0 +1,49 @@
+加载 NF4 量化 merged 模型 ...
+[transformers] The fast path is not available because one of the required library is not installed. Falling back to torch implementation. To install follow https://github.com/fla-org/flash-linear-attention#installation and https://github.com/Dao-AILab/causal-conv1d
+Loading weights:   0%|          | 0/723 [00:00<?, ?it/s]Loading weights:   0%|          | 1/723 [00:00<10:56,  1.10it/s]Loading weights:   1%|          | 6/723 [00:01<01:41,  7.08it/s]Loading weights:   2%|▏         | 13/723 [00:01<00:45, 15.73it/s]Loading weights:   3%|▎         | 25/723 [00:01<00:21, 33.16it/s]Loading weights:   4%|▍         | 32/723 [00:01<00:17, 39.76it/s]Loading weights:   6%|▌         | 40/723 [00:01<00:14, 48.37it/s]Loading weights:   7%|▋         | 48/723 [00:01<00:14, 47.27it/s]Loading weights:   9%|▊         | 62/723 [00:01<00:09, 66.50it/s]Loading weights:  10%|▉         | 71/723 [00:01<00:09, 67.86it/s]Loading weights:  11%|█         | 79/723 [00:02<00:09, 68.92it/s]Loading weights:  12%|█▏        | 89/723 [00:02<00:08, 74.10it/s]Loading weights:  14%|█▎        | 98/723 [00:02<00:09, 63.97it/s]Loading weights:  15%|█▍        | 106/723 [00:02<00:09, 64.31it/s]Loading weights:  16%|█▋        | 118/723 [00:02<00:07, 76.65it/s]Loading weights:  18%|█▊        | 128/723 [00:02<00:07, 81.92it/s]Loading weights:  19%|█▉        | 137/723 [00:02<00:07, 76.87it/s]Loading weights:  20%|██        | 146/723 [00:02<00:07, 77.73it/s]Loading weights:  21%|██▏       | 155/723 [00:03<00:08, 66.87it/s]Loading weights:  23%|██▎       | 167/723 [00:03<00:07, 77.87it/s]Loading weights:  24%|██▍       | 176/723 [00:03<00:07, 73.77it/s]Loading weights:  26%|██▌       | 185/723 [00:03<00:06, 77.65it/s]Loading weights:  27%|██▋       | 195/723 [00:03<00:06, 81.63it/s]Loading weights:  28%|██▊       | 204/723 [00:03<00:07, 69.70it/s]Loading weights:  29%|██▉       | 212/723 [00:03<00:07, 68.74it/s]Loading weights:  31%|███       | 224/723 [00:03<00:06, 80.40it/s]Loading weights:  32%|███▏      | 234/723 [00:04<00:05, 84.36it/s]Loading weights:  34%|███▎      | 243/723 [00:04<00:06, 75.74it/s]Loading weights:  35%|███▍      | 252/723 [00:04<00:06, 77.95it/s]Loading weights:  36%|███▌      | 261/723 [00:04<00:07, 65.68it/s]Loading weights:  38%|███▊      | 274/723 [00:04<00:05, 77.30it/s]Loading weights:  39%|███▉      | 283/723 [00:04<00:06, 69.51it/s]Loading weights:  40%|████      | 292/723 [00:04<00:06, 69.72it/s]Loading weights:  42%|████▏     | 305/723 [00:05<00:05, 78.53it/s]Loading weights:  43%|████▎     | 314/723 [00:05<00:05, 70.05it/s]Loading weights:  45%|████▌     | 327/723 [00:05<00:04, 80.87it/s]Loading weights:  46%|████▋     | 336/723 [00:05<00:04, 78.89it/s]Loading weights:  48%|████▊     | 345/723 [00:05<00:05, 75.46it/s]Loading weights:  50%|████▉     | 358/723 [00:05<00:04, 83.05it/s]Loading weights:  51%|█████     | 367/723 [00:05<00:04, 72.21it/s]Loading weights:  53%|█████▎    | 380/723 [00:05<00:04, 85.40it/s]Loading weights:  54%|█████▍    | 390/723 [00:06<00:03, 84.75it/s]Loading weights:  55%|█████▌    | 399/723 [00:06<00:04, 67.07it/s]Loading weights:  57%|█████▋    | 411/723 [00:06<00:03, 78.35it/s]Loading weights:  58%|█████▊    | 420/723 [00:06<00:04, 64.12it/s]Loading weights:  59%|█████▉    | 428/723 [00:06<00:04, 66.20it/s]Loading weights:  61%|██████    | 442/723 [00:06<00:03, 81.88it/s]Loading weights:  63%|██████▎   | 454/723 [00:06<00:02, 90.83it/s]Loading weights:  64%|██████▍   | 466/723 [00:07<00:02, 96.34it/s]Loading weights:  66%|██████▋   | 480/723 [00:07<00:02, 101.22it/s]Loading weights:  73%|███████▎  | 530/723 [00:07<00:00, 202.14it/s]Loading weights:  80%|███████▉  | 578/723 [00:07<00:00, 275.42it/s]Loading weights:  87%|████████▋ | 626/723 [00:07<00:00, 329.61it/s]Loading weights:  93%|█████████▎| 674/723 [00:07<00:00, 367.06it/s]Loading weights:  99%|█████████▉| 716/723 [00:07<00:00, 372.09it/s]Loading weights: 100%|██████████| 723/723 [00:07<00:00, 93.34it/s] 
+已移除视觉塔 | 当前显存 2.90GB
+冻结 fp32 权重压回 bf16: 178 个张量 | 当前显存 2.90GB
+trainable params: 32,464,896 || all params: 4,238,216,192 || trainable%: 0.7660
+可用任务 3196（初始 prompt <= 600 tokens）
+重放遍数 μ=2（>1 时同批数据重放多遍，PPO 裁剪上岗）| 首回合批量 gen_batch=4
+训练中闭环评估: 16 个任务（data/tora_sft/eval_set.jsonl），每 10 步一次
+[step   1/30] reward=0.500 success=50% turns=2.0 exec_err=0% kl=0.0000 loss=0.0000 gnorm=0.00 lr=0.00e+00 mem=5.66GB (62.8s)
+[step   2/30] reward=0.300 success=25% turns=2.38 exec_err=36% kl=0.0000 loss=-0.2780 gnorm=6.58 lr=3.00e-06 mem=6.39GB (281.8s)
+[step   3/30] reward=0.525 success=50% turns=2.75 exec_err=57% kl=0.0001 loss=-0.0309 gnorm=4.63 lr=6.00e-06 mem=6.39GB (314.0s)
+[step   4/30] reward=0.569 success=50% turns=2.12 exec_err=22% kl=0.0001 loss=-0.1814 gnorm=7.91 lr=9.00e-06 mem=6.39GB (94.8s)
+[step   5/30] reward=0.119 success=0% turns=2.25 exec_err=50% kl=0.0002 loss=0.1745 gnorm=3.04 lr=1.20e-05 mem=6.39GB (228.8s)
+[step   6/30] reward=0.869 success=88% turns=2.38 exec_err=36% kl=0.0001 loss=-0.1544 gnorm=4.74 lr=1.50e-05 mem=6.39GB (211.7s)
+[step   7/30] reward=0.650 success=62% turns=2.12 exec_err=22% kl=0.0001 loss=-0.1204 gnorm=1.75 lr=1.49e-05 mem=6.39GB (132.1s)
+[step   8/30] reward=0.212 success=12% turns=2.88 exec_err=73% kl=0.0004 loss=0.0525 gnorm=4.48 lr=1.48e-05 mem=6.77GB (512.1s)
+[step   9/30] reward=0.125 success=0% turns=2.25 exec_err=36% kl=0.0002 loss=-0.1435 gnorm=3.34 lr=1.45e-05 mem=6.77GB (263.0s)
+  [eval@ 10] success=0.375 reward=0.434
+  当前评估最优，已保存 -> outputs/grpo-mu2-lr15\best
+[step  10/30] reward=0.294 success=25% turns=2.12 exec_err=33% kl=0.0013 loss=-0.1910 gnorm=8.36 lr=1.41e-05 mem=6.77GB (583.8s)
+  已保存 outputs/grpo-mu2-lr15\checkpoint-10
+[step  11/30] reward=0.506 success=50% turns=2.25 exec_err=50% kl=0.0011 loss=-0.1303 gnorm=10.09 lr=1.36e-05 mem=6.77GB (223.1s)
+[step  12/30] reward=0.575 success=50% turns=2.0 exec_err=0% kl=0.0000 loss=0.0000 gnorm=0.00 lr=1.36e-05 mem=6.77GB (71.2s)
+[step  13/30] reward=0.738 success=75% turns=2.0 exec_err=25% kl=0.0039 loss=0.0006 gnorm=4.03 lr=1.30e-05 mem=6.77GB (95.8s)
+[step  14/30] reward=0.537 success=50% turns=2.0 exec_err=50% kl=0.0025 loss=0.3756 gnorm=4.79 lr=1.23e-05 mem=6.77GB (130.0s)
+[step  15/30] reward=0.138 success=0% turns=2.0 exec_err=25% kl=0.0046 loss=-0.0001 gnorm=6.50 lr=1.15e-05 mem=6.77GB (98.1s)
+[step  16/30] reward=0.831 success=88% turns=2.0 exec_err=12% kl=0.0055 loss=-0.2240 gnorm=9.80 lr=1.07e-05 mem=6.77GB (54.7s)
+[step  17/30] reward=0.656 success=62% turns=2.0 exec_err=50% kl=0.0083 loss=0.4499 gnorm=4.41 lr=9.82e-06 mem=6.77GB (60.7s)
+[step  18/30] reward=0.575 success=50% turns=2.0 exec_err=0% kl=0.0000 loss=0.0000 gnorm=0.00 lr=9.82e-06 mem=6.77GB (68.6s)
+[step  19/30] reward=0.325 success=25% turns=2.0 exec_err=38% kl=0.0038 loss=-0.1177 gnorm=10.92 lr=8.91e-06 mem=6.77GB (127.9s)
+  [eval@ 20] success=0.500 reward=0.544
+  当前评估最优，已保存 -> outputs/grpo-mu2-lr15\best
+[step  20/30] reward=0.463 success=38% turns=2.0 exec_err=50% kl=0.0028 loss=-0.0185 gnorm=8.23 lr=7.97e-06 mem=6.77GB (440.4s)
+  已保存 outputs/grpo-mu2-lr15\checkpoint-20
+[step  21/30] reward=0.994 success=100% turns=2.0 exec_err=12% kl=0.0027 loss=-0.2464 gnorm=25.45 lr=7.03e-06 mem=6.77GB (46.1s)
+[step  22/30] reward=0.144 success=0% turns=2.0 exec_err=12% kl=0.0033 loss=-0.2294 gnorm=9.31 lr=6.10e-06 mem=6.77GB (76.6s)
+[step  23/30] reward=0.537 success=50% turns=2.0 exec_err=0% kl=0.0021 loss=-0.4400 gnorm=11.43 lr=5.18e-06 mem=6.77GB (85.5s)
+[step  24/30] reward=0.925 success=100% turns=2.0 exec_err=0% kl=0.0000 loss=0.0000 gnorm=0.00 lr=5.18e-06 mem=6.77GB (46.7s)
+[step  25/30] reward=0.125 success=0% turns=2.0 exec_err=50% kl=0.0000 loss=0.0000 gnorm=0.00 lr=5.18e-06 mem=6.77GB (94.8s)
+[step  26/30] reward=0.850 success=100% turns=2.0 exec_err=0% kl=0.0000 loss=0.0000 gnorm=0.00 lr=5.18e-06 mem=6.77GB (60.5s)
+[step  27/30] reward=0.569 success=50% turns=2.0 exec_err=12% kl=0.0021 loss=-0.2357 gnorm=8.57 lr=4.31e-06 mem=6.77GB (72.4s)
+[step  28/30] reward=0.444 success=38% turns=1.88 exec_err=14% kl=0.0018 loss=-0.2820 gnorm=13.12 lr=3.48e-06 mem=6.77GB (164.6s)
+[step  29/30] reward=0.575 success=50% turns=2.0 exec_err=0% kl=0.0000 loss=0.0000 gnorm=0.00 lr=3.48e-06 mem=6.77GB (98.8s)
+  [eval@ 30] success=0.500 reward=0.541
+[step  30/30] reward=0.731 success=75% turns=2.0 exec_err=0% kl=0.0029 loss=-0.4442 gnorm=18.31 lr=2.72e-06 mem=6.77GB (566.0s)
+  已保存 outputs/grpo-mu2-lr15\checkpoint-30
+闭环评估最优: step 20 success=0.500 reward=0.544 -> outputs/grpo-mu2-lr15\best
+GRPO 完成 -> outputs/grpo-mu2-lr15\final
