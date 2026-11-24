@@ -53,6 +53,7 @@ data/
   split_grpo_pool.py     # grpo_pool → eval_set(100 持出) + grpo_train
   analyze_tora.py        # 转换前数据摸底
   tora_sft/              # 生成的数据：train(1901)/val(99)/grpo_train(3214)/eval_set(101)
+  grpo_v2/               # v2 数据（build_v2_sets.py 生成）：pool_train_v2(2914)/dev_v2(100)/eval_v2(80)/difficulty_v2.json
 scripts/
   envs/math_env.py       # 数学闭环环境：受限执行 + rollout + boxed 打分（训练/评测共用）
   training/
@@ -61,7 +62,7 @@ scripts/
     merge_lora.py        # adapter 合并回底座
   evaluation/eval_math.py # 闭环做题评测（100 题 boxed 正确率）
   tests/                 # 离线自测（不占 GPU）：纯函数 + mock rollout
-  tools/                 # 显存探测、mask 校验、趋势分析、报告、下模型、冒烟测试
+  tools/                 # 显存探测、mask 校验、趋势分析、报告、下模型、冒烟测试；v2 配套：build_v2_sets/train_resume/train_watchdog 等
 logs/                    # SFT/GRPO 训练日志 + 步级/轨迹审计 JSONL
 outputs/                 # 训练产物（checkpoint 权重不入库，见下）
 ```
@@ -127,3 +128,4 @@ cat outputs/eval/math_summary.md                          # 全部评测对比�
 - `AGENTS.md` — 面向开发/维护的工程约定：显存红线细节、模板坑、已知坑、代码约定
 - `ARCHIVE-INFO.txt` — 封存时点的成果与复现要点
 - `outputs/eval/math_summary.md` — 全部评测汇总
+- `outputs/eval/grpo_report.md` — GRPO v1/v2 训练对比报告

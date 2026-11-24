@@ -1,64 +1,78 @@
-# GRPO 对齐 · 前后对比报告
+# GRPO 训练报告：v1（60 步）vs v2 重训（200 步）
 
-## 1. GRPO 训练过程（整条链路 trajectory 模式）
+> 本报告 2026-11-24 手工重写为 **v1/v2 对比口径**（旧的单轮 v1 报告内容已并入对比）。
+> `scripts/tools/grpo_report.py` 只读 v1 日志、输出旧的单轮格式，**勿再运行它覆盖本文件**（AGENTS.md「grpo_report.py 与 v1/v2 对比报告」有同样警示）。
+> 逐项评测数字与 `outputs/eval/math_summary.md` 一致；步级明细在 `logs/grpo_log_math.jsonl`（v1）与 `logs/grpo_v2/grpo_log_math.jsonl`（v2）。
 
-- 步数: 60 | 平均 reward 前12步 0.584 → 后12步 0.646
-- 端到端成功率: 前12步 49% → 后12步 56% | 平均回合 2.2
-- KL(对 SFT 参考模型): 均值 0.0013 / 最大 0.0044（beta 锚定，偏离极小 → 通用能力不被破坏）
-- 显存峰值 6.75GB | 未出现 OOM/重启
+## 0. 口径先行：两把尺子，绝对值不能横比
 
-## 2. 整条链路明细样例（组内比较让模型自我优化）
+- v1 的尺子是 **eval_set 100 题**（v1 池切分的持出集），v2 的尺子是 **eval_v2 80 题**（v2 池切分的持出集）。两把尺子零重叠、难度构成不同（eval_v2 无 Level 1、以中段题为主），所以 **67.5% 与 44.0% 不能直接相减**。
+- 可比的是**各自尺子上相对出发点的提升**：
 
-- 任务 `math-test-4810`（MATH-Level 5），G=4 条轨迹:
+| | 尺子 | 出发点 | 训练后 | 提升 |
+|---|---|---|---|---|
+| v1 | eval_set 100 题 | SFT 37.0% | GRPO best 44.0% | **+7.0pp** |
+| v2 | eval_v2 80 题 | v2-base（同一 SFT 合并模型）45.0% | best@80 67.5% | **+22.5pp** |
 
-  轨迹0: reward=0.20 adv=+0.58 | 成功=False 预测=x - 2y + z = 0 真值=20x + 23y + 26z - 69 = 0 回合=2 执行 1 次（报错 0）
-    [题] Let line $L$ be the intersection of the planes $x + y + z - 6 = 0$ and $2x + 3y + 4z + 5 = 0.$  Find the equation of
-    [代码] from sympy import symbols, Eq, solve
-    
-    def equation_of_plane():
-        """Let line $L$ be the intersection of the planes $x + y + z - 6 = 0$ and $2x + 3y + 4z + 5 = 0.$  Find the equation
-      ⇐ x - 2*y + z
+- 同一个 merged-tora 在两把尺子上分别读 37.0% 与 45.0%——eval_v2 对 SFT 后的模型更"可做"，v2 绝对值普遍偏高主要是尺子差异，不是模型凭空变强。
 
-  轨迹1: reward=0.10 adv=-1.73 | 成功=False 预测=None 真值=20x + 23y + 26z - 69 = 0 回合=3 执行 3 次（报错 3）
-    [题] Let line $L$ be the intersection of the planes $x + y + z - 6 = 0$ and $2x + 3y + 4z + 5 = 0.$  Find the equation of
-    [代码] from sympy import symbols, Eq, solve
-    
-    def find_plane_equation():
-        """Let line $L$ be the intersection of the planes $x + y + z - 6 = 0$ and $2x + 3y + 4z + 5 = 0.$  Find the equation
-      ⇐ C:\Users\dyc\AppData\Local\Temp\tora_sbx_90xoey6c\solution.py:5: SyntaxWarning: invalid escape sequence '\['
+## 1. 配置对比
 
-  轨迹2: reward=0.20 adv=+0.58 | 成功=False 预测=3x + 2y + z - 6 = 0 真值=20x + 23y + 26z - 69 = 0 回合=2 执行 1 次（报错 0）
-    [题] Let line $L$ be the intersection of the planes $x + y + z - 6 = 0$ and $2x + 3y + 4z + 5 = 0.$  Find the equation of
-    [代码] from sympy import symbols, Eq, simplify
-    from sympy.solvers.inequalities import solve_univariate_inequality
-    from sympy.calculus.util import continuous_domain
-    
-    def plane_containing_line():
+| 项 | v1（封存 2026-10-24） | v2（2026-11 重训） |
+|---|---|---|
+| 起点 | `outputs/merged-tora`（同一 SFT 合并模型） | 同左 |
+| 任务池 | grpo_train 3214 题 | pool_train_v2 2914 题（probe 摸底筛 p∈[0.05,0.95]，只训有梯度信号的中段题） |
+| 抽题方式 | 课程化：难度层轮转交织 | 难度感知加权：按每题成功率估计抽题（冷却 40 步 / 同题≤3 次 / 全零组重抽 / 难度表每步回写） |
+| 组大小 G × 每步题数 P | 4 × 2 | 8 × 2 |
+| 步数 | 60 | 200 |
+| lr | 3e-5（脚本默认） | 1e-5 cosine |
+| KL β | 0.025 | 0.05 |
+| 温度 / reward | T=0.8；0.8×正确 + 0.1×boxed + 0.1×执行无误 | 同左 |
+| 训练中评估 | 每 20 步 greedy 闭环评估存 best（best=step-20） | 同左（40 题尺子；best=step-80） |
+| 速度 / 显存 | ~3-4 分钟/步，峰值 6.75GB | ~9.5 分钟/步，峰值 7.03GB |
 
-  轨迹3: reward=0.20 adv=+0.58 | 成功=False 预测=3x + 4y + 5z - 1 = 0 真值=20x + 23y + 26z - 69 = 0 回合=2 执行 1 次（报错 0）
-    [题] Let line $L$ be the intersection of the planes $x + y + z - 6 = 0$ and $2x + 3y + 4z + 5 = 0.$  Find the equation of
-    [代码] from sympy import symbols, Eq, simplify
-    
-    def plane_equation():
-        """Let line $L$ be the intersection of the planes $x + y + z - 6 = 0$ and $2x + 3y + 4z + 5 = 0.$  Find the equation
-      ⇐ 3*x + 4*y + 5*z - 1
+## 2. 训练动态对比
 
-## 3. 闭环评测对比（同一持出集，boxed 正确率）
+| 指标 | v1（60 步） | v2（200 步） |
+|---|---|---|
+| reward | 0.584 → 0.646（前/后 12 步） | 0.41 → 0.55（前/后 20 步） |
+| 训练池 success | 49% → 56% | 36% → 52% |
+| KL（对 SFT 参考） | 均值 0.0013 / 最大 0.0044 | 累计 0.41（均值 ~0.002/步，最大 0.0074） |
+| 执行报错率 | -（日志未记，见终评口径） | 26.8% → 23.3% |
+| 零梯度步 | - | 18%（组内全同分，正常） |
+| 平均回合 / 显存峰值 | 2.2 / 6.75GB | 2.1 / 7.03GB |
 
-| 指标 | math_grpo | math_sel-base | math_sel-ck1500 | math_sel-ck2000 | math_sel-ck2500 | math_sft |
-|---|---|---|---|---|---|---|
-| 总正确率 | 44.0% | 0.0% | 66.7% | 73.3% | 66.7% | 37.0% |
-| 平均回合 | 2.07 | 1.00 | 2.00 | 2.03 | 1.97 | 2.26 |
-| 执行报错率 | 24.3% | 0.0% | 3.3% | 9.7% | 3.4% | 37.7% |
-| 未终答率 | 0.0% | 0.0% | 0.0% | 0.0% | 0.0% | 6.0% |
+- v1 的日志 `logs/grpo_log_math.jsonl` 在封存后还追加了几段小实验（μ=2 / 分段实验）的记录；上表 v1 数字只取前 60 条（steps 1-60），与封存报告完全一致。
+- v2 的日志前 10 条是两次早夭尝试（steps 1-6 / 1-4），上表按 step 去重后的主跑（1-200）计算。
 
-分难度层正确率:
+v2 训练中 40 题尺子曲线：42.5 → 67.5 → 60 → **75.0（best@80）** → 后段 62.5–70 平台。训练中尺子读 0.750 的 best@80，在新鲜尺子上读 67.5%——赢者诅咒 ~7.5pp 被挤出，但泛化提升真实。
 
-| 难度层 | math_grpo | math_sel-base | math_sel-ck1500 | math_sel-ck2000 | math_sel-ck2500 | math_sft |
-|---|---|---|---|---|---|---|
-| Level 1 | 90.9% | 0.0% | 90.9% | 90.9% | 90.9% | 90.9% |
-| Level 2 | 50.0% | 0.0% | 52.6% | 63.2% | 52.6% | 55.0% |
-| Level 3 | 66.7% | - | - | - | - | 57.1% |
-| Level 4 | 18.2% | - | - | - | - | 4.5% |
-| Level 5 | 23.1% | - | - | - | - | 11.5% |
+## 3. 终评对比（各自持出尺子，boxed 正确率）
 
+### v1 · eval_set 100 题
+
+| 模型 | 总正确率 | L1 | L2 | L3 | L4 | L5 | 报错率 | 未终答 |
+|---|---|---|---|---|---|---|---|---|
+| base（Qwen3.5-4B） | ~0% | - | - | - | - | - | - | - |
+| SFT（ckpt-2000） | 37.0% | 90.9% | 55.0% | 57.1% | 4.5% | 11.5% | 37.7% | 6.0% |
+| **GRPO best（step-20）** | **44.0%** | 90.9% | 50.0% | 66.7% | 18.2% | 23.1% | **24.3%** | **0%** |
+
+### v2 · eval_v2 80 题（新鲜尺子）
+
+| 模型 | 总正确率 | L2 | L3 | L4 | L5 | 报错率 | 未终答 |
+|---|---|---|---|---|---|---|---|
+| v2-base（merged-tora） | 45.0% | 12.5% | 46.7% | 51.4% | 40.0% | 35.6% | 7.5% |
+| **best@80（step-80）** | **67.5%** | 62.5% | 70.0% | 62.2% | **100%** | **15.9%** | **0%** |
+| final@200（step-200） | 66.2% | 75.0% | 63.3% | 62.2% | **100%** | 24.4% | 2.5% |
+
+（`math_summary.md` 里的 v2-best 46.2% 是训练早期对当时 best 存档的一次评测，已被上表终评取代。）
+
+## 4. 结论
+
+- **两轮提升都真实，v2 幅度大得多**（+7.0pp vs +22.5pp，各自尺子内相对出发点）。v2 的增益来自三件可辨识的事：
+  1. **probe 中段任务池**：2914 题全落在 p∈[0.05,0.95]，几乎没有"全对/全错"的无效题；
+  2. **难度感知采样器**：步数不浪费在太易/太难题与刚做过的熟题上（新题组 success 45.8% vs 熟题 63.0%，覆盖面健康）；续训一度误用 probe 初版难度表导致 80% 重抽熟题，改指训练自回写的 `difficulty_updated.json` 后降到 29%；
+  3. **G=8 深组 + 200 步长程**：组内对比信号更稳，L5 从 40% 推到 100%。
+- **行为质量同步改善**（两轮同向）：执行报错率下降、未终答清零；v2 偷懒审计干净（做对题里"真算"91%，无跳代码/刷格式分倾向）。
+- **best 机制有效**：v1 best=step-20、v2 best=step-80（都不是 final；v2 final@200 = 66.2%，比 best 低 1.3pp）。
+- **KL 全程受控**：v1 均值 0.0013，v2 累计 0.41，均无跑飞；v2 的 stop-drop 保险丝已关（0.05 阈值在 40 题尺子 σ≈8pp 下三次噪声误杀，用户令），以 best + 新鲜终评为准。

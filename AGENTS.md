@@ -4,7 +4,7 @@
 
 Qwen3.5-4B 智能体微调：QLoRA(AdaLoRA) SFT + 整条链路 GRPO。全部流程针对 **8GB RTX 5070 Laptop GPU + Windows 11 (WDDM)** 设计——这是所有代码修改的第一约束。
 
-- **本目录是完整封存包**（冻结于 2026-10-24、TRL 框架迁移动工之前），用于复现阶段工作；后续开发在别的目录进行。动手前先确认用户意图是"复现/查阅"还是"在此续训"，封存说明与最终成果表见 `ARCHIVE-INFO.txt`。
+- 本目录是 2026-10-24 的阶段封存快照，2026-11 在此续训了 GRPO v2（200 步，见"当前状态"）。动手前先确认用户意图是"复现/查阅"还是"在此续训"，封存说明见 `ARCHIVE-INFO.txt`。
 - **主线（唯一保留的链路）：ToRA 数学推理**——用 `D:\NLP\ft-qwen3.5-4b-agent-cot-data` 的官方 ToRA 轨迹（题目 → ```python → 真实执行结果 → \boxed 终答）做 SFT，再用 `math_env.py`（受限执行 + boxed 正确性奖励）做整条链路 GRPO。**旧 XML 工具调用管线（agent_env/rewards/eval_agent/step 模式等）已于 2026-11-08 删除**，只保留轨迹层级训练模式。
 - 已开源：https://github.com/asdasdasdwwwasdwwdDDD/qwen3.5-4b-math-agent-sft-grpo（权重在 Release 附件）。
 - 运行环境：conda env `pytorch`（`D:\anaconda\envs\pytorch`，Python 3.12；torch 2.10.0+cu128 / transformers 5.12.1 / peft 0.19.1 / bitsandbytes 0.50.0）。所有脚本先 `conda activate pytorch`，**在仓库根目录以 `python -m scripts.<子包>.<模块>` 运行**（scripts 是包，勿用 `python scripts/xxx.py` 旧方式）。
@@ -13,8 +13,9 @@ Qwen3.5-4B 智能体微调：QLoRA(AdaLoRA) SFT + 整条链路 GRPO。全部流�
 
 - `data/tora_sft/` — **数学链路数据**（由 `data/convert_tora.py` 生成，seed=42 可复现）：
   `train.jsonl`(1901)/`val.jsonl`(99)（多轮轨迹：user 题 → assistant ```python → tool ```output → assistant \boxed 终答）；
-  `grpo_train.jsonl`(3214)/`eval_set.jsonl`(101 条记录，评测汇总口径 100 题)（由 `split_grpo_pool.py` 从 math_test 池切分，SFT 见过的 1640 题已剔除；eval_set 为 base/SFT/GRPO 三方共用持出尺子）
-- `data/` — 处理脚本平铺：`convert_tora.py`（内联轨迹→多轮 messages，含 role="tool" 回填的模板坑详注）、`split_grpo_pool.py`、`analyze_tora.py`（转换前摸底）
+  `grpo_train.jsonl`(3214)/`eval_set.jsonl`(101 条记录，评测汇总口径 100 题)（由 `split_grpo_pool.py` 从 math_test 池切分，SFT 见过的 1640 题已剔除；eval_set 为 base/SFT/GRPO 三方共用持出尺子）；
+  v2 前置输入：`dev_set.jsonl`/`difficulty.json`/`grpo_train_nodev.jsonl`
+- `data/grpo_v2/` — **GRPO v2 数据**（由 `scripts/tools/build_v2_sets.py` 生成）：`pool_train_v2.jsonl`(2914，经 probe 筛 p∈[0.05,0.95]，只训有梯度信号的中段题)/`difficulty_v2.json`(probe 初版难度表，仅启动用)/`dev_v2.jsonl`(100，训练中尺子)/`eval_v2.jsonl`(80 持出终评尺子)/`probe_results.jsonl`+`selection_report.json`（摸底产物）
 - `scripts/` — **包结构**（各子包有 `__init__.py`，跨模块 import 一律 `from scripts.xxx import`）：
   - `envs/math_env.py` — 唯一闭环环境（受限 Python 执行 + rollout + boxed 打分 + `render_ids`/`generate_once` 生成原语），被训练与评测共用
   - `training/train_qlora.py` — SFT 主脚本（同时是工具函数枢纽：CHAT_TMPL_KW/TARGET_MODULES/训练锁/摘视觉塔/冻结权重压缩/公共前缀 loss mask）
@@ -22,13 +23,13 @@ Qwen3.5-4B 智能体微调：QLoRA(AdaLoRA) SFT + 整条链路 GRPO。全部流�
   - `training/merge_lora.py` — adapter 合并
   - `evaluation/eval_math.py` — 闭环做题评测（内联 4bit 加载）
   - `tests/` — 离线自测（不占 GPU）：`test_math_env.py`（纯函数）、`test_math_rollout.py`（mock 模型走多轮）
-  - `tools/` — `check_mask.py`（mask 校验）、`probe_vram.py`（显存探测）、`show_eval_curve.py`（SFT 选点）、`math_trend.py`/`grpo_trend.py`/`grpo_report.py`（趋势与报告，默认读 math 日志）、`check_forgetting.py`、`download_model.py`、`smoke_test.py`
+  - `tools/` — `check_mask.py`（mask 校验）、`probe_vram.py`（显存探测）、`show_eval_curve.py`（SFT 选点）、`math_trend.py`/`grpo_trend.py`/`grpo_report.py`（趋势与报告，默认读 math 日志）、`check_forgetting.py`、`download_model.py`、`smoke_test.py`；v2 配套：`build_v2_sets.py`/`build_difficulty.py`（v2 任务池/难度表构建）、`probe_band.py`/`build_band_sets.py`（v1.5 分段实验）、`train_resume.py`（断点续训：扫日志找断点 + 调度器快进）、`train_watchdog.py`（本地看门狗，每 5 分钟自愈，不占模型额度）、`train_alive.py`/`train_kill.py`（进程探测/终止）、`test_sampler.py`（采样器离线自测）
 - `models/Qwen3.5-4B` — **junction（封存未包含，`models/` 目录不存在）**，指向 `D:\NLP\ft-qwen3.5-4b-aviation\models\Qwen3.5-4B`（不复制 9.3GB 权重）。**训练/评估前先 `ls models/Qwen3.5-4B` 验证能列出 config.json**；不存在/失效则重建
   `cmd /c rmdir models\Qwen3.5-4B` + `cmd /c mklink /J models\Qwen3.5-4B D:\NLP\ft-qwen3.5-4b-aviation\models\Qwen3.5-4B`（rmdir 只删链接不删模型）
 - `logs/` — `sft_tora.log`（数学 SFT）、`grpo_tora_run.log`（数学 GRPO 全程）、`sel_*.log`/`merge_tora.log`/`final_evals.log`（选优/合并/终评）；GRPO 步级/轨迹审计 `grpo_log_math.jsonl`/`grpo_trajs_math.jsonl`
 - `outputs/` — 封存只含 `qlora-tora/`（SFT）、`grpo-tora/`（RL）、`eval/`；`outputs/.train.lock` 为单实例训练锁（未入包）。`merged-tora/`（8.5GB）**未入包**，merged 模型用 `scripts/training/merge_lora.py` 从 checkpoint 十分钟复现
 
-## 当前状态（封存时点 2026-10-24：全流程已完成，无待办）
+## 当前状态（v1 封存 2026-10-24 + v2 重训 2026-11-24，均已完成，无待办）
 
 - **最终成果**（eval_set 持出集 100 题，4bit 部署口径，汇总在 `outputs/eval/math_summary.md`）：
   base ~0% ｜ **SFT 37.0%**（ckpt-2000；L1 90.9 / L2 55.0 / L3 57.1 / L4 4.5 / L5 11.5）｜ **GRPO 44.0%**（best=step-20；L1 90.9 / L2 50.0 / L3 66.7 / L4 18.2 / L5 23.1）。
@@ -37,6 +38,14 @@ Qwen3.5-4B 智能体微调：QLoRA(AdaLoRA) SFT + 整条链路 GRPO。全部流�
 - **选优**：eval_loss 只看 token loss，最终按 30 题快速生成评测（`outputs/eval/math_sel-*.json`：base 0% / ck1500 66.7% / **ck2000 73.3%** / ck2500 66.7%）双指标选定 **checkpoint-2000**，合并产物（未入包）即 `outputs/merged-tora`。
 - **GRPO 已跑完**：60 步课程化（难度层轮转交织）+ T=0.8，组内优势 + PPO 裁剪 + KL(beta=0.025)；训练中每 20 步 greedy 闭环评估存 best，**best=step-20**，checkpoint-10…60 与 final 在 `outputs/grpo-tora`，日志 `logs/grpo_tora_run.log` + `grpo_log_math.jsonl`/`grpo_trajs_math.jsonl`。
 - 复现顺序：`convert_tora.py → split_grpo_pool.py → check_mask.py → train_qlora.py → merge_lora.py → train_grpo.py → eval_math.py`（`ARCHIVE-INFO.txt` 里的 `--mode math` 是笔误，train_grpo 无 --mode/--env 旗标，默认即数学轨迹模式）。
+
+### v2 重训（2026-11-24 完成，200 步）
+
+- **成果**（eval_v2 80 题新鲜尺子，与训练池零重叠）：base 45.0% ｜ **best@80 = 67.5%** ｜ final@200 = 66.2%（**+22.5pp**）；报错率 35.6%→15.9%，未终答 7.5%→0%。训练中 40 题尺子 best@80 = 0.750，在新鲜尺子上读数 67.5%（赢者诅咒 ~7.5pp，提升真实）。
+- **过程**：训练池 success 36%→52%（20 步窗口）；训练中 40 题尺子 42.5→67.5→60→**75.0（best@80）**→后段 62.5–70 平台；全程 KL 累计 0.41；偷懒审计干净（做对题里"真算"91%）。零梯度步占 18% 属正常（组内全同分）。
+- **续训修正（2026-11-23）**：续训一度误用 probe 初版难度表 → 续训段 80% 重抽熟题；`train_resume.py` 的 BASE_FLAGS 已改指 `outputs/grpo-v2/difficulty_updated.json`（训练自己持续回写的那份），重抽率 80%→29%。
+- **stop-drop 保险丝已关（用户令）**：0.05 阈值在 40 题尺子（σ≈8pp）上三次噪声误杀；best 存档机制保留，最终以 best + 新鲜终评为准。
+- 产物：`outputs/grpo-v2/{best=step-80, final=step-200, checkpoint-*}`、`difficulty_updated.json`（训练中持续回写）、`runs/`（**TB 事件文件是红线，禁止删除/移动/修改**，5 段 event 文件拼成一条连续曲线）；日志 `logs/grpo_v2_run*.log` + `logs/grpo_v2/grpo_log_math.jsonl`。
 
 ## 常用命令（复现数学链路；数据已生成，可直接从任意一步开始；一律仓库根运行）
 
@@ -65,9 +74,24 @@ python -m scripts.training.train_grpo --model outputs/merged-tora \
 python -m scripts.training.train_grpo --model outputs/merged-tora \
     --out outputs/grpo-rerun --max-steps 60 --num-generations 4 --epochs 4 --gen-batch 4
 python -m scripts.evaluation.eval_math --model outputs/merged-tora --adapter outputs/grpo-tora/best --tag grpo
-cat outputs/eval/math_summary.md                                  # 三方对比表
-tensorboard --logdir outputs/qlora-tora                           # 或 outputs/grpo-tora
+
+# GRPO v2（probe 任务池 + 难度感知采样器，P=2×G=8，200 步 ≈ 32h，约 9.5 分钟/步）
+python -m scripts.training.train_grpo --model outputs/merged-tora \
+    --out outputs/grpo-v2 --data data/grpo_v2/pool_train_v2.jsonl \
+    --difficulty data/grpo_v2/difficulty_v2.json --eval-data data/grpo_v2/dev_v2.jsonl \
+    --max-steps 200 --num-generations 8 --gen-batch 8 --prompts-per-step 2 \
+    --lr 1e-5 --beta 0.05 --eval-every 20 --eval-n 40 --save-steps 20
+# 意外中断后续训（扫日志找断点，TB 曲线保持同一条；勿覆写 grpo-v2，续训前确认看门狗已停）：
+python -m scripts.tools.train_resume        # 本地看门狗：python -m scripts.tools.train_watchdog
+python -m scripts.evaluation.eval_math --model outputs/merged-tora \
+    --adapter outputs/grpo-v2/best --data data/grpo_v2/eval_v2.jsonl --n 80 --tag v2-best
+cat outputs/eval/math_summary.md                                  # 全部评测对比表
+tensorboard --logdir outputs/qlora-tora                           # 或 outputs/grpo-tora / outputs/grpo-v2
 ```
+
+## grpo_report.py 与 v1/v2 对比报告
+
+- `python -m scripts.tools.grpo_report` 生成 `outputs/eval/grpo_report.md`（读 `logs/grpo_log_math.jsonl`，即 v1 60 步的日志）；v2 的对比汇总手工维护在 `outputs/eval/grpo_report.md`（2026-11-24 重写为 v1/v2 对比口径），勿再用脚本覆盖它。
 
 ## 硬约束：8GB 显存红线（改训练代码必读 README「显存红线」一节）
 
