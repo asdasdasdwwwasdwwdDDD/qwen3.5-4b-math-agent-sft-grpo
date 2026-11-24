@@ -1,0 +1,145 @@
+W1122 13:11:19.314000 33544 site-packages\torch\distributed\elastic\multiprocessing\redirects.py:29] NOTE: Redirects are currently not supported in Windows or MacOs.
+Loading weights:   0%|          | 0/723 [00:00<?, ?it/s]Loading weights:   0%|          | 1/723 [00:02<33:05,  2.75s/it]Loading weights:   1%|          | 6/723 [00:03<04:35,  2.60it/s]Loading weights:   2%|▏         | 12/723 [00:03<01:57,  6.05it/s]Loading weights:   3%|▎         | 22/723 [00:03<00:52, 13.31it/s]Loading weights:   4%|▍         | 28/723 [00:03<00:41, 16.87it/s]Loading weights:   6%|▌         | 40/723 [00:03<00:24, 28.11it/s]Loading weights:   7%|▋         | 47/723 [00:03<00:23, 28.65it/s]Loading weights:   8%|▊         | 61/723 [00:03<00:15, 43.41it/s]Loading weights:  10%|▉         | 69/723 [00:04<00:15, 43.25it/s]Loading weights:  11%|█         | 79/723 [00:04<00:12, 49.82it/s]Loading weights:  12%|█▏        | 89/723 [00:04<00:11, 55.64it/s]Loading weights:  13%|█▎        | 96/723 [00:04<00:12, 49.76it/s]Loading weights:  14%|█▍        | 102/723 [00:04<00:12, 48.07it/s]Loading weights:  16%|█▌        | 114/723 [00:04<00:10, 60.70it/s]Loading weights:  17%|█▋        | 121/723 [00:04<00:11, 52.50it/s]Loading weights:  18%|█▊        | 132/723 [00:05<00:09, 60.68it/s]Loading weights:  20%|█▉        | 142/723 [00:05<00:09, 63.74it/s]Loading weights:  21%|██        | 149/723 [00:05<00:11, 51.65it/s]Loading weights:  21%|██▏       | 155/723 [00:05<00:12, 44.86it/s]Loading weights:  23%|██▎       | 167/723 [00:05<00:10, 54.79it/s]Loading weights:  24%|██▍       | 173/723 [00:06<00:12, 43.31it/s]Loading weights:  26%|██▌       | 185/723 [00:06<00:10, 51.71it/s]Loading weights:  26%|██▋       | 191/723 [00:06<00:10, 50.97it/s]Loading weights:  28%|██▊       | 199/723 [00:06<00:10, 50.12it/s]Loading weights:  28%|██▊       | 205/723 [00:06<00:12, 40.93it/s]Loading weights:  29%|██▉       | 212/723 [00:06<00:11, 44.31it/s]Loading weights:  31%|███       | 224/723 [00:07<00:09, 54.21it/s]Loading weights:  32%|███▏      | 230/723 [00:07<00:08, 55.40it/s]Loading weights:  33%|███▎      | 238/723 [00:07<00:08, 55.61it/s]Loading weights:  34%|███▎      | 244/723 [00:07<00:08, 56.08it/s]Loading weights:  35%|███▍      | 252/723 [00:07<00:08, 54.78it/s]Loading weights:  36%|███▌      | 258/723 [00:07<00:10, 46.08it/s]Loading weights:  37%|███▋      | 265/723 [00:07<00:09, 49.19it/s]Loading weights:  38%|███▊      | 277/723 [00:07<00:07, 57.94it/s]Loading weights:  40%|███▉      | 287/723 [00:08<00:07, 61.17it/s]Loading weights:  41%|████      | 294/723 [00:08<00:08, 51.78it/s]Loading weights:  42%|████▏     | 305/723 [00:08<00:07, 58.66it/s]Loading weights:  43%|████▎     | 312/723 [00:08<00:09, 44.81it/s]Loading weights:  45%|████▌     | 326/723 [00:08<00:06, 59.61it/s]Loading weights:  46%|████▌     | 333/723 [00:09<00:07, 50.99it/s]Loading weights:  48%|████▊     | 344/723 [00:09<00:06, 57.64it/s]Loading weights:  49%|████▉     | 354/723 [00:09<00:05, 61.53it/s]Loading weights:  50%|████▉     | 361/723 [00:09<00:06, 53.74it/s]Loading weights:  51%|█████     | 367/723 [00:09<00:07, 50.80it/s]Loading weights:  52%|█████▏    | 379/723 [00:09<00:05, 61.89it/s]Loading weights:  53%|█████▎    | 386/723 [00:10<00:06, 52.72it/s]Loading weights:  55%|█████▍    | 397/723 [00:10<00:05, 60.67it/s]Loading weights:  56%|█████▌    | 406/723 [00:10<00:04, 66.95it/s]Loading weights:  57%|█████▋    | 414/723 [00:10<00:05, 53.95it/s]Loading weights:  58%|█████▊    | 421/723 [00:10<00:05, 52.45it/s]Loading weights:  61%|██████▏   | 444/723 [00:10<00:03, 89.77it/s]Loading weights:  68%|██████▊   | 492/723 [00:10<00:01, 178.87it/s]Loading weights:  75%|███████▍  | 542/723 [00:10<00:00, 253.72it/s]Loading weights:  83%|████████▎ | 598/723 [00:11<00:00, 329.92it/s]Loading weights:  90%|████████▉ | 648/723 [00:11<00:00, 368.44it/s]Loading weights:  96%|█████████▋| 696/723 [00:11<00:00, 392.30it/s]Loading weights: 100%|██████████| 723/723 [00:11<00:00, 63.79it/s] 
+探针: 450 题 × G=8（data/grpo_v2/probe_candidates.jsonl）
+已完成 229 题，续跑
+[transformers] `causal_conv1d_fn` is falling back to its reference PyTorch implementation because `causal_conv1d` is not installed. This is correct but much slower; install `causal_conv1d` for the optimized kernel.
+[transformers] `causal_conv1d_update` is falling back to its reference PyTorch implementation because `causal_conv1d` is not installed. This is correct but much slower; install `causal_conv1d` for the optimized kernel.
+W1122 13:25:57.628000 7220 site-packages\torch\distributed\elastic\multiprocessing\redirects.py:29] NOTE: Redirects are currently not supported in Windows or MacOs.
+Loading weights:   0%|          | 0/723 [00:00<?, ?it/s]Loading weights:   0%|          | 1/723 [00:01<17:52,  1.49s/it]Loading weights:   1%|          | 6/723 [00:01<02:41,  4.44it/s]Loading weights:   2%|▏         | 12/723 [00:01<01:12,  9.87it/s]Loading weights:   3%|▎         | 22/723 [00:01<00:33, 20.91it/s]Loading weights:   4%|▍         | 28/723 [00:02<00:27, 25.29it/s]Loading weights:   6%|▌         | 40/723 [00:02<00:16, 40.46it/s]Loading weights:   7%|▋         | 48/723 [00:02<00:22, 30.40it/s]Loading weights:   7%|▋         | 54/723 [00:02<00:23, 28.66it/s]Loading weights:   9%|▉         | 65/723 [00:02<00:16, 39.21it/s]Loading weights:  10%|█         | 75/723 [00:03<00:13, 47.87it/s]Loading weights:  11%|█▏        | 82/723 [00:03<00:13, 45.98it/s]Loading weights:  13%|█▎        | 93/723 [00:03<00:11, 56.55it/s]Loading weights:  14%|█▍        | 100/723 [00:03<00:12, 49.30it/s]Loading weights:  16%|█▌        | 114/723 [00:03<00:09, 66.77it/s]Loading weights:  17%|█▋        | 123/723 [00:03<00:09, 62.74it/s]Loading weights:  18%|█▊        | 132/723 [00:03<00:09, 64.79it/s]Loading weights:  20%|█▉        | 142/723 [00:04<00:08, 67.49it/s]Loading weights:  21%|██        | 150/723 [00:04<00:09, 57.77it/s]Loading weights:  22%|██▏       | 157/723 [00:04<00:10, 54.79it/s]Loading weights:  23%|██▎       | 168/723 [00:04<00:08, 65.71it/s]Loading weights:  24%|██▍       | 176/723 [00:04<00:09, 59.84it/s]Loading weights:  26%|██▌       | 185/723 [00:04<00:08, 62.00it/s]Loading weights:  27%|██▋       | 195/723 [00:04<00:07, 66.25it/s]Loading weights:  28%|██▊       | 202/723 [00:05<00:16, 32.17it/s]Loading weights:  29%|██▉       | 208/723 [00:05<00:14, 34.76it/s]Loading weights:  30%|███       | 220/723 [00:05<00:10, 47.81it/s]Loading weights:  31%|███▏      | 227/723 [00:05<00:10, 45.87it/s]Loading weights:  33%|███▎      | 238/723 [00:06<00:08, 56.26it/s]Loading weights:  34%|███▍      | 248/723 [00:06<00:07, 62.49it/s]Loading weights:  35%|███▌      | 256/723 [00:06<00:08, 56.67it/s]Loading weights:  36%|███▋      | 263/723 [00:06<00:11, 40.09it/s]Loading weights:  38%|███▊      | 274/723 [00:06<00:08, 51.83it/s]Loading weights:  39%|███▉      | 281/723 [00:06<00:08, 50.42it/s]Loading weights:  40%|████      | 291/723 [00:07<00:07, 57.83it/s]Loading weights:  42%|████▏     | 301/723 [00:07<00:06, 63.01it/s]Loading weights:  43%|████▎     | 309/723 [00:07<00:07, 57.92it/s]Loading weights:  44%|████▎     | 316/723 [00:07<00:07, 52.85it/s]Loading weights:  45%|████▌     | 327/723 [00:07<00:06, 64.40it/s]Loading weights:  46%|████▋     | 335/723 [00:07<00:09, 42.50it/s]Loading weights:  48%|████▊     | 344/723 [00:08<00:07, 48.66it/s]Loading weights:  49%|████▊     | 351/723 [00:08<00:07, 52.51it/s]Loading weights:  50%|████▉     | 358/723 [00:08<00:07, 52.14it/s]Loading weights:  50%|█████     | 364/723 [00:08<00:08, 44.85it/s]Loading weights:  51%|█████▏    | 371/723 [00:08<00:07, 48.70it/s]Loading weights:  53%|█████▎    | 382/723 [00:08<00:05, 62.36it/s]Loading weights:  54%|█████▍    | 390/723 [00:08<00:05, 61.39it/s]Loading weights:  55%|█████▍    | 397/723 [00:09<00:05, 60.23it/s]Loading weights:  56%|█████▋    | 407/723 [00:09<00:06, 47.03it/s]Loading weights:  57%|█████▋    | 413/723 [00:09<00:07, 42.71it/s]Loading weights:  58%|█████▊    | 418/723 [00:09<00:07, 41.75it/s]Loading weights:  61%|██████▏   | 444/723 [00:09<00:03, 85.93it/s]Loading weights:  68%|██████▊   | 494/723 [00:09<00:01, 179.07it/s]Loading weights:  76%|███████▌  | 550/723 [00:09<00:00, 271.56it/s]Loading weights:  83%|████████▎ | 600/723 [00:10<00:00, 330.25it/s]Loading weights:  90%|████████▉ | 650/723 [00:10<00:00, 372.37it/s]Loading weights:  98%|█████████▊| 706/723 [00:10<00:00, 419.34it/s]Loading weights: 100%|██████████| 723/723 [00:10<00:00, 70.03it/s] 
+探针: 450 题 × G=8（data/grpo_v2/probe_candidates.jsonl）
+已完成 229 题，续跑
+[transformers] `causal_conv1d_fn` is falling back to its reference PyTorch implementation because `causal_conv1d` is not installed. This is correct but much slower; install `causal_conv1d` for the optimized kernel.
+[transformers] `causal_conv1d_update` is falling back to its reference PyTorch implementation because `causal_conv1d` is not installed. This is correct but much slower; install `causal_conv1d` for the optimized kernel.
+  [230/450] math-test-2586 3/8 (198.0s)
+  [231/450] math-test-198 6/8 (115.0s)
+  [232/450] math-test-2147 1/8 (236.9s)
+  [233/450] math-test-1024 2/8 (55.7s)
+W1122 13:39:34.447000 29748 site-packages\torch\distributed\elastic\multiprocessing\redirects.py:29] NOTE: Redirects are currently not supported in Windows or MacOs.
+Loading weights:   0%|          | 0/723 [00:00<?, ?it/s]Loading weights:   0%|          | 1/723 [00:01<19:06,  1.59s/it]Loading weights:   1%|          | 6/723 [00:01<02:55,  4.08it/s]Loading weights:   2%|▏         | 13/723 [00:02<01:11,  9.93it/s]Loading weights:   3%|▎         | 25/723 [00:02<00:31, 22.48it/s]Loading weights:   4%|▍         | 32/723 [00:02<00:23, 28.86it/s]Loading weights:   6%|▌         | 41/723 [00:02<00:18, 36.98it/s]Loading weights:   7%|▋         | 48/723 [00:02<00:16, 40.18it/s]Loading weights:   9%|▊         | 62/723 [00:02<00:11, 59.63it/s]Loading weights:  10%|▉         | 71/723 [00:02<00:10, 63.21it/s]Loading weights:  11%|█         | 80/723 [00:02<00:10, 60.54it/s]Loading weights:  13%|█▎        | 92/723 [00:02<00:08, 71.95it/s]Loading weights:  14%|█▍        | 101/723 [00:03<00:10, 57.81it/s]Loading weights:  16%|█▌        | 114/723 [00:03<00:08, 72.16it/s]Loading weights:  17%|█▋        | 123/723 [00:03<00:08, 66.68it/s]Loading weights:  18%|█▊        | 132/723 [00:03<00:08, 69.94it/s]Loading weights:  20%|█▉        | 142/723 [00:03<00:07, 73.18it/s]Loading weights:  21%|██        | 150/723 [00:03<00:09, 63.59it/s]Loading weights:  22%|██▏       | 157/723 [00:04<00:09, 57.95it/s]Loading weights:  23%|██▎       | 168/723 [00:04<00:08, 69.34it/s]Loading weights:  24%|██▍       | 176/723 [00:04<00:08, 65.08it/s]Loading weights:  26%|██▌       | 185/723 [00:04<00:08, 66.00it/s]Loading weights:  27%|██▋       | 195/723 [00:04<00:07, 69.50it/s]Loading weights:  28%|██▊       | 203/723 [00:04<00:08, 59.32it/s]Loading weights:  29%|██▉       | 210/723 [00:04<00:09, 55.37it/s]Loading weights:  31%|███       | 221/723 [00:04<00:07, 67.42it/s]Loading weights:  32%|███▏      | 229/723 [00:05<00:07, 64.04it/s]Loading weights:  33%|███▎      | 238/723 [00:05<00:07, 67.57it/s]Loading weights:  34%|███▍      | 248/723 [00:05<00:06, 72.70it/s]Loading weights:  35%|███▌      | 256/723 [00:05<00:07, 65.23it/s]Loading weights:  36%|███▋      | 263/723 [00:05<00:07, 62.12it/s]Loading weights:  38%|███▊      | 274/723 [00:05<00:06, 73.63it/s]Loading weights:  39%|███▉      | 282/723 [00:05<00:06, 67.83it/s]Loading weights:  40%|████      | 291/723 [00:05<00:05, 72.76it/s]Loading weights:  42%|████▏     | 301/723 [00:06<00:05, 75.20it/s]Loading weights:  43%|████▎     | 309/723 [00:06<00:06, 64.55it/s]Loading weights:  44%|████▎     | 316/723 [00:06<00:07, 56.24it/s]Loading weights:  46%|████▌     | 329/723 [00:06<00:05, 70.40it/s]Loading weights:  47%|████▋     | 337/723 [00:06<00:05, 66.46it/s]Loading weights:  48%|████▊     | 345/723 [00:06<00:06, 59.55it/s]Loading weights:  49%|████▉     | 357/723 [00:06<00:05, 71.70it/s]Loading weights:  50%|█████     | 365/723 [00:07<00:06, 53.40it/s]Loading weights:  52%|█████▏    | 379/723 [00:07<00:04, 70.39it/s]Loading weights:  54%|█████▎    | 388/723 [00:07<00:05, 64.29it/s]Loading weights:  55%|█████▍    | 397/723 [00:07<00:04, 65.87it/s]Loading weights:  56%|█████▋    | 407/723 [00:07<00:04, 69.38it/s]Loading weights:  57%|█████▋    | 415/723 [00:07<00:04, 62.64it/s]Loading weights:  58%|█████▊    | 422/723 [00:08<00:05, 58.70it/s]Loading weights:  63%|██████▎   | 458/723 [00:08<00:02, 126.41it/s]Loading weights:  70%|██████▉   | 506/723 [00:08<00:01, 211.26it/s]Loading weights:  78%|███████▊  | 566/723 [00:08<00:00, 308.23it/s]Loading weights:  86%|████████▌ | 622/723 [00:08<00:00, 374.40it/s]Loading weights:  93%|█████████▎| 674/723 [00:08<00:00, 412.81it/s]Loading weights:  99%|█████████▉| 718/723 [00:08<00:00, 385.54it/s]Loading weights: 100%|██████████| 723/723 [00:08<00:00, 82.75it/s] 
+探针: 450 题 × G=8（data/grpo_v2/probe_candidates.jsonl）
+已完成 233 题，续跑
+[transformers] `causal_conv1d_fn` is falling back to its reference PyTorch implementation because `causal_conv1d` is not installed. This is correct but much slower; install `causal_conv1d` for the optimized kernel.
+[transformers] `causal_conv1d_update` is falling back to its reference PyTorch implementation because `causal_conv1d` is not installed. This is correct but much slower; install `causal_conv1d` for the optimized kernel.
+  [234/450] math-test-3688 3/8 (93.0s)
+W1122 13:46:33.514000 31012 site-packages\torch\distributed\elastic\multiprocessing\redirects.py:29] NOTE: Redirects are currently not supported in Windows or MacOs.
+Loading weights:   0%|          | 0/723 [00:00<?, ?it/s]Loading weights:   0%|          | 1/723 [00:01<17:07,  1.42s/it]Loading weights:   1%|          | 6/723 [00:01<02:23,  5.01it/s]Loading weights:   2%|▏         | 12/723 [00:01<01:04, 11.10it/s]Loading weights:   3%|▎         | 22/723 [00:01<00:30, 23.05it/s]Loading weights:   4%|▍         | 28/723 [00:01<00:25, 27.70it/s]Loading weights:   6%|▌         | 41/723 [00:02<00:15, 43.90it/s]Loading weights:   7%|▋         | 49/723 [00:02<00:14, 47.62it/s]Loading weights:   9%|▊         | 62/723 [00:02<00:10, 64.66it/s]Loading weights:  10%|▉         | 71/723 [00:02<00:09, 68.14it/s]Loading weights:  11%|█         | 80/723 [00:02<00:09, 66.94it/s]Loading weights:  12%|█▏        | 90/723 [00:02<00:08, 73.99it/s]Loading weights:  14%|█▎        | 99/723 [00:02<00:10, 57.11it/s]Loading weights:  15%|█▍        | 107/723 [00:02<00:10, 61.12it/s]Loading weights:  16%|█▋        | 118/723 [00:03<00:08, 69.67it/s]Loading weights:  18%|█▊        | 128/723 [00:03<00:08, 72.50it/s]Loading weights:  19%|█▉        | 136/723 [00:03<00:09, 64.12it/s]Loading weights:  20%|██        | 146/723 [00:03<00:08, 68.13it/s]Loading weights:  21%|██▏       | 154/723 [00:03<00:10, 54.97it/s]Loading weights:  23%|██▎       | 167/723 [00:03<00:08, 66.42it/s]Loading weights:  24%|██▍       | 175/723 [00:04<00:09, 59.44it/s]Loading weights:  26%|██▌       | 185/723 [00:04<00:08, 67.00it/s]Loading weights:  27%|██▋       | 193/723 [00:04<00:07, 69.66it/s]Loading weights:  28%|██▊       | 201/723 [00:04<00:09, 55.68it/s]Loading weights:  29%|██▉       | 208/723 [00:04<00:09, 53.19it/s]Loading weights:  30%|███       | 220/723 [00:04<00:07, 65.74it/s]Loading weights:  32%|███▏      | 228/723 [00:05<00:10, 47.19it/s]Loading weights:  33%|███▎      | 237/723 [00:05<00:09, 52.86it/s]Loading weights:  34%|███▎      | 244/723 [00:05<00:09, 49.42it/s]Loading weights:  35%|███▍      | 251/723 [00:05<00:09, 51.82it/s]Loading weights:  36%|███▌      | 257/723 [00:05<00:10, 43.78it/s]Loading weights:  36%|███▋      | 263/723 [00:05<00:09, 46.76it/s]Loading weights:  38%|███▊      | 274/723 [00:05<00:07, 59.48it/s]Loading weights:  39%|███▉      | 281/723 [00:06<00:08, 50.85it/s]Loading weights:  40%|████      | 291/723 [00:06<00:07, 57.16it/s]Loading weights:  41%|████      | 298/723 [00:06<00:07, 57.35it/s]Loading weights:  42%|████▏     | 305/723 [00:06<00:07, 55.04it/s]Loading weights:  43%|████▎     | 311/723 [00:06<00:11, 37.40it/s]Loading weights:  44%|████▍     | 318/723 [00:06<00:10, 39.27it/s]Loading weights:  45%|████▌     | 327/723 [00:07<00:08, 46.37it/s]Loading weights:  46%|████▌     | 333/723 [00:07<00:10, 38.02it/s]Loading weights:  47%|████▋     | 343/723 [00:07<00:07, 49.11it/s]Loading weights:  48%|████▊     | 349/723 [00:07<00:07, 47.66it/s]Loading weights:  50%|████▉     | 358/723 [00:07<00:07, 51.67it/s]Loading weights:  50%|█████     | 364/723 [00:07<00:08, 44.57it/s]Loading weights:  51%|█████▏    | 371/723 [00:07<00:07, 49.73it/s]Loading weights:  53%|█████▎    | 383/723 [00:08<00:05, 61.22it/s]Loading weights:  54%|█████▍    | 393/723 [00:08<00:04, 66.34it/s]Loading weights:  55%|█████▌    | 401/723 [00:08<00:05, 61.26it/s]Loading weights:  57%|█████▋    | 411/723 [00:08<00:04, 65.94it/s]Loading weights:  58%|█████▊    | 418/723 [00:08<00:05, 54.86it/s]Loading weights:  62%|██████▏   | 446/723 [00:08<00:02, 100.95it/s]Loading weights:  69%|██████▉   | 502/723 [00:08<00:01, 205.76it/s]Loading weights:  76%|███████▋  | 552/723 [00:09<00:00, 275.80it/s]Loading weights:  83%|████████▎ | 602/723 [00:09<00:00, 325.21it/s]Loading weights:  90%|████████▉ | 650/723 [00:09<00:00, 363.15it/s]Loading weights:  97%|█████████▋| 698/723 [00:09<00:00, 392.36it/s]Loading weights: 100%|██████████| 723/723 [00:09<00:00, 76.66it/s] 
+探针: 450 题 × G=8（data/grpo_v2/probe_candidates.jsonl）
+已完成 234 题，续跑
+[transformers] `causal_conv1d_fn` is falling back to its reference PyTorch implementation because `causal_conv1d` is not installed. This is correct but much slower; install `causal_conv1d` for the optimized kernel.
+[transformers] `causal_conv1d_update` is falling back to its reference PyTorch implementation because `causal_conv1d` is not installed. This is correct but much slower; install `causal_conv1d` for the optimized kernel.
+  [235/450] math-test-1723 0/8 (149.8s)
+W1122 13:50:26.794000 27552 site-packages\torch\distributed\elastic\multiprocessing\redirects.py:29] NOTE: Redirects are currently not supported in Windows or MacOs.
+Loading weights:   0%|          | 0/723 [00:00<?, ?it/s]Loading weights:   0%|          | 1/723 [00:01<18:09,  1.51s/it]Loading weights:   1%|          | 6/723 [00:01<02:29,  4.81it/s]Loading weights:   2%|▏         | 12/723 [00:01<01:06, 10.72it/s]Loading weights:   3%|▎         | 22/723 [00:01<00:31, 22.45it/s]Loading weights:   4%|▍         | 29/723 [00:02<00:25, 27.58it/s]Loading weights:   6%|▌         | 40/723 [00:02<00:17, 40.05it/s]Loading weights:   7%|▋         | 47/723 [00:02<00:17, 38.09it/s]Loading weights:   8%|▊         | 61/723 [00:02<00:11, 56.81it/s]Loading weights:  10%|▉         | 70/723 [00:02<00:11, 55.47it/s]Loading weights:  11%|█         | 79/723 [00:02<00:10, 59.34it/s]Loading weights:  12%|█▏        | 89/723 [00:02<00:09, 65.44it/s]Loading weights:  13%|█▎        | 97/723 [00:03<00:10, 60.51it/s]Loading weights:  14%|█▍        | 104/723 [00:03<00:10, 57.83it/s]Loading weights:  16%|█▌        | 115/723 [00:03<00:08, 68.90it/s]Loading weights:  17%|█▋        | 123/723 [00:03<00:09, 65.21it/s]Loading weights:  18%|█▊        | 132/723 [00:03<00:08, 68.90it/s]Loading weights:  20%|█▉        | 142/723 [00:03<00:07, 75.98it/s]Loading weights:  21%|██        | 150/723 [00:03<00:08, 63.91it/s]Loading weights:  22%|██▏       | 157/723 [00:03<00:09, 57.06it/s]Loading weights:  23%|██▎       | 167/723 [00:04<00:08, 66.68it/s]Loading weights:  24%|██▍       | 175/723 [00:04<00:09, 57.12it/s]Loading weights:  26%|██▌       | 185/723 [00:04<00:08, 63.29it/s]Loading weights:  27%|██▋       | 195/723 [00:04<00:07, 66.17it/s]Loading weights:  28%|██▊       | 202/723 [00:04<00:09, 54.49it/s]Loading weights:  29%|██▉       | 208/723 [00:04<00:09, 52.26it/s]Loading weights:  30%|███       | 220/723 [00:04<00:07, 65.41it/s]Loading weights:  32%|███▏      | 228/723 [00:05<00:08, 57.53it/s]Loading weights:  33%|███▎      | 238/723 [00:05<00:07, 62.31it/s]Loading weights:  34%|███▍      | 245/723 [00:05<00:07, 64.03it/s]Loading weights:  35%|███▍      | 252/723 [00:05<00:07, 61.50it/s]Loading weights:  36%|███▌      | 259/723 [00:05<00:09, 46.77it/s]Loading weights:  38%|███▊      | 273/723 [00:05<00:06, 64.69it/s]Loading weights:  39%|███▉      | 281/723 [00:06<00:07, 58.17it/s]Loading weights:  40%|████      | 291/723 [00:06<00:06, 64.28it/s]Loading weights:  41%|████▏     | 299/723 [00:06<00:06, 67.82it/s]Loading weights:  42%|████▏     | 307/723 [00:06<00:07, 54.66it/s]Loading weights:  43%|████▎     | 314/723 [00:06<00:07, 55.20it/s]Loading weights:  45%|████▌     | 326/723 [00:06<00:05, 68.64it/s]Loading weights:  46%|████▌     | 334/723 [00:06<00:06, 59.90it/s]Loading weights:  48%|████▊     | 344/723 [00:06<00:05, 66.05it/s]Loading weights:  49%|████▉     | 354/723 [00:07<00:05, 68.86it/s]Loading weights:  50%|█████     | 362/723 [00:07<00:05, 60.89it/s]Loading weights:  51%|█████     | 369/723 [00:07<00:06, 55.09it/s]Loading weights:  53%|█████▎    | 380/723 [00:07<00:05, 65.45it/s]Loading weights:  54%|█████▎    | 388/723 [00:07<00:05, 60.30it/s]Loading weights:  55%|█████▍    | 397/723 [00:07<00:05, 63.18it/s]Loading weights:  56%|█████▋    | 407/723 [00:07<00:04, 66.00it/s]Loading weights:  57%|█████▋    | 414/723 [00:08<00:05, 57.00it/s]Loading weights:  58%|█████▊    | 420/723 [00:08<00:05, 54.17it/s]Loading weights:  61%|██████▏   | 444/723 [00:08<00:02, 95.96it/s]Loading weights:  68%|██████▊   | 490/723 [00:08<00:01, 185.16it/s]Loading weights:  74%|███████▍  | 536/723 [00:08<00:00, 255.76it/s]Loading weights:  81%|████████  | 584/723 [00:08<00:00, 314.17it/s]Loading weights:  88%|████████▊ | 634/723 [00:08<00:00, 359.96it/s]Loading weights:  95%|█████████▍| 684/723 [00:08<00:00, 387.04it/s]Loading weights: 100%|██████████| 723/723 [00:09<00:00, 79.89it/s] 
+探针: 450 题 × G=8（data/grpo_v2/probe_candidates.jsonl）
+已完成 235 题，续跑
+[transformers] `causal_conv1d_fn` is falling back to its reference PyTorch implementation because `causal_conv1d` is not installed. This is correct but much slower; install `causal_conv1d` for the optimized kernel.
+[transformers] `causal_conv1d_update` is falling back to its reference PyTorch implementation because `causal_conv1d` is not installed. This is correct but much slower; install `causal_conv1d` for the optimized kernel.
+  [236/450] math-test-2554 0/8 (197.1s)
+  [237/450] math-test-3398 8/8 (110.6s)
+  [238/450] math-test-3269 5/8 (71.3s)
+  [239/450] math-test-30 8/8 (41.4s)
+  [240/450] math-test-4974 7/8 (74.1s)
+  [241/450] math-test-3031 0/8 (36.5s)
+  [242/450] math-test-2193 0/8 (98.1s)
+  [243/450] math-test-3034 2/8 (123.9s)
+  [244/450] math-test-932 0/8 (40.8s)
+  [245/450] math-test-4692 1/8 (273.7s)
+  [246/450] math-test-205 7/8 (61.5s)
+  [247/450] math-test-1642 6/8 (51.5s)
+  [248/450] math-test-1633 1/8 (44.8s)
+  [249/450] math-test-34 3/8 (46.7s)
+  [250/450] math-test-4727 0/8 (297.6s)
+  [251/450] math-test-1912 4/8 (37.9s)
+  [252/450] math-test-1222 7/8 (37.8s)
+  [253/450] math-test-4436 7/8 (45.8s)
+  [254/450] math-test-4968 0/8 (44.2s)
+  [255/450] math-test-2874 1/8 (127.2s)
+  [256/450] math-test-3881 1/8 (52.1s)
+  [257/450] math-test-3874 7/8 (40.2s)
+  [258/450] math-test-4700 0/8 (21.9s)
+  [259/450] math-test-3201 2/8 (25.7s)
+  [260/450] math-test-338 0/8 (382.9s)
+  [261/450] math-test-4888 0/8 (151.9s)
+  [262/450] math-test-1399 6/8 (49.2s)
+  [263/450] math-test-1289 1/8 (83.1s)
+  [264/450] math-test-1916 0/8 (118.6s)
+  [265/450] math-test-139 3/8 (227.1s)
+  [266/450] math-test-3300 0/8 (25.5s)
+  [267/450] math-test-877 3/8 (89.0s)
+  [268/450] math-test-3065 8/8 (27.1s)
+  [269/450] math-test-220 0/8 (406.7s)
+  [270/450] math-test-4618 1/8 (127.3s)
+  [271/450] math-test-992 8/8 (37.0s)
+  [272/450] math-test-4278 5/8 (79.4s)
+  [273/450] math-test-816 6/8 (75.5s)
+  [274/450] math-test-2821 0/8 (61.9s)
+  [275/450] math-test-3114 5/8 (55.8s)
+  [276/450] math-test-3471 1/8 (110.0s)
+  [277/450] math-test-1275 7/8 (43.1s)
+  [278/450] math-test-1524 6/8 (38.0s)
+  [279/450] math-test-4821 0/8 (299.8s)
+  [280/450] math-test-2513 2/8 (96.2s)
+  [281/450] math-test-2370 0/8 (268.1s)
+  [282/450] math-test-1641 4/8 (40.7s)
+  [283/450] math-test-3241 8/8 (34.9s)
+  [284/450] math-test-183 1/8 (126.9s)
+  [285/450] math-test-952 5/8 (151.8s)
+  [286/450] math-test-2144 6/8 (32.8s)
+  [287/450] math-test-1946 6/8 (56.5s)
+  [288/450] math-test-4415 6/8 (58.8s)
+  [289/450] math-test-316 0/8 (185.8s)
+  [290/450] math-test-4824 0/8 (422.6s)
+  [291/450] math-test-411 8/8 (32.9s)
+  [292/450] math-test-4449 7/8 (56.5s)
+  [293/450] math-test-388 1/8 (36.0s)
+  [294/450] math-test-3628 8/8 (24.3s)
+  [295/450] math-test-3868 0/8 (199.2s)
+  [296/450] math-test-4582 1/8 (193.2s)
+  [297/450] math-test-2576 1/8 (359.7s)
+  [298/450] math-test-3632 0/8 (63.0s)
+  [299/450] math-test-2437 7/8 (134.1s)
+  [300/450] math-test-1680 0/8 (168.0s)
+  [301/450] math-test-2131 3/8 (46.4s)
+  [302/450] math-test-1095 1/8 (279.9s)
+  [303/450] math-test-3643 0/8 (92.6s)
+  [304/450] math-test-2649 2/8 (78.6s)
+  [305/450] math-test-2232 4/8 (43.8s)
+  [306/450] math-test-2073 4/8 (34.9s)
+  [307/450] math-test-2480 2/8 (146.0s)
+  [308/450] math-test-1550 4/8 (61.8s)
+  [309/450] math-test-754 5/8 (35.3s)
+  [310/450] math-test-726 8/8 (41.1s)
+  [311/450] math-test-4264 7/8 (54.2s)
+  [312/450] math-test-2662 0/8 (156.8s)
+  [313/450] math-test-2042 1/8 (86.4s)
+  [314/450] math-test-2182 0/8 (184.3s)
+  [315/450] math-test-2602 0/8 (162.6s)
+  [316/450] math-test-1720 0/8 (489.1s)
+  [317/450] math-test-4837 0/8 (64.2s)
+  [318/450] math-test-1323 1/8 (45.7s)
+  [319/450] math-test-2062 1/8 (77.7s)
+  [320/450] math-test-4952 4/8 (62.0s)
+  [321/450] math-test-4640 5/8 (48.1s)
+  [322/450] math-test-4538 6/8 (49.1s)
+  [323/450] math-test-4574 6/8 (124.0s)
+  [324/450] math-test-2497 0/8 (197.0s)
+  [325/450] math-test-2955 0/8 (407.8s)
+  [326/450] math-test-729 8/8 (43.8s)
+  [327/450] math-test-2205 1/8 (51.2s)
+  [328/450] math-test-3599 2/8 (50.9s)
+  [329/450] math-test-3242 0/8 (93.0s)
+  [330/450] math-test-810 0/8 (154.7s)
+  [331/450] math-test-1990 8/8 (41.6s)
+  [332/450] math-test-800 6/8 (71.1s)
+  [333/450] math-test-2836 1/8 (67.9s)
+  [334/450] math-test-275 0/8 (25.6s)
+  [335/450] math-test-1664 0/8 (168.2s)
+  [336/450] math-test-2261 0/8 (158.6s)
+  [337/450] math-test-1559 0/8 (65.1s)
+  [338/450] math-test-486 4/8 (230.0s)
+  [339/450] math-test-4086 4/8 (95.6s)
+  [340/450] math-test-4336 8/8 (24.7s)
+  [341/450] math-test-2769 1/8 (127.3s)
+  [342/450] math-test-1672 0/8 (63.9s)
+  [343/450] math-test-3390 1/8 (158.4s)
+  [344/450] math-test-1545 0/8 (38.7s)

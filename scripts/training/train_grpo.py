@@ -3,7 +3,7 @@
 
 从用户问题出发，模型自己走完整条链路——写 Python 代码、经 math_env 受限子进程真实执行、
 输出以 role="tool" 回填、继续推理，直到 \boxed 终答。同一任务采样 G 条完整轨迹成组，
-score_trajectory 按「答案正确 0.8 + boxed 格式 0.1 + 执行无误 0.1」打 0~1 分，组内归一化
+score_trajectory 按「答案正确 1.00 / 交卷且跑过代码 0.10 / 其余 0」打 0~1 分，组内归一化
 优势后沿轨迹全部生成 token 反传：
     PPO 裁剪策略梯度 + KL 锚定（参考策略 = 关掉 LoRA 的 merged 模型，零额外显存）
 
@@ -23,6 +23,7 @@ import argparse
 import json
 import os
 import random
+import shutil
 import sys
 import time
 
@@ -119,6 +120,109 @@ def make_task_order(task_pool, curriculum):
     task_order = task_pool[:]
     random.shuffle(task_order)
     return task_order
+
+
+def load_difficulty(path):
+    """难度表 {task_id: [n_correct, n_samples]}。文件不存在返回空表。"""
+    if not path or not os.path.exists(path):
+        return {}
+    with open(path, encoding="utf-8") as f:
+        raw = json.load(f)
+    return {k: list(v) for k, v in raw.items()}
+
+
+def make_sampler(task_pool, difficulty, explore_ratio, seed=0, explore_end=None,
+                 explore_horizon=0, cooldown_draws=0, max_task_draws=0):
+    """难度定向采样：优先抽「已知部分会做」的题，按 explore_ratio 探索未探测题。
+
+    动机（2026-11-11 实测）：在训练池上均匀抽题时，44.7% 的组全错、29.7% 全对，
+    只有 25.7% 的组带正确性方差 —— 而只有这部分真正教「做对」。全错组靠格式分
+    挤出的梯度占了总梯度质量的 38%，教的是「赶紧交卷」，不是「算对」。
+
+    做法：维护每题 [正确数, 采样数]，把 0<正确率<1 的题放进 mixed 池优先抽；
+    每抽一次在线更新，新出现的「部分会做」题自动进池、退化的题自动出池。
+    与动态重采样不同，它不丢弃已经生成的轨迹，因此不额外消耗算力。
+    返回 (draw, update, dump, count_mixed)。
+
+    2026-11-21 新增（默认全部关闭，行为与旧版逐位一致）：
+      - explore_end + explore_horizon>0：探索比例从 explore_ratio 线性衰减到
+        explore_end（按累计抽题数 / explore_horizon 插值）。前期多探索发现新题、
+        在线充实难度表，后期少把算力浪费在全对/全错的死题上。
+      - cooldown_draws>0：一道题采出全错组后冷却该题 cooldown_draws 次抽签
+        （按抽签序号闭区间计），期间跳过不抽；题目重新出现方差（进入 mixed）
+        立即解冻——防止采样器反复撞同一道当前模型完全做不了的题。
+      - max_task_draws>0：单题全程最多抽中该次数（低放回约束）。g8 run 复盘
+        （2026-11-21）：320 次抽题只覆盖 213 题、最热题被抽 5 次，是行为收敛/池内
+        过拟合的直接推手。超限题被过滤，mixed 池过滤后为空时自动落到全池找没抽过
+        的题；极端情况（全池全部到限）回退原列表，宁可超限不空转。
+        注意：冷却/上限过滤改为先筛后抽（旧实现是重试式），启用这些功能的 run
+        随机数流与旧版不逐位一致（默认参数下仍逐位一致）。"""
+    rng = random.Random(seed)
+    stats = {t["id"]: list(difficulty.get(t["id"], [0, 0])) for t in task_pool}
+    mixed = [t for t in task_pool
+             if stats[t["id"]][1] > 0 and 0 < stats[t["id"]][0] < stats[t["id"]][1]]
+    in_mixed = {t["id"] for t in mixed}
+    cooldown_until = {}    # tid -> 解冻的抽签序号（n_draws 达到该序号后恢复可抽）
+    draw_count = {}        # tid -> 本轮已被抽中次数（max_task_draws>0 时生效）
+    n_draws = 0
+    explore_start = float(explore_ratio)
+    explore_end = explore_start if explore_end is None else float(explore_end)
+
+    def _ratio():
+        if explore_horizon <= 0 or explore_end == explore_start:
+            return explore_start
+        t = min(n_draws / float(explore_horizon), 1.0)
+        return explore_start + (explore_end - explore_start) * t
+
+    def _eligible(tasks):
+        """按冷却与单题上限过滤候选；两者都关时原样返回（默认路径零开销、流不变）。
+        返回空列表时由 draw() 决定回退，不在内层静默兜底。"""
+        if max_task_draws <= 0 and cooldown_draws <= 0:
+            return tasks
+        out = []
+        for t in tasks:
+            if cooldown_draws > 0 and n_draws < cooldown_until.get(t["id"], 0):
+                continue
+            if max_task_draws > 0 and draw_count.get(t["id"], 0) >= max_task_draws:
+                continue
+            out.append(t)
+        return out
+
+    def draw():
+        nonlocal n_draws
+        n_draws += 1
+        cands = None
+        if mixed and rng.random() >= _ratio():
+            cands = _eligible(mixed)   # mixed 池被冷却/上限滤空 → 落到全池
+        if not cands:
+            cands = _eligible(task_pool) or task_pool
+        task = rng.choice(cands)
+        if max_task_draws > 0:
+            draw_count[task["id"]] = draw_count.get(task["id"], 0) + 1
+        return task
+
+    def update(task, n_correct, n_total):
+        nonlocal mixed
+        s = stats[task["id"]]
+        s[0] += n_correct
+        s[1] += n_total
+        is_mixed = 0 < s[0] < s[1]
+        if is_mixed and task["id"] not in in_mixed:
+            mixed.append(task)
+            in_mixed.add(task["id"])
+        elif not is_mixed and task["id"] in in_mixed:
+            in_mixed.discard(task["id"])
+            mixed = [t for t in mixed if t["id"] != task["id"]]
+        if is_mixed:
+            cooldown_until.pop(task["id"], None)   # 出现方差立即解冻
+        elif n_correct == 0 and cooldown_draws > 0:
+            # 闭区间：接下来 cooldown_draws 次抽签（序号 n_draws+1 .. n_draws+cooldown）不可抽
+            cooldown_until[task["id"]] = n_draws + cooldown_draws + 1
+
+    def dump():
+        return {k: v for k, v in stats.items() if v[1] > 0}
+
+    return draw, update, dump, (lambda: len(mixed))
 
 
 def group_advantages(rewards):
@@ -286,6 +390,10 @@ def log_step(writer, log_fp, args, step, step_t0, details, group_stats, stats, l
            "reward_mean": round(sum(g["mean_r"] for g in group_stats) / len(group_stats), 4),
            "valid_group_frac": round(sum(1 for g in group_stats if g["std_r"] > 1e-6)
                                      / len(group_stats), 3),
+           # 被「全错组跳过」规则置零的组数：这些组本来会产生与正确性无关的格式梯度
+           "no_correct_groups": sum(1 for g in group_stats if g.get("no_correct")),
+           # 触发了「零方差组重采」的组数：监控重采率（过高说明难度表滞后严重）
+           "rerolled_groups": sum(1 for g in group_stats if g.get("rerolled")),
            "success_rate": round(sum(1 for d in details if d["success"]) / len(details), 3),
            "avg_turns": round(sum(d["n_turns"] for d in details) / len(details), 2),
            "exec_err": round(sum(detail["n_error"] for detail in details) / max(total_exec, 1), 3),
@@ -317,33 +425,91 @@ def train_trajectory_loop(model, tokenizer, task_pool, args, opt, sched, trainab
                           writer, log_fp, traj_audit_fp, save_steps, eval_tasks=None):
     """整条链路 GRPO 主循环。每个训练步的时间线（与日志字段一一对应）：
       取批 → 1) 生成组+打分+组内优势+审计落盘 → 2) 同批数据重放 μ 遍反传
-           → 2.5) 每 eval-every 步 greedy 闭环评估存 best → 3) 记日志 → 存档。
+           → 2.5) 每 eval-every 步 greedy 闭环评估存 best（较本轮最优跌超
+                  --stop-drop 则记下并在存档后提前停止）→ 3) 记日志 → 存档。
     各环节细节见 generate_scored_group / group_advantages / train_step_update / log_step。"""
     task_order = make_task_order(task_pool, getattr(args, "curriculum", False))
     cursor = 0
-    best = {"success": -1.0, "reward": -1.0, "step": 0}  # 闭环评估最优点 -> out/best
-    for step in range(1, args.max_steps + 1):
+    sampler = None
+    if getattr(args, "difficulty", ""):
+        draw, update, dump, n_mixed = make_sampler(
+            task_pool, load_difficulty(args.difficulty),
+            args.explore_ratio, seed=getattr(args, "seed", 0),
+            explore_end=getattr(args, "explore_end", None),
+            explore_horizon=getattr(args, "explore_horizon", 0),
+            cooldown_draws=getattr(args, "cooldown_draws", 0),
+            max_task_draws=getattr(args, "max_task_draws", 0))
+        sampler = (draw, update, dump)
+        _extra = ""
+        if getattr(args, "explore_horizon", 0) > 0:
+            _extra = f"→{args.explore_end}（{args.explore_horizon} 次抽签内线性衰减）"
+        if getattr(args, "cooldown_draws", 0) > 0:
+            _extra += f" | 全错冷却 {args.cooldown_draws} 次抽签"
+        if getattr(args, "max_task_draws", 0) > 0:
+            _extra += f" | 单题至多抽 {args.max_task_draws} 次（低放回）"
+        print(f"难度定向采样: 已知部分会做 {n_mixed()} 题 | 探索比例 {args.explore_ratio}"
+              f"{_extra}（全错/全对的题只按探索比例抽到）", flush=True)
+    # best 初值：续训时用 --best-init-* 继承上一轮分数，避免新 run 的第一个评估点
+    # （哪怕更差）无条件覆盖 out/best。默认 -1 时与旧行为完全一致。
+    best = {"success": args.best_init_success, "reward": args.best_init_reward, "step": 0}
+    if args.best_init_success >= 0:
+        if args.resume and os.path.abspath(args.resume) != os.path.abspath(os.path.join(args.out, "best")):
+            inherited = os.path.join(args.out, "best")
+            if not os.path.exists(inherited):
+                shutil.copytree(args.resume, inherited)
+            print(f"继承上一轮 best（success={args.best_init_success:.3f} "
+                  f"reward={args.best_init_reward:.3f}）-> {inherited}；"
+                  f"本轮只有超过该分数才会覆盖", flush=True)
+    for step in range(args.init_step + 1, args.max_steps + 1):
         step_t0 = time.time()
-        if cursor + args.prompts_per_step > len(task_order):
-            task_order = make_task_order(task_pool, getattr(args, "curriculum", False))
-            cursor = 0
-        task_batch = task_order[cursor:cursor + args.prompts_per_step]
-        cursor += args.prompts_per_step
+        if sampler is not None:
+            task_batch = [sampler[0]() for _ in range(args.prompts_per_step)]
+        else:
+            if cursor + args.prompts_per_step > len(task_order):
+                task_order = make_task_order(task_pool, getattr(args, "curriculum", False))
+                cursor = 0
+            task_batch = task_order[cursor:cursor + args.prompts_per_step]
+            cursor += args.prompts_per_step
 
         # ---- 1) 整条链路 rollout（组 = 同一任务 G 条完整轨迹）----
         rollouts = []   # [(env, trajectory, adv, reward, detail)]
         group_stats = []
         for task in task_batch:
             group, envs = generate_scored_group(model, tokenizer, task, args)
-            torch.cuda.empty_cache()  # 生成阶段的 kv cache 归还驱动，给梯度阶段腾峰值
             rewards = [reward for _trajectory, reward, _detail in group]
             advs, mean, std = group_advantages(rewards)
+            # 全同分组（全对或全错，组内零方差）重采一次（--reroll-dead 1）：把白跑的
+            # 生成再给一次出方差的机会。G=8 下全同分概率已大降（p=0.5 时 12.5%→0.8%），
+            # 重采只对死组翻倍生成成本（--reroll-dead 0=旧行为，直接用首采组）。
+            # 难度统计把两次尝试合并计数（n_total=2G），p 的估计保持诚实。
+            rerolled = False
+            n_correct_stat = sum(1 for _t, _r, d in group if d["correct"])
+            n_total_stat = len(group)
+            if getattr(args, "reroll_dead", 0) and std <= 1e-6:
+                group, envs = generate_scored_group(model, tokenizer, task, args)
+                rewards = [reward for _trajectory, reward, _detail in group]
+                advs, mean, std = group_advantages(rewards)
+                rerolled = True
+                n_correct_stat += sum(1 for _t, _r, d in group if d["correct"])
+                n_total_stat += len(group)
+            torch.cuda.empty_cache()  # 生成阶段的 kv cache 归还驱动，给梯度阶段腾峰值
+            # 全错组：没有任何一条轨迹答对，组内方差只可能来自 0.1 的「交卷+跑代码」档。
+            # 这条梯度与正确性无关，且方向恒定（教「记得交卷」），会单调累积成策略锐化，
+            # 因此默认整组置零跳过；--skip-no-correct 0 可恢复旧行为。
+            n_correct = sum(1 for _t, _r, d in group if d["correct"])
+            no_correct = n_correct == 0 and bool(getattr(args, "skip_no_correct", 1))
+            if no_correct:
+                advs = [0.0] * len(advs)
             for (trajectory, reward, detail), adv, env in zip(group, advs, envs):
                 rollouts.append((env, trajectory, adv, reward, detail))
             group_stats.append({"mean_r": round(mean, 4), "std_r": round(std, 4),
+                           "no_correct": bool(no_correct), "rerolled": bool(rerolled),
                            "rewards": [round(reward, 4) for reward in rewards]})
+            if sampler is not None:
+                sampler[1](task, n_correct_stat, n_total_stat)
             traj_audit_fp.write(json.dumps({
                 "step": step, "tid": task["id"], "category": task["category"],
+                "rerolled": bool(rerolled),
                 "group": [{"reward": round(reward, 4), "adv": round(adv, 3), "detail": detail,
                            "text": format_trajectory(env, trajectory)}
                           for (trajectory, reward, detail), adv, env in zip(group, advs, envs)],
@@ -360,6 +526,7 @@ def train_trajectory_loop(model, tokenizer, task_pool, args, opt, sched, trainab
 
         # ---- 2.5) 训练中闭环评估：greedy 固定子集（与 eval_math 同口径），追踪最优 ----
         last_eval = None
+        early_stop = ""
         if eval_tasks and step % args.eval_every == 0:
             eval_success, eval_reward = run_closed_eval(model, tokenizer, eval_tasks, args)
             last_eval = (eval_success, eval_reward)
@@ -371,6 +538,13 @@ def train_trajectory_loop(model, tokenizer, task_pool, args, opt, sched, trainab
                 model.save_pretrained(os.path.join(args.out, "best"))
                 tokenizer.save_pretrained(os.path.join(args.out, "best"))
                 print(f"  当前评估最优，已保存 -> {os.path.join(args.out, 'best')}", flush=True)
+            elif (getattr(args, "stop_drop", 0) > 0 and best["step"]
+                  and eval_success < best["success"] - args.stop_drop):
+                # 预注册停止规则（g8 run 教训：eval@120 跌 5pp 时该停没停，多烧 1.5h）。
+                # best["step"] 非零保证最优出自本轮 eval，续训继承的门槛不触发。
+                early_stop = (f"eval success {eval_success:.3f} 较本轮历史最优 "
+                              f"{best['success']:.3f}（step {best['step']}）下跌超过 "
+                              f"{args.stop_drop}，--stop-drop 触发提前停止")
 
         # ---- 3) 按步记录（record 构造 / jsonl 落盘 / 打印 / TensorBoard 见 log_step）----
         log_step(writer, log_fp, args, step, step_t0, details, group_stats, stats, last_eval, sched)
@@ -380,19 +554,38 @@ def train_trajectory_loop(model, tokenizer, task_pool, args, opt, sched, trainab
             model.save_pretrained(ckpt_dir)
             print(f"  已保存 {ckpt_dir}", flush=True)
 
+        if early_stop:
+            print(early_stop, flush=True)
+            break
+
     if best["step"]:
         print(f"闭环评估最优: step {best['step']} success={best['success']:.3f} "
               f"reward={best['reward']:.3f} -> {os.path.join(args.out, 'best')}", flush=True)
+    elif best["success"] >= 0:
+        print(f"本轮未超过继承门槛 success={best['success']:.3f} reward={best['reward']:.3f}，"
+              f"{os.path.join(args.out, 'best')} 保持为续训起点", flush=True)
+    if sampler is not None:
+        dump_path = os.path.join(args.out, "difficulty_updated.json")
+        with open(dump_path, "w", encoding="utf-8") as f:
+            json.dump(sampler[2](), f, ensure_ascii=False, indent=1)
+        print(f"难度表已更新（可直接作为下一轮 --difficulty）-> {dump_path}", flush=True)
 
 
 def main():
     arg_parser = argparse.ArgumentParser()
     arg_parser.add_argument("--model", type=str, default="outputs/merged-tora",
                     help="SFT 合并后的 bf16 模型目录（GRPO 起点，同时作 KL 参考）")
-    arg_parser.add_argument("--data", type=str, default="data/tora_sft/grpo_train.jsonl",
-                    help="训练任务文件（默认池已剔除 SFT 见过的题）")
+    arg_parser.add_argument("--data", type=str, default="data/tora_sft/grpo_train_nodev.jsonl",
+                    help="训练任务文件。默认已剔除 SFT 见过的题，并额外留出 120 题 dev"
+                         "（scripts.tools.split_dev 生成），防止训练池与选模集重叠")
     arg_parser.add_argument("--out", type=str, default="outputs/grpo-tora")
     arg_parser.add_argument("--resume", type=str, default=None, help="续训：加载此目录的 LoRA")
+    arg_parser.add_argument("--init-step", type=int, default=0,
+                    help="续训步号偏移：日志/TB/存档编号从 init-step+1 起（配合 --resume，"
+                         "TB 曲线才能与上一段拼成同一条，而不是重叠成两条线）")
+    arg_parser.add_argument("--init-sched-steps", type=int, default=None,
+                    help="调度器快进次数。默认= init-step；实际应为 已完成步数-零梯度步数"
+                         "（sched.step 只在 n_trained>0 的步推进，见训练循环）")
     arg_parser.add_argument("--max-steps", type=int, default=100)
     arg_parser.add_argument("--num-generations", type=int, default=4,
                     help="每组候选数 G（每个任务 G 条完整轨迹）")
@@ -422,14 +615,30 @@ def main():
                          "常态 2~5.5，每步硬剪到 1.0 等效把学习率再砍 2~5 倍）")
     arg_parser.add_argument("--kl-clip", type=float, default=0.05, help="单 token KL 截断，防离群主导")
     arg_parser.add_argument("--epsilon", type=float, default=0.2, help="PPO 裁剪")
+    arg_parser.add_argument("--skip-no-correct", type=int, default=1,
+                    help="整组无一题答对（全错组）时把优势置零、整组跳过反传，默认 1=开。"
+                         "理由：全错组的奖励只可能是 0 或 0.1（交卷+跑过代码），组内方差"
+                         "仅来自这 0.1 档，它教的是「记得交卷、记得跑代码」而非「算对」。"
+                         "实测 fix120 后半段这类梯度占总梯度质量 21.8 个百分点，是策略锐化与"
+                         "泛化下降的主推力。0=旧行为（全错组仍可贡献格式梯度）")
     arg_parser.add_argument("--save-steps", type=int, default=None, help="默认 max_steps//10")
-    arg_parser.add_argument("--eval-data", type=str, default="data/tora_sft/eval_set.jsonl",
-                    help="训练中闭环评估的任务文件（与 SFT/RL 训练题均不相交的持出集）")
+    arg_parser.add_argument("--eval-data", type=str, default="data/tora_sft/dev_set.jsonl",
+                    help="训练中闭环评估的任务文件。**默认 dev_set（120 题，从训练池留出）**："
+                         "旧默认 eval_set 只有 101 题且是最终测试集，用它选 best 等于在测试集上"
+                         "选模（2026-11-11 实测：16 题子集全部落在测试集内，虚高 +2pp）")
     arg_parser.add_argument("--eval-every", type=int, default=20,
                     help="每 N 个训练步做一次闭环评估（greedy 固定子集），0 关闭；"
                          "每次约 2~4 分钟，最优 checkpoint 存 out/best")
-    arg_parser.add_argument("--eval-n", type=int, default=16,
-                    help="每次闭环评估的任务数（固定随机子集，各评估点分数可比）")
+    arg_parser.add_argument("--eval-n", type=int, default=40,
+                    help="每次闭环评估的任务数（固定随机子集，各评估点分数可比）。"
+                         "16 题时 1σ≈12.4pp，两题之差就能翻转 best，默认提到 40（1σ≈7.7pp）")
+    # 续训场景：best 的初值。不同步这两个值，续训 run 的第一次评估（哪怕更差）也会
+    # 无条件写入 out/best，把上一轮辛苦选出的最优点覆盖掉。默认 -1 与旧行为逐位一致。
+    arg_parser.add_argument("--best-init-success", type=float, default=-1.0,
+                    help="续训时传入上一轮 best 的 success，作为 out/best 的初始门槛；"
+                         "本轮只有严格超过它才会覆盖。默认 -1=不设门槛（旧行为）")
+    arg_parser.add_argument("--best-init-reward", type=float, default=-1.0,
+                    help="同上，上一轮 best 的 reward（success 相同时用作次级比较）")
     arg_parser.add_argument("--max-prompt-len", type=int, default=600,
                     help="初始 prompt token 上限过滤")
     arg_parser.add_argument("--curriculum", type=int, default=1,
@@ -448,9 +657,33 @@ def main():
                          "（old_logp 现算，ratio 恒 1，裁剪不触发）；>1 时 old_logp 首遍缓存复用，"
                          "ratio 偏离 1、PPO 裁剪与 clip_tokens 真正工作。注意每训练步"
                          "参数移动量约 ×μ，想保持总移动可比可减 --max-steps（如 60→20）")
-    arg_parser.add_argument("--turn-exec-w", type=float, default=0.5,
+    arg_parser.add_argument("--turn-exec-w", type=float, default=0.0,
                     help="分轮次优势的执行信号权重：代码轮 adv += w×(+1 执行无错 / -1 报错)，"
-                         "终答轮不加。0=旧行为（整条轨迹同一优势，代码被终答连坐）")
+                         "终答轮不加。**默认 0**：2026-11-11 实测 w=0.5 时该惩罚与"
+                         "exec_clean 同向叠加，压得模型不敢写会报错的代码（执行次数 1.30→1.13）。"
+                         "仅在需要做消融实验时显式开启")
+    arg_parser.add_argument("--difficulty", type=str, default="",
+                    help="难度表 JSON（scripts.tools.build_difficulty 生成）。开启后按"
+                         "「已知部分会做」的题池定向采样，替换 curriculum 顺序轮转")
+    arg_parser.add_argument("--explore-ratio", type=float, default=0.3,
+                    help="难度定向采样时探索未探测题的比例（默认 0.3）")
+    arg_parser.add_argument("--explore-end", type=float, default=None,
+                    help="探索比例的衰减终点：--explore-horizon>0 时从 --explore-ratio 线性"
+                         "衰减到该值（按累计抽题数插值）。默认 None=不衰减（旧口径）")
+    arg_parser.add_argument("--explore-horizon", type=int, default=0,
+                    help="探索比例衰减的总抽签数（≈ max_steps×prompts_per_step）。0=不衰减")
+    arg_parser.add_argument("--cooldown-draws", type=int, default=0,
+                    help="一道题采出全错组后的冷却抽签数（期间不抽它，题目重新出现方差"
+                         "立即解冻）。防止反复撞同一道当前模型做不了的题。0=关闭")
+    arg_parser.add_argument("--reroll-dead", type=int, default=0,
+                    help="组内全同分（零方差）时对该题重采一次，1=开。G=8 下全同分已少，"
+                         "重采只对死组翻倍生成成本，换取部分死组变成有方差组。0=旧行为")
+    arg_parser.add_argument("--max-task-draws", type=int, default=0,
+                    help="单题全程最多抽中次数（低放回约束，0=不限）。g8 复盘：320 抽只覆盖"
+                         " 213 题、最热题 5 次，是行为收敛/池内过拟合的直接推手，建议 2-3")
+    arg_parser.add_argument("--stop-drop", type=float, default=0.0,
+                    help="闭环 eval 较本轮历史最优下跌超过此值即提前停止（0=关闭，建议 0.05）。"
+                         "把『该停就停』写进代码，不依赖人盯")
     arg_parser.add_argument("--seed", type=int, default=42)
     args = arg_parser.parse_args()
     # 前置检查：本地没有该目录时直接报中文错并给修复提示。否则 transformers 会把这个
@@ -504,6 +737,14 @@ def main():
     save_steps = args.save_steps or max(1, args.max_steps // 10)
     warmup = max(5, int(0.05 * args.max_steps))
     sched = get_cosine_schedule_with_warmup(opt, warmup, args.max_steps)
+    if args.init_step:
+        # 续训接缝：快进上一轮实际发生过的 sched.step() 次数（零梯度步不推进），
+        # lr 从上轮日志末值无缝续接（v2@60 步：60-13 零梯度 = 47 次 -> lr 9.093e-6）
+        ff = args.init_sched_steps if args.init_sched_steps is not None else args.init_step
+        for _ in range(ff):
+            sched.step()
+        print(f"续训：步号从 {args.init_step + 1} 起，调度器快进 {ff} 次 "
+              f"(lr={sched.get_last_lr()[0]:.4e})", flush=True)
 
     from torch.utils.tensorboard import SummaryWriter
     os.makedirs(os.path.join(args.out, "runs"), exist_ok=True)

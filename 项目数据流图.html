@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Qwen3.5-4B 智能体微调 · 全链路数据流</title>
+<title>Qwen3.5-4B 数学智能体微调 · 全链路数据流</title>
 <style>
   html,body{ margin:0; padding:0; background:#0b101c; }
   body{ box-sizing:border-box; padding:24px 16px 40px; }
@@ -25,8 +25,8 @@ try{
 </script>
 <div id="qwen-flow">
   <div class="qf-head">
-    <h2>Qwen3.5-4B 智能体微调 · 全链路数据流</h2>
-    <div class="qf-sub">QLoRA(AdaLoRA) SFT → 合并 → 整条链路 GRPO → 闭环评估 · RTX 5070 Laptop 8GB · Windows/WDDM · 数字均来自 README 实测与 logs/grpo_log.jsonl</div>
+    <h2>Qwen3.5-4B 数学智能体微调 · 全链路数据流</h2>
+    <div class="qf-sub">QLoRA(AdaLoRA) SFT → 合并 → 整条链路 GRPO(v2) → 闭环评估 · RTX 5070 Laptop 8GB · Windows/WDDM · 数字均来自 README 实测与 logs/grpo_v2/grpo_log_math.jsonl（2026-11-24）</div>
   </div>
 
   <nav class="qf-trace" aria-label="流水线阶段导航(点击跳转)">
@@ -34,13 +34,13 @@ try{
     <span class="sep" aria-hidden="true">→</span>
     <button type="button" class="qf-pill" data-goto="1"><i class="st done"></i>SFT 训练</button>
     <span class="sep" aria-hidden="true">→</span>
-    <button type="button" class="qf-pill" data-goto="2"><i class="st done"></i>评估 · 合并</button>
+    <button type="button" class="qf-pill" data-goto="2"><i class="st done"></i>选优 · 合并</button>
     <span class="sep" aria-hidden="true">→</span>
-    <button type="button" class="qf-pill" data-goto="3"><i class="st done"></i>GRPO ×100</button>
+    <button type="button" class="qf-pill" data-goto="3"><i class="st done"></i>GRPO ×200</button>
     <span class="sep" aria-hidden="true">→</span>
-    <button type="button" class="qf-pill" data-goto="4"><i class="st todo"></i>闭环评估</button>
+    <button type="button" class="qf-pill" data-goto="4"><i class="st done"></i>闭环评估</button>
     <span class="sep" aria-hidden="true">→</span>
-    <button type="button" class="qf-pill" data-goto="5"><i class="st opt"></i>演示</button>
+    <button type="button" class="qf-pill" data-goto="5"><i class="st done"></i>发布</button>
   </nav>
 
   <ol class="qf-stages">
@@ -50,40 +50,22 @@ try{
       <div class="qf-rail"><span class="qf-dot">0</span></div>
       <div class="qf-body">
         <h3 class="qf-h"><button type="button" class="qf-toggle" aria-expanded="true" aria-controls="qf-d0">
-          <span class="t">数据生成</span><span class="sub">seed=42 · 900 条</span>
-          <code class="f">data/build_dataset.py</code>
+          <span class="t">数据生成</span><span class="sub">官方 ToRA 轨迹 · seed=42 可复现</span>
+          <code class="f">data/convert_tora.py · data/split_grpo_pool.py · scripts/tools/build_v2_sets.py</code>
           <span class="qf-badge bdone">✓ 已完成</span>
           <span class="chev" aria-hidden="true">▾</span>
         </button></h3>
         <div class="qf-detail" id="qf-d0"><div>
-          <p class="lead">脚本合成 900 条工具调用轨迹,可复现(seed=42),6 类场景混比——训练目标全部程序化可验证。</p>
+          <p class="lead">官方 ToRA 数学推理轨迹转换成多轮对话数据（题目 → ```python → 真实执行结果 → \boxed 终答），再切出训练池与三方共用的持出尺子。</p>
           <div class="items">
-            <div><b>20 个内置工具</b><span>TOOL_DEFS:天气 / 计算 / 汇率 / 股票 / IP / 餐厅…</span></div>
-            <div><b>原生 XML 调用格式</b><span>&lt;tool_call&gt;&lt;function=…&gt;,chat template 渲染即训练目标</span></div>
-            <div><b>划分</b><span>train 855 · val 45</span></div>
-            <div><b>token 长度</b><span>p50 619 · p95 850 · max 896(--max-len 1024 不截断)</span></div>
+            <div><b>SFT 数据</b><span>train 1901 · val 99（多轮轨迹，role="tool" 回填执行结果）</span></div>
+            <div><b>GRPO 池</b><span>grpo_train 3214 题（SFT 见过的 1640 题已剔除）</span></div>
+            <div><b>持出尺子</b><span>eval_set 101 条（汇总口径 100 题，base/SFT/GRPO 三方共用）</span></div>
+            <div><b>v2 任务池</b><span>probe 摸底 2914 题筛 p∈[0.05,0.95] → pool_train_v2（有梯度信号的中段题）</span></div>
+            <div><b>v2 双尺子</b><span>dev_v2 100 题（训练中 40 题固定尺子）· eval_v2 80 题（新鲜终评）——均与训练池零重叠</span></div>
           </div>
-          <div class="qf-card">
-            <div class="qf-clabel">6 类场景配比(共 900 条)</div>
-            <div class="qf-mixbar" role="img" aria-label="900 条训练轨迹按场景配比:single_call 240 条,chained 180 条,parallel 150 条,error_retry 120 条,no_tool 120 条,clarify 90 条">
-              <span class="qf-seg" data-cat="single_call" data-tooltip="single_call · 240 条(26.7%)" style="width:26.7%;background:var(--qf-c1)"></span>
-              <span class="qf-seg" data-cat="chained" data-tooltip="chained · 180 条(20.0%)" style="width:20%;background:var(--qf-c2)"></span>
-              <span class="qf-seg" data-cat="parallel" data-tooltip="parallel · 150 条(16.7%)" style="width:16.7%;background:var(--qf-c3)"></span>
-              <span class="qf-seg" data-cat="error_retry" data-tooltip="error_retry · 120 条(13.3%)" style="width:13.3%;background:var(--qf-c4)"></span>
-              <span class="qf-seg" data-cat="no_tool" data-tooltip="no_tool · 120 条(13.3%)" style="width:13.3%;background:var(--qf-c5)"></span>
-              <span class="qf-seg" data-cat="clarify" data-tooltip="clarify · 90 条(10.0%)" style="width:10%;background:var(--qf-c6)"></span>
-            </div>
-            <div class="qf-mixlegend">
-              <div data-cat="single_call"><i style="background:var(--qf-c1)"></i><div><b>single_call <span>240</span></b><span class="d">单轮单工具调用</span></div></div>
-              <div data-cat="chained"><i style="background:var(--qf-c2)"></i><div><b>chained <span>180</span></b><span class="d">多步链式调用</span></div></div>
-              <div data-cat="parallel"><i style="background:var(--qf-c3)"></i><div><b>parallel <span>150</span></b><span class="d">一轮并行多调用</span></div></div>
-              <div data-cat="error_retry"><i style="background:var(--qf-c4)"></i><div><b>error_retry <span>120</span></b><span class="d">报错→分析→修正重试</span></div></div>
-              <div data-cat="no_tool"><i style="background:var(--qf-c5)"></i><div><b>no_tool <span>120</span></b><span class="d">负样本:直接答 / 拒绝危险</span></div></div>
-              <div data-cat="clarify"><i style="background:var(--qf-c6)"></i><div><b>clarify <span>90</span></b><span class="d">必填参数缺失先澄清</span></div></div>
-            </div>
-          </div>
-          <p class="flag orange">◆ Loss mask 只对 assistant 生成内容算损失:系统提示、工具定义、用户消息、工具返回全部 −100(公共前缀对齐算法,check_mask.py 可人工校验)。</p>
-          <div class="qf-art">产出 → <code>data/train.jsonl</code> · <code>data/val.jsonl</code></div>
+          <p class="flag red">● 模板坑（convert_tora.py 有详注）：执行结果必须以 role="tool" 回填。Qwen3.5 模板只给"最后一条真实 user 消息之后"的 assistant 轮插 <think>；用裸 user 轮回填会让中间的代码轮被剥 think，与生成提示渲染分叉，loss mask 把代码轮整个 mask 掉（只训终答不训代码）。</p>
+          <div class="qf-art">产出 → <code>data/tora_sft/</code> · <code>data/grpo_v2/</code></div>
         </div></div>
       </div>
     </li>
@@ -93,69 +75,49 @@ try{
       <div class="qf-rail"><span class="qf-dot">1</span></div>
       <div class="qf-body">
         <h3 class="qf-h"><button type="button" class="qf-toggle" aria-expanded="true" aria-controls="qf-d1">
-          <span class="t">SFT · QLoRA(AdaLoRA)</span><span class="sub">216 步 · 峰值 5.57 GB</span>
-          <code class="f">scripts/train_qlora.py</code>
+          <span class="t">SFT · QLoRA(AdaLoRA)</span><span class="sub">6000 步计划 · ~4900 步早停 · 峰值 5.6 GB</span>
+          <code class="f">scripts/training/train_qlora.py</code>
           <span class="qf-badge bdone">✓ 已完成</span>
           <span class="chev" aria-hidden="true">▾</span>
         </button></h3>
         <div class="qf-detail" id="qf-d1"><div>
-          <p class="lead">NF4 4bit 量化底座 + 自适应秩 LoRA,按步驱动 216 步(≈2 epochs),每 27 步存档并评估。</p>
+          <p class="lead">NF4 4bit 量化底座 + 自适应秩 LoRA，学会「写 Python → 看执行结果 → \boxed 作答」的解题链路；每 500 步存档并评估。</p>
           <div class="items">
-            <div><b>加载即摘视觉塔</b><span>必须用 Qwen3_5ForConditionalGeneration——AutoModelForCausalLM 会静默随机初始化文本层;摘除 168.9M 视觉塔</span></div>
-            <div><b>AdaLoRA</b><span>init_r 16 → target 8 自适应秩重分配,alpha 32,12 类线性层,可训练 32.5M(0.77%)</span></div>
-            <div><b>优化器</b><span>adamw_8bit(非 paged)· lr 1e-4 cosine + warmup · bs 1 × accum 8</span></div>
-            <div><b>3:1 混合注意力</b><span>24 层 GatedDeltaNet 线性注意力 + 8 层全注意力;SDPA torch 回退属正常</span></div>
+            <div><b>加载即摘视觉塔</b><span>必须用 Qwen3_5ForConditionalGeneration——AutoModelForCausalLM 会静默随机初始化文本层</span></div>
+            <div><b>AdaLoRA</b><span>init_r 16 → target 8，alpha 32，12 类线性层</span></div>
+            <div><b>优化器</b><span>adamw_8bit(非 paged) · lr cosine + warmup · bs 2 × accum 4 · max-len 1024</span></div>
+            <div><b>Loss mask</b><span>assistant 区间才算损失（公共前缀对齐算法，check_mask.py 可校验）</span></div>
           </div>
-          <div class="qf-duo">
-            <div class="qf-card">
-              <div class="qf-clabel">8GB 显存红线 · 六项修复前后(30 步 smoke 同机同数据)</div>
-              <div class="qf-vram">
-                <div class="qf-vrow">
-                  <div class="qf-vhead"><b>峰值 allocated</b></div>
-                  <div class="qf-vbar"><div class="track"><span class="fill before" style="width:69%"></span></div><em>7.59</em></div>
-                  <div class="qf-vbar"><div class="track"><span class="fill after" style="width:50.6%"></span></div><em>5.57</em></div>
-                </div>
-                <div class="qf-vrow">
-                  <div class="qf-vhead"><b>分配器 reserved</b></div>
-                  <div class="qf-vbar"><div class="track"><span class="fill before" style="width:98%"></span></div><em>10.78</em></div>
-                  <div class="qf-vbar"><div class="track"><span class="fill after" style="width:62.6%"></span></div><em>6.89</em></div>
-                </div>
-                <div class="qf-vlegend"><span><i class="sw before"></i>修复前(GB)</span><span><i class="sw after"></i>修复后(GB)</span></div>
-              </div>
-              <p class="mini">共享显存 1.71GB → ≈0.1GB,全程零换页;每步 empty_cache 让 reserved 贴近真实用量。</p>
-            </div>
-            <div class="qf-card">
-              <div class="qf-clabel">eval_loss 曲线(留出 45 条,每 27 步评估一次)</div>
-              <div id="qf-evalchart" class="qf-chart"></div>
-              <p class="mini">1.866 → 0.823,收尾仍在下探;评估只算 loss(prediction_loss_only)防 248k 词表 logits 撑爆。</p>
-            </div>
+          <div class="qf-card">
+            <div class="qf-clabel">eval_loss 曲线（val 99 题，每 500 步评估，checkpoint-500…4500 共 9 个存档点）</div>
+            <div id="qf-evalchart" class="qf-chart"></div>
+            <p class="mini">0.279 → 0.104（checkpoint-2000 谷底）→ 回升至 0.151；用户确认过拟合后 ~4900 步提前终止。评估只算 loss（prediction_loss_only）防 248k 词表 logits 撑爆。</p>
           </div>
-          <p class="flag red">● 单实例锁 outputs/.train.lock:双进程互相挤进共享显存必假死——利用率 100% 但功耗 ~30W、每步几分钟。</p>
-          <p class="flag orange">◆ peft 0.19 AdaLoRA 收尾 reset_ipt() KeyError 已捕获、沿用上次秩分配,勿删该 try/except。</p>
-          <div class="qf-art">产出 → <code>outputs/qlora-adapter/final</code>(eval_loss 0.823)</div>
+          <p class="flag red">● 单实例锁 outputs/.train.lock：双进程互相挤进共享显存必假死——利用率 100% 但功耗 ~30W、每步几分钟。</p>
+          <p class="flag orange">◆ peft 0.19 AdaLoRA 收尾 reset_ipt() KeyError 已捕获、沿用上次秩分配，勿删该 try/except。</p>
+          <div class="qf-art">产出 → <code>outputs/qlora-tora/checkpoint-500…4500</code></div>
         </div></div>
       </div>
     </li>
 
-    <!-- ======== 2 评估+合并 ======== -->
+    <!-- ======== 2 选优+合并 ======== -->
     <li class="qf-stage done">
       <div class="qf-rail"><span class="qf-dot">2</span></div>
       <div class="qf-body">
         <h3 class="qf-h"><button type="button" class="qf-toggle" aria-expanded="true" aria-controls="qf-d2">
-          <span class="t">评估 · 合并</span><span class="sub">底座就绪</span>
-          <code class="f">eval_agent.py / merge_lora.py</code>
+          <span class="t">选优 · 合并</span><span class="sub">双指标选定 checkpoint-2000</span>
+          <code class="f">scripts/tools/show_eval_curve.py · scripts/training/merge_lora.py</code>
           <span class="qf-badge bdone">✓ 已完成</span>
           <span class="chev" aria-hidden="true">▾</span>
         </button></h3>
         <div class="qf-detail" id="qf-d2"><div>
-          <p class="lead">用同一把尺(rewards.py + agent_env.py)测基线与微调后,再把 adapter 合并成完整模型——它同时是 GRPO 的训练底座与 KL 参考策略。</p>
+          <p class="lead">eval_loss 只看 token loss，最终按 30 题快速生成评测双指标选点，再合并成完整模型——它同时是 GRPO 的训练底座与 KL 参考策略。</p>
           <div class="items">
-            <div><b>双口径评估</b><span>闭环整条链路(默认)+ 逐轮步进 --mode step</span></div>
-            <div><b>闭环指标</b><span>task_success_rate · call_f1 · answer_score · avg_turns · fmt_valid_rate</span></div>
-            <div><b>合并</b><span>CPU bf16,合并后独立可部署 → outputs/merged</span></div>
-            <div><b>KL 零开销</b><span>disable_adapter() 现场算参考策略,不占额外显存</span></div>
+            <div><b>30 题快速评测</b><span>ck1500 66.7% · ck2000 73.3% · ck2500 66.7% → 选 ck2000</span></div>
+            <div><b>合并</b><span>CPU bf16，十分钟复现，合并后独立可部署</span></div>
+            <div><b>KL 零开销</b><span>disable_adapter() 现场算参考策略，不占额外显存</span></div>
           </div>
-          <div class="qf-art">产出 → <code>outputs/merged</code></div>
+          <div class="qf-art">产出 → <code>outputs/merged-tora</code>（8.5GB，本地可再生，不入库）</div>
         </div></div>
       </div>
     </li>
@@ -165,98 +127,111 @@ try{
       <div class="qf-rail"><span class="qf-dot">3</span></div>
       <div class="qf-body">
         <h3 class="qf-h"><button type="button" class="qf-toggle" aria-expanded="true" aria-controls="qf-d3">
-          <span class="t">GRPO · 整条链路</span><span class="sub">100 步 · 峰值 5.66 GB</span>
-          <code class="f">scripts/train_grpo.py</code>
+          <span class="t">GRPO · 整条链路（v2）</span><span class="sub">v1 封存 60 步 → v2 重训 200 步 · 峰值 7.03 GB · ≈9.5 分钟/步</span>
+          <code class="f">scripts/training/train_grpo.py</code>
           <span class="qf-badge bdone">✓ 已完成</span>
           <span class="chev" aria-hidden="true">▾</span>
         </button></h3>
         <div class="qf-detail" id="qf-d3"><div>
-          <p class="lead">每步 1 个任务,同一任务采样 G=4 条完整轨迹成组——模型从用户问题出发自己走完「调工具 → 真拿返回 → 继续 → 终答」,按整条轨迹结果做组内对齐。不依赖人工偏好与外部奖励模型。</p>
+          <p class="lead">每步抽 2 题，每题采样 G=8 条完整解题轨迹成组——模型从题目出发自己走完「写代码 → 受限执行 → 读结果 → \boxed 终答」，按整条轨迹的答案正确性做组内对齐。v1（G=4 课程化）封存于 outputs/grpo-tora；v2 换 probe 任务池 + 难度感知采样器重训。</p>
           <div class="qf-card">
-            <div class="qf-looprow"><span class="qf-tag">×4 轨迹</span><span class="qf-tag2">×4 回合</span><span class="qf-tmini">rollout 一次参数更新 = 1 个任务 1 个组</span></div>
+            <div class="qf-looprow"><span class="qf-tag">×2 题</span><span class="qf-tag2">×8 轨迹</span><span class="qf-tmini">T=0.8 · 首 8 条批量采样 · 每步 16 条轨迹</span></div>
             <div class="qf-flow">
-              <div class="step">生成一轮<em>T=0.9 · 记 prompt / gen ids</em></div>
+              <div class="step">生成一轮<em>记 prompt / gen ids</em></div>
               <span class="arr" aria-hidden="true">→</span>
-              <div class="step">解析 XML 调用<em>同时记格式错误</em></div>
+              <div class="step">解析 ```python</div>
               <span class="arr" aria-hidden="true">→</span>
-              <div class="step">执行工具<em>闸门 1 真值回放 / 闸门 2 沙箱兜底</em></div>
+              <div class="step">受限子进程真执行<em>python -I · 20s 超时 · 输出截断</em></div>
+              <span class="arr" aria-hidden="true">→</span>
+              <div class="step">role="tool" 回填<em>报错文本也回填，鼓励读 Traceback 修正</em></div>
             </div>
-            <div class="qf-gates">
-              <div><span class="gtag">闸门 1</span>参数与 GT 等价(执行验证等价,如 35**3 ≡ pow(35,3))→ 回放数据集记录的返回,<strong>该卡一次性核销</strong></div>
-              <div><span class="gtag">闸门 2</span>无卡可发 → 按参数哈希现编稳定返回(calculator 除外,真算);错误语义与合成数据一致</div>
-            </div>
-            <p class="mini">↺ 带工具返回 / 用户追问渲染下一轮 · 4 条轨迹生成完 empty_cache · 用户模拟器按 GT 回放追问</p>
+            <p class="mini">↺ 循环至 \boxed 终答或回合上限 · 每条 rollout 独立 MathEnv · reward = 0.8×正确 + 0.1×boxed 格式 + 0.1×执行无误</p>
           </div>
-          <p class="formula">base = 0.55 × 调用覆盖 + 0.45 × 回答事实　·　覆盖按乘性:命中占比 × (0.4×名称F1 + 0.6×参数软匹配)<br>纪律乘项:该澄清未澄清 ×0.5 ｜ 无需工具却误发调用 ×0.5 ｜ 格式门槛 ×(0.5+0.5×可解析回合占比)</p>
+          <p class="formula">难度感知采样器：按每题成功率估计 p 加权抽题（太易太难都没梯度）· 探索比例 0.5 ｜ 同题冷却 40 步 ｜ 同题最多 3 次 ｜ 全零组重抽 1 次 ｜ 难度表每步回写 difficulty_updated.json（续训不丢状态）</p>
           <div class="qf-card">
-            <div class="qf-clabel">更新 · 沿轨迹逐回合反传</div>
+            <div class="qf-clabel">更新 · 逐回合反传</div>
             <div class="qf-forwards">
-              <div><span class="gtag">old</span>当前权重,PPO 裁剪基准</div>
-              <div><span class="gtag">ref</span>关掉 LoRA 的 SFT 模型,现场算 KL(β 0.04)</div>
-              <div><span class="gtag">act</span>带梯度,真正反传的一次</div>
+              <div><span class="gtag">old</span>当前权重，PPO 裁剪基准</div>
+              <div><span class="gtag">ref</span>关掉 LoRA 的 SFT 模型，现场算 KL（β=0.05）</div>
+              <div><span class="gtag">act</span>带梯度，真正反传的一次</div>
             </div>
-            <p class="mini">组内优势 adv = (r − 组均值) / 组标准差 → PPO 裁剪策略梯度 · logits_to_keep 只对补全段出 logits(省 ~1.5GB)· 回合损失按 token 加权 → 每 4 条轨迹优化一步 → 梯度裁剪 1.0</p>
+            <p class="mini">组内优势 adv=(r−均值)/标准差 → PPO 裁剪策略梯度 · logits_to_keep 只对补全段出 logits（省 ~1.5GB）· lr 1e-5 cosine · μ=1（封存口径，ratio 恒 1，loss/kl 每步≈0 属正常）· 梯度裁剪</p>
           </div>
           <div class="qf-card">
-            <div class="qf-clabel">100 步 reward 趋势 · 来自 logs/grpo_log.jsonl</div>
+            <div class="qf-clabel">v2 全程 200 步趋势 · 来自 logs/grpo_v2/grpo_log_math.jsonl</div>
             <div class="qf-series" role="group" aria-label="曲线显示开关">
               <button type="button" class="qf-sbtn" data-s="raw" aria-pressed="true"><i style="background:var(--qf-muted)"></i>reward 逐步</button>
               <button type="button" class="qf-sbtn" data-s="roll" aria-pressed="true"><i style="background:var(--qf-accent)"></i>reward · 20 步窗口</button>
               <button type="button" class="qf-sbtn" data-s="succ" aria-pressed="false"><i style="background:var(--qf-green)"></i>success · 20 步窗口</button>
+              <button type="button" class="qf-sbtn" data-s="ev" aria-pressed="true"><i style="background:var(--qf-orange)"></i>40 题尺子评估点</button>
             </div>
             <div id="qf-trendchart" class="qf-chart"></div>
-            <p class="mini">峰值显存恒稳 5.66GB · 单步 p50 ≈59s(3 回合长任务 ~66s)· 每 10 步存 checkpoint,末尾存 final</p>
+            <p class="mini">训练池 reward 窗口 0.41→0.57、success 36%→52% · 每 20 步在 40 题固定尺子 greedy 评估存 best（best=step80 0.750）· 峰值显存恒稳 7.03GB · 每 20 步存 checkpoint，末尾存 final</p>
           </div>
-          <p class="flag red">● 每任务 1 个 env 供 4 条轨迹共用:答案卡被第 1 条用光,后 3 条同样的调用落到 sandbox,拿到的事实与真值不同。</p>
-          <p class="flag red">● 组内全同分 → 优势全 0:实测 19/100 步零梯度;日志里 loss/kl 恒 ≈0 属正常,学习信号看 grad_norm 与 success_rate。</p>
-          <p class="flag red">● old 与 act 同一时刻同一权重,ratio 恒为 1、裁剪从不触发;grad_norm 2–5.5 每步被剪到 1.0,等效学习率降 2–5 倍。</p>
-          <div class="qf-art">产出 → <code>outputs/grpo-adapter/final</code> · <code>logs/grpo_log.jsonl</code> · <code>logs/grpo_trajs.jsonl</code></div>
+          <p class="flag red">● 零梯度步全程占 18%（组内全同分 → 优势全 0），属正常现象；调度器只在实际有梯度的步推进。</p>
+          <p class="flag red">● stop-drop 保险丝已关（2026-11-23）：0.05 阈值在 40 题尺子（σ≈8pp）上三次噪声误杀，每次"掉分"仅 3 题。best 存档机制仍在。</p>
+          <p class="flag orange">◆ 续训三件套：--resume（挂 adapter）+ --init-step（步号偏移，TB 拼成同一条线）+ --init-sched-steps（调度器快进，lr 逐位续接）——60→110→200 三段曲线无断裂。本地看门狗 train_watchdog.py 每 5 分钟自愈，不占模型额度。</p>
+          <div class="qf-art">产出 → <code>outputs/grpo-v2/</code>（best=step80 · final=step200 · checkpoint-20…200）· <code>logs/grpo_v2/</code></div>
         </div></div>
       </div>
     </li>
 
     <!-- ======== 4 闭环评估 ======== -->
-    <li class="qf-stage todo">
+    <li class="qf-stage done">
       <div class="qf-rail"><span class="qf-dot">4</span></div>
       <div class="qf-body">
         <h3 class="qf-h"><button type="button" class="qf-toggle" aria-expanded="true" aria-controls="qf-d4">
-          <span class="t">闭环评估 + 报告</span><span class="sub">outputs/eval 为空</span>
-          <code class="f">eval_agent / check_forgetting / grpo_report</code>
-          <span class="qf-badge btodo">⏳ 待办</span>
+          <span class="t">闭环评估</span><span class="sub">训练与评测共用 math_env 同一把尺子</span>
+          <code class="f">scripts/evaluation/eval_math.py</code>
+          <span class="qf-badge bdone">✓ 已完成</span>
           <span class="chev" aria-hidden="true">▾</span>
         </button></h3>
         <div class="qf-detail" id="qf-d4"><div>
-          <p class="lead">GRPO 之后的三道收尾,全部尚未运行——GRPO 有没有用,目前没有裁决数据。</p>
+          <p class="lead">闭环做题评测：真实受限执行 + \boxed 判卷。三把尺子分别盯「封存对比 / 训练中监控 / 新鲜终评」。</p>
           <div class="items">
-            <div><b>闭环评估</b><span>--model outputs/merged --adapter outputs/grpo-adapter/final --tag grpo</span></div>
-            <div><b>遗忘检测</b><span>check_forgetting.py → outputs/forgetting_grpo</span></div>
-            <div><b>对比报告</b><span>grpo_report.py → base / SFT / SFT+GRPO 三方对比表</span></div>
+            <div><b>eval_set 100 题</b><span>封存三方对比（base / SFT / GRPO v1）</span></div>
+            <div><b>dev_v2 40 题固定尺子</b><span>训练中每 20 步 greedy 评估，选 best</span></div>
+            <div><b>eval_v2 80 题新鲜尺子</b><span>训练结束后终评，防"训着尺子做题"</span></div>
           </div>
-          <div class="qf-art">产出(待生成)→ <code>outputs/eval/grpo_report.md</code></div>
+          <div class="qf-card">
+            <div class="qf-clabel">主要结果（正确率）</div>
+            <div class="qf-table">
+              <div class="tr th"><span>尺子</span><span>base</span><span>SFT</span><span>GRPO v1</span><span>GRPO v2 best@80</span><span>v2 final@200</span></div>
+              <div class="tr"><span>eval_set 100（封存）</span><span>~0%</span><span>37.0%</span><span>44.0%</span><span>—</span><span>—</span></div>
+              <div class="tr"><span>dev_v2 40（训练中）</span><span>42.5%*(起点)</span><span>—</span><span>—</span><span>75.0%</span><span>67.5%</span></div>
+              <div class="tr"><span>eval_v2 80（新鲜）</span><span>45.0%</span><span>—</span><span>—</span><span>67.5%</span><span>66.2%</span></div>
+            </div>
+            <p class="mini">* 42.5% 是 v2 训练起点（step 20）在该尺子的读数。新鲜终评（2026-11-24）：相对 base 45.0% 提升 22.5pp；执行报错率 35.6%→15.9%，未终答 7.5%→0%；训练中尺子的 0.750 在新鲜尺子上读数 67.5%，赢者诅咒被挤出但提升真实。偷懒审计干净（做对题里"真算"91%）。逐项明细见 outputs/eval/math_summary.md。</p>
+          </div>
+          <div class="qf-art">产出 → <code>outputs/eval/math_summary.md</code> · <code>outputs/eval/math_*.json</code></div>
         </div></div>
       </div>
     </li>
 
-    <!-- ======== 5 演示 ======== -->
-    <li class="qf-stage opt">
+    <!-- ======== 5 发布 ======== -->
+    <li class="qf-stage done">
       <div class="qf-rail"><span class="qf-dot">5</span></div>
       <div class="qf-body">
         <h3 class="qf-h"><button type="button" class="qf-toggle" aria-expanded="true" aria-controls="qf-d5">
-          <span class="t">交互演示</span>
-          <code class="f">scripts/demo_inference.py</code>
-          <span class="qf-badge bopt">◦ 可选</span>
+          <span class="t">开源发布</span>
+          <code class="f">github.com/asdasdasdwwwasdwwdDDD/qwen3.5-4b-math-agent-sft-grpo</code>
+          <span class="qf-badge bdone">✓ 已发布</span>
           <span class="chev" aria-hidden="true">▾</span>
         </button></h3>
         <div class="qf-detail" id="qf-d5"><div>
-          <p class="lead">完整闭环对话演示:真解析 XML、沙箱真执行、多轮追问,与训练 / 评估共用 agent_env.py 口径一致。</p>
-          <p class="flag red">● 安全红线:run_python 一律拒绝执行——模型生成的代码绝不落地运行。</p>
-          <div class="qf-art">终端交互,无落盘产物</div>
+          <p class="lead">全流程代码 + 日志 + 评测汇总开源；checkpoint 权重走 Release 附件（单文件 58~124MB，超 git 单文件 100MB 上限的不进仓库）。</p>
+          <div class="items">
+            <div><b>仓库</b><span>代码 / 数据生成脚本 / 日志 / 评测 JSON 全量入库</span></div>
+            <div><b>Release</b><span>SFT ckpt-2000 与 GRPO best adapter（含 config），下载后从第 2 步十分钟复现</span></div>
+            <div><b>不入库</b><span>merged 整模型（8.5GB 可再生）· checkpoint 权重 · TB 事件文件</span></div>
+          </div>
+          <div class="qf-art">tag archive-2026-10-24 · v2 结果随 2026-11 提交更新</div>
         </div></div>
       </div>
     </li>
   </ol>
 
-  <p class="qf-tail">SFT:eval_loss 1.866 → 0.823 仍在下探。GRPO:reward 20 步窗口均值在 0.76–0.87 窄幅波动、未见明确趋势,success 窗口末段曾抬至 0.66 后回落——整体仍属噪声区间,下一道闸门是第 4 步的闭环对比评估。</p>
+  <p class="qf-tail">v2 全程实测：训练池 success 36%→52%（20 步窗口），训练中 40 题尺子 42.5→67.5→60→75.0（best@80）→后段 62.5–70 平台；新鲜 80 题终评 best@80 = 67.5%、final@200 = 66.2%（base 45.0%，+22.5pp）；全程 KL 累计 0.41 无跑飞；难度表修复后续训段熟题重抽 80%→29%。</p>
 </div>
 
 <style>
@@ -365,8 +340,13 @@ try{
   padding:12px 14px; margin:10px 0;
 }
 #qwen-flow .qf-clabel{ font-size:12px; color:var(--qf-muted); margin-bottom:8px; }
-#qwen-flow .qf-duo{ display:grid; grid-template-columns:1fr 1fr; gap:12px; }
-@media (max-width:700px){ #qwen-flow .qf-duo{ grid-template-columns:1fr; } }
+
+/* ---- results table ---- */
+#qwen-flow .qf-table{ display:grid; gap:2px; font-size:12.5px; }
+#qwen-flow .qf-table .tr{ display:grid; grid-template-columns:2.2fr 1fr 1fr 1fr 1.4fr 1.4fr; gap:4px; padding:4px 8px; border-radius:6px; background:var(--qf-card2); }
+#qwen-flow .qf-table .tr.th{ background:transparent; color:var(--qf-muted); font-size:11.5px; }
+#qwen-flow .qf-table .tr:not(.th) span:first-child{ color:var(--qf-fg); }
+#qwen-flow .qf-table span{ color:var(--qf-muted); font-variant-numeric:tabular-nums; }
 
 /* ---- rollout loop card ---- */
 #qwen-flow .qf-looprow{ display:flex; align-items:center; gap:8px; margin-bottom:8px; flex-wrap:wrap; }
@@ -382,45 +362,12 @@ try{
 }
 #qwen-flow .qf-flow .step em{ font-style:normal; font-size:11px; color:var(--qf-muted); }
 #qwen-flow .qf-flow .arr{ align-self:center; color:var(--qf-border2); }
-#qwen-flow .qf-gates{ display:grid; gap:4px; font-size:12px; color:var(--qf-muted); }
-#qwen-flow .qf-gates strong{ color:var(--qf-fg); font-weight:500; }
+#qwen-flow .qf-forwards{ display:grid; gap:4px; font-size:12px; color:var(--qf-muted); margin-bottom:4px; }
 #qwen-flow .gtag{
   display:inline-block; min-width:44px; margin-right:6px;
   font-size:11px; color:var(--qf-fg); background:var(--qf-card2);
   border:1px solid var(--qf-border); border-radius:4px; padding:0 6px; text-align:center;
 }
-#qwen-flow .qf-forwards{ display:grid; gap:4px; font-size:12px; color:var(--qf-muted); margin-bottom:4px; }
-
-/* ---- data mix bar ---- */
-#qwen-flow .qf-mixbar{
-  display:flex; gap:2px; height:18px; padding:2px;
-  background:var(--qf-inset); border-radius:7px; margin-bottom:10px;
-}
-#qwen-flow .qf-seg{ border-radius:4px; min-width:4px; transition:filter .15s,opacity .15s; }
-#qwen-flow .qf-seg.hot{ filter:brightness(1.35); }
-#qwen-flow .qf-seg.dim{ opacity:.35; }
-#qwen-flow .qf-mixlegend{ display:grid; grid-template-columns:repeat(3,1fr); gap:6px 14px; }
-@media (max-width:560px){ #qwen-flow .qf-mixlegend{ grid-template-columns:repeat(2,1fr); } }
-#qwen-flow .qf-mixlegend > div{ display:flex; gap:8px; align-items:flex-start; padding:3px 6px; border-radius:6px; transition:background .15s; }
-#qwen-flow .qf-mixlegend > div.hot{ background:var(--qf-card2); }
-#qwen-flow .qf-mixlegend i{ width:10px; height:10px; border-radius:3px; flex:none; margin-top:4px; }
-#qwen-flow .qf-mixlegend b{ font-size:12px; font-weight:500; display:block; }
-#qwen-flow .qf-mixlegend b span{ color:var(--qf-accent); font-variant-numeric:tabular-nums; margin-left:4px; }
-#qwen-flow .qf-mixlegend .d{ font-size:11px; color:var(--qf-muted); display:block; }
-
-/* ---- vram bars ---- */
-#qwen-flow .qf-vrow{ margin-bottom:7px; }
-#qwen-flow .qf-vhead{ font-size:12px; margin-bottom:3px; }
-#qwen-flow .qf-vbar{ display:flex; align-items:center; gap:8px; margin-bottom:3px; }
-#qwen-flow .qf-vbar .track{ flex:1; height:11px; background:var(--qf-inset); border-radius:6px; overflow:hidden; }
-#qwen-flow .qf-vbar .fill{ display:block; height:100%; border-radius:6px; }
-#qwen-flow .fill.before{ background:color-mix(in srgb,var(--qf-red) 55%,transparent); }
-#qwen-flow .fill.after{ background:var(--qf-green); }
-#qwen-flow .qf-vbar em{ font-style:normal; font-size:11px; color:var(--qf-muted); min-width:38px; font-variant-numeric:tabular-nums; }
-#qwen-flow .qf-vlegend{ display:flex; gap:14px; font-size:11px; color:var(--qf-muted); margin-top:2px; }
-#qwen-flow .qf-vlegend .sw{ display:inline-block; width:10px; height:6px; border-radius:3px; margin-right:5px; }
-#qwen-flow .sw.before{ background:color-mix(in srgb,var(--qf-red) 55%,transparent); }
-#qwen-flow .sw.after{ background:var(--qf-green); }
 
 /* ---- charts ---- */
 #qwen-flow .qf-chart{ width:100%; }
@@ -446,6 +393,7 @@ try{
   #qwen-flow .qf-stage{ grid-template-columns:26px minmax(0,1fr); gap:10px; }
   #qwen-flow .items{ grid-template-columns:1fr; }
   #qwen-flow .qf-toggle .f{ margin-left:0; }
+  #qwen-flow .qf-table .tr{ grid-template-columns:1.6fr 1fr 1fr 1fr 1.2fr 1.2fr; font-size:11.5px; }
 }
 @media (prefers-reduced-motion:reduce){
   #qwen-flow *{ transition:none !important; animation:none !important; }
@@ -459,42 +407,73 @@ try{
   var stages = [].slice.call(root.querySelectorAll('.qf-stage'));
 
   /* ---------- 数据(实测) ---------- */
-  var EVAL_LOSS = [[27,1.866],[54,1.481],[81,1.193],[108,1.011],[135,0.903],[162,0.848],[189,0.828],[216,0.823]];
+  var EVAL_LOSS = [[500,0.279],[1000,0.198],[1500,0.106],[2000,0.104],[2500,0.107],[3000,0.113],[3500,0.127],[4000,0.136],[4500,0.151]];
+  var EVAL_PTS = [[20,0.425],[40,0.675],[60,0.600],[80,0.750],[100,0.675],[120,0.675],[140,0.700],[160,0.650],[180,0.625],[200,0.675]];
   var GRPO_REWARD = [
-1.0,0.949,0.865,0.245,0.633,1.0,0.73,0.949,0.899,0.95,
-0.33,0.865,0.529,0.899,0.949,0.761,0.876,1.0,0.906,0.865,
-0.39,0.613,0.932,0.956,0.848,0.854,0.511,0.802,0.745,0.813,
-0.861,0.922,0.655,0.932,0.875,0.485,0.957,0.932,0.73,0.929,
-0.647,0.748,0.97,0.932,0.797,0.757,0.743,1.0,0.929,0.826,
-0.775,0.817,1.0,0.355,0.797,0.966,0.983,0.966,0.776,0.91,
-0.799,0.459,0.899,0.797,0.797,0.978,1.0,0.922,0.72,1.0,
-0.453,0.984,0.855,0.797,0.732,0.611,0.797,0.91,1.0,1.0,
-0.92,1.0,0.944,0.966,0.654,0.76,0.872,0.604,0.97,0.94,
-0.289,0.934,0.782,1.0,0.804,1.0,0.882,1.0,0.423,0.817];
+0.881,0.831,0.487,0.719,0.512,0.369,0.131,0.306,0.256,0.069
+,0.269,0.094,0.494,0.256,0.469,0.769,0.094,0.138,0.769,0.325
+,0.494,0.438,0.269,0.537,0.075,0.2,0.119,0.55,0.362,0.525
+,0.369,0.362,0.606,0.887,0.438,0.263,0.881,0.55,0.606,0.325
+,0.475,0.55,0.319,0.775,0.55,0.094,0.169,0.662,1.0,0.662
+,0.55,0.388,0.412,0.487,0.087,0.419,0.544,0.55,0.15,0.094
+,0.881,0.887,0.55,0.944,0.537,0.656,0.325,0.775,0.494,0.212
+,0.381,0.4,0.512,0.431,0.544,0.831,0.438,0.212,0.544,0.319
+,0.656,0.537,0.381,0.662,0.606,0.487,0.25,0.831,0.494,0.719
+,0.438,0.381,0.662,0.831,0.319,0.494,0.825,1.0,0.662,0.212
+,1.0,0.944,0.55,1.0,0.537,0.6,0.381,0.775,0.494,0.469
+,0.719,0.719,0.944,0.55,0.113,0.094,0.775,0.519,0.775,0.656
+,0.425,0.381,0.55,0.494,0.15,0.081,0.6,0.438,0.6,0.138
+,0.688,0.369,0.438,0.55,0.431,0.719,0.713,0.713,0.263,0.719
+,0.075,0.419,0.944,0.544,0.494,0.269,0.606,1.0,0.719,0.831
+,0.487,0.087,0.887,0.55,0.206,0.206,0.719,0.831,0.075,0.825
+,0.494,0.656,0.1,0.106,0.887,0.775,0.887,0.831,1.0,0.831
+,0.55,0.144,0.875,0.425,0.356,0.056,0.944,0.606,0.887,0.944
+,0.6,0.938,0.494,0.831,0.144,0.594,0.069,1.0,0.544,0.138
+,0.525,0.719,0.606,0.662,0.6,0.431,0.887,0.269,0.55,0.438];
   var GRPO_ROLL = [
-1.0,0.975,0.938,0.765,0.739,0.782,0.775,0.797,0.808,0.822,
-0.777,0.785,0.765,0.775,0.786,0.785,0.79,0.802,0.807,0.81,
-0.78,0.763,0.766,0.802,0.812,0.805,0.794,0.787,0.779,0.772,
-0.799,0.802,0.808,0.81,0.806,0.792,0.796,0.793,0.784,0.787,
-0.8,0.807,0.809,0.807,0.805,0.8,0.812,0.822,0.831,0.831,
-0.827,0.822,0.839,0.81,0.806,0.83,0.832,0.834,0.836,0.835,
-0.842,0.828,0.824,0.818,0.818,0.829,0.842,0.838,0.827,0.836,
-0.82,0.828,0.821,0.843,0.84,0.822,0.813,0.81,0.821,0.825,
-0.832,0.859,0.861,0.869,0.862,0.851,0.845,0.829,0.841,0.838,
-0.83,0.828,0.824,0.834,0.838,0.857,0.862,0.866,0.837,0.828];
+0.881,0.856,0.733,0.73,0.686,0.633,0.561,0.529,0.499,0.456
+,0.439,0.41,0.417,0.405,0.41,0.432,0.412,0.397,0.416,0.412
+,0.393,0.373,0.362,0.353,0.331,0.323,0.322,0.334,0.34,0.362
+,0.367,0.381,0.386,0.418,0.416,0.391,0.43,0.451,0.443,0.443
+,0.442,0.447,0.45,0.462,0.486,0.48,0.483,0.488,0.52,0.527
+,0.536,0.537,0.528,0.508,0.49,0.498,0.481,0.481,0.458,0.447
+,0.467,0.484,0.496,0.504,0.503,0.531,0.539,0.545,0.52,0.497
+,0.489,0.489,0.494,0.491,0.514,0.535,0.53,0.513,0.532,0.544
+,0.532,0.515,0.506,0.492,0.496,0.487,0.484,0.486,0.486,0.512
+,0.515,0.514,0.521,0.541,0.53,0.513,0.532,0.572,0.578,0.572
+,0.59,0.61,0.618,0.635,0.632,0.637,0.644,0.641,0.641,0.629
+,0.643,0.66,0.674,0.66,0.649,0.629,0.627,0.603,0.609,0.631
+,0.602,0.574,0.574,0.548,0.529,0.503,0.514,0.497,0.503,0.486
+,0.484,0.467,0.442,0.442,0.458,0.489,0.486,0.495,0.47,0.473
+,0.455,0.457,0.477,0.48,0.497,0.506,0.506,0.535,0.541,0.575
+,0.565,0.551,0.574,0.574,0.562,0.537,0.537,0.543,0.533,0.539
+,0.56,0.572,0.529,0.507,0.527,0.552,0.566,0.558,0.572,0.572
+,0.575,0.578,0.577,0.571,0.579,0.571,0.582,0.571,0.612,0.618
+,0.623,0.637,0.657,0.693,0.656,0.647,0.606,0.614,0.592,0.557
+,0.556,0.584,0.571,0.583,0.595,0.614,0.611,0.594,0.577,0.552];
   var SUCC_ROLL = [
-1.0,0.875,0.667,0.5,0.45,0.542,0.464,0.5,0.5,0.525,
-0.477,0.458,0.423,0.429,0.45,0.469,0.471,0.5,0.513,0.5,
-0.45,0.412,0.45,0.487,0.512,0.487,0.487,0.487,0.463,0.425,
-0.45,0.475,0.475,0.475,0.475,0.438,0.463,0.45,0.412,0.45,
-0.45,0.463,0.45,0.45,0.425,0.412,0.412,0.425,0.463,0.487,
-0.463,0.425,0.475,0.45,0.425,0.475,0.475,0.487,0.487,0.487,
-0.487,0.475,0.45,0.425,0.425,0.463,0.512,0.5,0.475,0.5,
-0.5,0.55,0.537,0.55,0.55,0.5,0.463,0.45,0.5,0.5,
-0.537,0.588,0.625,0.662,0.65,0.613,0.6,0.562,0.6,0.588,
-0.588,0.588,0.55,0.588,0.575,0.625,0.637,0.65,0.6,0.55];
+0.875,0.844,0.708,0.703,0.663,0.604,0.527,0.492,0.458,0.412
+,0.392,0.365,0.37,0.357,0.363,0.387,0.364,0.347,0.368,0.363
+,0.341,0.319,0.306,0.297,0.272,0.263,0.263,0.275,0.281,0.306
+,0.312,0.325,0.331,0.366,0.362,0.334,0.378,0.4,0.391,0.391
+,0.391,0.397,0.4,0.412,0.437,0.431,0.434,0.441,0.475,0.481
+,0.491,0.494,0.484,0.463,0.444,0.453,0.434,0.434,0.409,0.397
+,0.419,0.438,0.45,0.459,0.459,0.491,0.497,0.503,0.475,0.45
+,0.441,0.441,0.447,0.444,0.469,0.491,0.484,0.466,0.487,0.5
+,0.487,0.469,0.459,0.444,0.447,0.437,0.434,0.437,0.437,0.466
+,0.469,0.466,0.472,0.494,0.481,0.463,0.484,0.528,0.534,0.528
+,0.547,0.569,0.578,0.597,0.594,0.6,0.606,0.603,0.603,0.591
+,0.606,0.625,0.641,0.625,0.616,0.594,0.591,0.566,0.572,0.597
+,0.566,0.534,0.534,0.506,0.484,0.456,0.469,0.45,0.456,0.437
+,0.437,0.419,0.391,0.391,0.406,0.441,0.437,0.447,0.419,0.422
+,0.403,0.406,0.428,0.431,0.45,0.459,0.459,0.491,0.497,0.535
+,0.522,0.506,0.531,0.531,0.519,0.491,0.491,0.497,0.488,0.494
+,0.516,0.528,0.484,0.463,0.484,0.512,0.528,0.519,0.534,0.534
+,0.537,0.54,0.54,0.534,0.544,0.537,0.55,0.537,0.581,0.587
+,0.594,0.609,0.628,0.666,0.625,0.616,0.572,0.581,0.556,0.519
+,0.519,0.55,0.534,0.547,0.559,0.578,0.575,0.556,0.537,0.509];
 
-  var SERIES = { raw:true, roll:true, succ:false };
+  var SERIES = { raw:true, roll:true, succ:false, ev:true };
 
   /* ---------- 状态持久化 ---------- */
   function applyState(st){
@@ -511,6 +490,7 @@ try{
       SERIES.raw = st.series.raw !== false;
       SERIES.roll = st.series.roll !== false;
       SERIES.succ = !!st.series.succ;
+      SERIES.ev = st.series.ev !== false;
       syncSeriesBtns(); drawTrend();
     }
   }
@@ -519,7 +499,7 @@ try{
       if(window.zcode && window.zcode.setWidgetState){
         window.zcode.setWidgetState({ privateContent:{
           open: stages.map(function(li){ return !li.classList.contains('collapsed'); }),
-          series: { raw:SERIES.raw, roll:SERIES.roll, succ:SERIES.succ }
+          series: { raw:SERIES.raw, roll:SERIES.roll, succ:SERIES.succ, ev:SERIES.ev }
         }}).catch(function(){});
       }
     }catch(e){}
@@ -557,25 +537,6 @@ try{
     });
   });
 
-  /* ---------- 数据配比:扇区 ↔ 图例联动 ---------- */
-  var segs = [].slice.call(root.querySelectorAll('.qf-seg'));
-  var legItems = [].slice.call(root.querySelectorAll('.qf-mixlegend [data-cat]'));
-  function hot(cat, on){
-    segs.forEach(function(s){
-      var hit = on && s.getAttribute('data-cat') === cat;
-      s.classList.toggle('hot', hit);
-      s.classList.toggle('dim', on && !hit);
-    });
-    legItems.forEach(function(l){
-      l.classList.toggle('hot', on && l.getAttribute('data-cat') === cat);
-    });
-  }
-  segs.concat(legItems).forEach(function(el){
-    var cat = el.getAttribute('data-cat');
-    el.addEventListener('mouseenter', function(){ hot(cat, true); });
-    el.addEventListener('mouseleave', function(){ hot(null, false); });
-  });
-
   /* ---------- SVG 工具 ---------- */
   function svgEl(tag, attrs){
     var el = document.createElementNS('http://www.w3.org/2000/svg', tag);
@@ -591,7 +552,7 @@ try{
     return t;
   }
 
-  /* ---------- eval_loss 曲线 ---------- */
+  /* ---------- SFT eval_loss 曲线 ---------- */
   function drawEval(){
     var box = document.getElementById('qf-evalchart');
     if(!box) return;
@@ -600,18 +561,20 @@ try{
     box.innerHTML = '';
     var H = 168, m = { t:20, r:16, b:26, l:40 };
     var iw = W - m.l - m.r, ih = H - m.t - m.b;
-    var x0 = 27, x1 = 216, y0 = 0.72, y1 = 1.98;
+    var x0 = 500, x1 = 4500, y0 = 0.08, y1 = 0.32;
     function X(v){ return m.l + (v - x0) / (x1 - x0) * iw; }
     function Y(v){ return m.t + (1 - (v - y0) / (y1 - y0)) * ih; }
     var svg = svgEl('svg', { viewBox:'0 0 '+W+' '+H, width:W, height:H, role:'img',
-      'aria-label':'SFT 评估损失曲线:step 27 为 1.866,逐级降至 step 216 的 0.823' });
-    [1.0, 1.5].forEach(function(v){
+      'aria-label':'SFT 评估损失曲线:500 步 0.279,2000 步谷底 0.104,之后回升至 4500 步 0.151' });
+    [0.1, 0.15, 0.2, 0.25].forEach(function(v){
       svg.appendChild(svgEl('line', { x1:m.l, x2:W-m.r, y1:Y(v), y2:Y(v), stroke:'var(--qf-border)', 'stroke-width':1 }));
-      svgText(svg, m.l-6, Y(v)+4, v.toFixed(1), { anchor:'end' });
+      svgText(svg, m.l-6, Y(v)+4, v.toFixed(2), { anchor:'end' });
     });
-    svgText(svg, X(27)-14, H-8, 'step 27', { anchor:'start' });
-    svgText(svg, X(108), H-8, '108', { anchor:'middle' });
-    svgText(svg, X(216), H-8, '216', { anchor:'end' });
+    svgText(svg, X(500)-10, H-8, '500', { anchor:'start' });
+    [1000, 2000, 3000, 4000].forEach(function(v){
+      svgText(svg, X(v), H-8, String(v), { anchor:'middle' });
+    });
+    svgText(svg, X(4500), H-8, '4500', { anchor:'end' });
     var d = EVAL_LOSS.map(function(p,i){ return (i?'L':'M') + X(p[0]).toFixed(1) + ' ' + Y(p[1]).toFixed(1); }).join(' ');
     svg.appendChild(svgEl('path', { d:d, fill:'none', stroke:'var(--qf-accent)', 'stroke-width':2,
       'stroke-linecap':'round', 'stroke-linejoin':'round' }));
@@ -621,13 +584,14 @@ try{
       c.setAttribute('data-tooltip', 'step '+p[0]+' · eval_loss '+p[1].toFixed(3));
       svg.appendChild(c);
     });
-    svgText(svg, X(27)+7, Y(1.866)-8, '1.866', { size:12, fill:'var(--qf-fg)' });
-    svgText(svg, X(216)-2, Y(0.823)-10, '0.823', { size:12, fill:'var(--qf-accent)', anchor:'end', weight:500 });
+    svgText(svg, X(500)+7, Y(0.279)-8, '0.279', { size:12, fill:'var(--qf-fg)' });
+    svgText(svg, X(2000), Y(0.104)-10, '0.104 ← 谷底 ck2000', { size:12, fill:'var(--qf-green)', anchor:'middle', weight:500 });
+    svgText(svg, X(4500)-2, Y(0.151)-10, '0.151', { size:12, fill:'var(--qf-orange)', anchor:'end' });
     svgText(svg, W-m.r, m.t-6, 'eval_loss', { anchor:'end' });
     box.appendChild(svg);
   }
 
-  /* ---------- GRPO reward 趋势 ---------- */
+  /* ---------- GRPO v2 趋势 ---------- */
   function drawTrend(){
     var box = document.getElementById('qf-trendchart');
     if(!box) return;
@@ -636,20 +600,20 @@ try{
     box.innerHTML = '';
     var H = 176, m = { t:16, r:40, b:26, l:34 };
     var iw = W - m.l - m.r, ih = H - m.t - m.b;
-    var x0 = 1, x1 = 100, y0 = 0.15, y1 = 1.03;
+    var x0 = 1, x1 = 200, y0 = 0.0, y1 = 1.03;
     function X(i){ return m.l + (i - x0) / (x1 - x0) * iw; }
     function Y(v){ return m.t + (1 - (v - y0) / (y1 - y0)) * ih; }
     var svg = svgEl('svg', { viewBox:'0 0 '+W+' '+H, width:W, height:H, role:'img',
-      'aria-label':'GRPO 100 步 reward 曲线:逐步值噪声大,20 步窗口均值在 0.76 至 0.87 之间窄幅波动' });
-    [0.4, 0.7, 1.0].forEach(function(v){
+      'aria-label':'GRPO v2 200 步趋势:reward 20 步窗口从 0.41 升至约 0.57,训练中 40 题尺子评估在 step 80 达 0.750' });
+    [0.25, 0.5, 0.75, 1.0].forEach(function(v){
       svg.appendChild(svgEl('line', { x1:m.l, x2:W-m.r, y1:Y(v), y2:Y(v), stroke:'var(--qf-border)', 'stroke-width':1 }));
-      svgText(svg, m.l-6, Y(v)+4, v.toFixed(1), { anchor:'end' });
+      svgText(svg, m.l-6, Y(v)+4, v.toFixed(2), { anchor:'end' });
     });
     svgText(svg, X(1), H-8, '步 1', { anchor:'start' });
-    [25, 50, 75].forEach(function(v){
+    [50, 100, 150].forEach(function(v){
       svgText(svg, X(v), H-8, String(v), { anchor:'middle' });
     });
-    svgText(svg, X(100), H-8, '100', { anchor:'end' });
+    svgText(svg, X(200), H-8, '200', { anchor:'end' });
     function path(arr, color, width, opacity, dash){
       var a = svgEl('path', { d: arr.map(function(v,i){ return (i?'L':'M') + X(i+1).toFixed(1) + ' ' + Y(v).toFixed(1); }).join(' '),
         fill:'none', stroke:color, 'stroke-width':width, 'stroke-linecap':'round', 'stroke-linejoin':'round' });
@@ -661,15 +625,23 @@ try{
     if(SERIES.raw)  path(GRPO_REWARD, 'var(--qf-muted)', 1, 0.45);
     if(SERIES.roll) path(GRPO_ROLL, 'var(--qf-accent)', 2);
     if(SERIES.succ) path(SUCC_ROLL, 'var(--qf-green)', 1.6, null, '5 3');
+    /* 训练中 40 题尺子评估点（离散散点） */
+    if(SERIES.ev){
+      EVAL_PTS.forEach(function(p){
+        var c = svgEl('circle', { cx:X(p[0]), cy:Y(p[1]), r:3.4, fill:'var(--qf-bg2)',
+          stroke:'var(--qf-orange)', 'stroke-width':1.8 });
+        c.setAttribute('data-tooltip', 'step '+p[0]+' · 40题尺子 '+(p[1]*100).toFixed(1)+'%'+(p[0]===80?' ← best':''));
+        svg.appendChild(c);
+      });
+      var best = EVAL_PTS[3];
+      svgText(svg, X(best[0]), Y(best[1])-10, '75.0@80', { size:11, fill:'var(--qf-orange)', anchor:'middle', weight:500 });
+    }
     /* 端点直标 */
     if(SERIES.roll){
-      var dot = svgEl('circle', { cx:X(100), cy:Y(GRPO_ROLL[99]), r:3, fill:'var(--qf-accent)' });
-      dot.setAttribute('data-tooltip','第 100 步 · 窗口均值 0.828');
+      var dot = svgEl('circle', { cx:X(200), cy:Y(GRPO_ROLL[199]), r:3, fill:'var(--qf-accent)' });
+      dot.setAttribute('data-tooltip','第 200 步 · 窗口均值 0.552');
       svg.appendChild(dot);
-      svgText(svg, X(100)+6, Y(GRPO_ROLL[99])+4, '0.83', { size:11, fill:'var(--qf-accent)', weight:500 });
-    }
-    if(SERIES.succ){
-      svgText(svg, X(100)+6, Y(SUCC_ROLL[99])+4, '0.55', { size:11, fill:'var(--qf-green)', weight:500 });
+      svgText(svg, X(200)+6, Y(GRPO_ROLL[199])+4, '0.55', { size:11, fill:'var(--qf-accent)', weight:500 });
     }
     box.appendChild(svg);
   }

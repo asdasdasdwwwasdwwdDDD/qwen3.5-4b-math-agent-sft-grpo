@@ -37,3 +37,18 @@ logs/tensorboard*.log
 
 # 单实例训练锁
 outputs/.train.lock
+
+# 归档的废弃实验（体积大、可再生，不入库）
+outputs/_archive/
+logs/archive/
+
+# v1.5 一次性实验中间产物（band/mid 实验，可由 build_band_sets.py / probe_band.py 再生；v2 主链路不用）
+data/tora_sft/band_l4_*.jsonl
+data/tora_sft/grpo_band155.jsonl
+data/tora_sft/grpo_mid100.jsonl
+data/tora_sft/grpo_sft_band.jsonl
+data/tora_sft/sft_l4_mix.jsonl
+outputs/eval-tmp/
+outputs/eval_test_*.jsonl/
+outputs/probe/
+outputs/probe_sft200.jsonl

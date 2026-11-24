@@ -1,7 +1,7 @@
 <div id="grpo-flow">
   <div class="head">
-    <h2>GRPO 训练流程</h2>
-    <div class="text-small muted">scripts/train_grpo.py --mode trajectory · 实测每步 ≈60 秒 · 峰值显存 5.66 GB</div>
+    <h2>GRPO 训练流程（数学链路 · v2）</h2>
+    <div class="text-small muted">scripts/training/train_grpo.py · P=2×G=8 · 实测每步 ≈9.5 分钟 · 峰值显存 7.03 GB · v2 已跑满 200 步（2026-11-24）</div>
   </div>
 
   <div class="trace text-small" aria-label="流水线位置">
@@ -11,9 +11,9 @@
     <span class="sep" aria-hidden="true">→</span>
     <span>合并模型</span>
     <span class="sep" aria-hidden="true">→</span>
-    <span class="here">GRPO ×100 步</span>
+    <span class="here">GRPO ×200 步</span>
     <span class="sep" aria-hidden="true">→</span>
-    <span class="undone">评估</span>
+    <span>闭环评估</span>
   </div>
 
   <ol class="stages">
@@ -23,48 +23,47 @@
         <h3>启动<span class="sub">训练前跑一次</span></h3>
         <div class="items">
           <div><b>单实例锁</b><span>outputs/.train.lock，双开必假死</span></div>
-          <div><b>载入 merged 模型</b><span>NF4 4bit，同时充当 KL 参考策略</span></div>
+          <div><b>载入 merged-tora</b><span>NF4 4bit，同时充当 KL 参考策略</span></div>
           <div><b>摘视觉塔 · 冻结权重压 bf16</b><span>纯文本用不到，省 ≈2 GB</span></div>
-          <div><b>挂 LoRA r=16</b><span>12 类线性层，可训练 32.5 M</span></div>
-          <div><b>读 train.jsonl</b><span>预渲染首条 prompt</span></div>
-          <div><b>AdamW8bit + cosine</b><span>非 paged，lr 1e-5</span></div>
+          <div><b>挂 LoRA r=16</b><span>12 类线性层，alpha 32</span></div>
+          <div><b>难度表驱动采样器</b><span>probe 初评 difficulty_v2.json，训练中持续回写 difficulty_updated.json</span></div>
+          <div><b>AdamW8bit + cosine</b><span>非 paged，lr 1e-5，200 步计划</span></div>
         </div>
-        <p class="flag orange">◆ 已缓解：build_dataset.py 新增 --seed，GRPO 改用 data/grpo_tasks（seed=2026）全新任务，与 SFT 数据隔离（chained 调用序列新颖度 81%）。</p>
+        <p class="flag orange">◆ 数据隔离：任务池 pool_train_v2.jsonl 经 probe 筛选（p∈[0.05,0.95] 有梯度信号），与 eval_v2 持出尺子零重叠。</p>
       </div>
     </li>
 
     <li class="stage">
       <div class="rail"><span class="dot">1</span></div>
       <div class="body">
-        <h3>取任务</h3>
-        <p>打乱队列依次取 1 个任务，取完重洗。</p>
-        <p class="flag orange">◆ 已调整：--prompts-per-step 默认 2，一次更新含两个组，方差减半（耗时约翻倍）。</p>
+        <h3>取任务<span class="sub">难度感知采样器</span></h3>
+        <p>按各题成功率 p 的估计加权抽 2 题/步：太易（p→1）太难得不了梯度，中段题梯度信号最足。</p>
+        <p class="mini">探索比例 0.5 ｜ 同题冷却 40 步 ｜ 同题最多抽 3 次 ｜ 全零组重抽 1 次（reroll-dead）｜ 难度表每步回写，续训不丢状态。</p>
+        <p class="flag orange">◆ 已修正（2026-11-23）：续训一度误用 probe 初版难度表，导致续训段 80% 重抽熟题；指向 difficulty_updated.json 后重抽率降到 29%。</p>
       </div>
     </li>
 
     <li class="stage">
       <div class="rail"><span class="dot">2</span></div>
       <div class="body">
-        <h3>采样 Rollout<span class="sub">同一任务做 4 遍，每遍最多 4 回合</span></h3>
+        <h3>采样 Rollout<span class="sub">每题 8 条完整解题轨迹</span></h3>
         <div class="card">
           <div class="loop">
-            <span class="tag">×4 轨迹</span>
-            <span class="tag2">×4 回合</span>
+            <span class="tag">×2 题</span>
+            <span class="tag2">×8 轨迹</span>
           </div>
           <div class="flow">
-            <div class="step">生成一轮<em>T=0.9 · 记 prompt/gen ids</em></div>
+            <div class="step">生成一轮<em>T=0.8 · 首 8 条批量 · 记 prompt/gen ids</em></div>
             <span class="arr" aria-hidden="true">→</span>
-            <div class="step">解析 XML 调用<em>同时记格式错误</em></div>
+            <div class="step">解析 ```python 代码块</div>
             <span class="arr" aria-hidden="true">→</span>
-            <div class="step">有调用 → 执行工具<em>无调用 → 交付追问或终局</em></div>
+            <div class="step">受限子进程真执行<em>python -I · 超时 20s · 输出截断</em></div>
+            <span class="arr" aria-hidden="true">→</span>
+            <div class="step">执行结果 role="tool" 回填<em>报错文本也回填</em></div>
           </div>
-          <div class="gates">
-            <div><span class="gtag">闸门 1</span>真值回放：参数与 GT 等价 → 发数据集记录的返回，<strong>该卡一次性核销</strong></div>
-            <div><span class="gtag">闸门 2</span>sandbox 兜底：无卡可发 → 按参数哈希现编一个稳定返回（calculator 除外，真算）</div>
-          </div>
-          <p class="mini">↺ 带着工具返回 / 用户追问渲染下一轮，回到生成 · 4 条轨迹生成完 empty_cache</p>
+          <p class="mini">↺ 循环至 \boxed 终答或回合上限 · 每条 rollout 独立 MathEnv（2026-10-24 修复，勿回退）· 空 empty_cache</p>
         </div>
-        <p class="flag red">● 已修复（2026-10-24）：每条轨迹独立 TaskEnv。旧版 G 条轨迹共用 1 个 env，答案卡被第 1 条用光，后 3 条拿到的事实与真值不同（46 个可比组中 31 组不一致）。</p>
+        <p class="flag red">● 模板约定：执行结果必须以 role="tool" 回填（渲染成 <code>```output</code> 包裹的 user 轮）——用裸 user 轮会让公共前缀 mask 把代码轮整个 mask 掉，只训终答不训代码。</p>
       </div>
     </li>
 
@@ -72,8 +71,8 @@
       <div class="rail"><span class="dot">3</span></div>
       <div class="body">
         <h3>打分</h3>
-        <p>0.55 × 调用覆盖 + 0.45 × 回答事实命中；该澄清未澄清、无需工具却调用 → ×0.5；格式不合格 → 再打折。</p>
-        <p class="mini">判卷对照的始终是 GT 记录的标准答案。</p>
+        <p><code>reward = 0.8 × \boxed 正确 + 0.1 × boxed 格式 + 0.1 × 执行无误</code>　判卷用 math_env 同一把尺，训练与评测口径一致。</p>
+        <p class="mini">做错但格式对、跑通不给零分（0.2/0.1 档），让"敢写敢跑"的行为先被奖励。</p>
       </div>
     </li>
 
@@ -82,39 +81,38 @@
       <div class="body">
         <h3>组内优势</h3>
         <p><code>adv = (r − 组均值) / 组标准差</code>　比组内平均好为正，差为负。</p>
-        <p class="flag red">● 出场顺序污染已随 env 修复消除（旧版实测：第 1 条回答分 0.857 vs 后 3 条 0.74–0.76，纯顺序差）。</p>
-        <p class="flag red">● 旧版实测 19/100 步组内全同分、优势全 0；换新 seed 数据后有望减少。</p>
+        <p class="flag red">● 组内全同分 → 优势全 0 → 零梯度步：v2 全程 18% 的步为零梯度，属正常现象；日志里 loss/kl 每步 ≈0 同理（μ=1 时 ratio 恒 1），学习信号看 grad_norm 与 success_rate。</p>
       </div>
     </li>
 
     <li class="stage">
       <div class="rail"><span class="dot">5</span></div>
       <div class="body">
-        <h3>更新<span class="sub">沿轨迹逐回合反传</span></h3>
+        <h3>更新<span class="sub">逐回合反传</span></h3>
         <div class="card">
           <div class="forwards">
             <div><span class="gtag">old</span>当前权重，PPO 裁剪基准</div>
-            <div><span class="gtag">ref</span>关掉 LoRA 的 SFT 模型，算 KL</div>
+            <div><span class="gtag">ref</span>关掉 LoRA 的 SFT 模型，现场算 KL（β=0.05）</div>
             <div><span class="gtag">act</span>带梯度，真正反传的一次</div>
           </div>
-          <p class="mini">回合损失按 token 数加权 → backward → 每 4 条轨迹优化一步 → 梯度裁剪 1.0</p>
+          <p class="mini">logits_to_keep 只对补全段出 logits（省 ~1.5GB）→ 回合损失按 token 加权 → 每 2 题 16 条轨迹优化一步 → 梯度裁剪</p>
         </div>
-        <p class="flag red">● 旧版单任务/步时 ratio 恒为 1、裁剪从不触发；现在每步 2 任务、累积中途即更新，后半桶轨迹的 ratio 开始起作用，old 前向不再白算。</p>
-        <p class="flag red">● 已调整：裁剪上限 1.0→2.0（--max-grad-norm）、lr 1e-5→3e-5（旧版实测范数 2–5.5 每步都被硬剪）。</p>
+        <p class="flag orange">◆ μ=1（封存口径）：ratio 恒 1，PPO 裁剪退化为保险丝；--epochs 4 可切重放口径。</p>
       </div>
     </li>
 
     <li class="stage">
       <div class="rail"><span class="dot">6</span></div>
       <div class="body">
-        <h3>记录与保存</h3>
-        <p>每步写 logs/grpo_log.jsonl 与 TensorBoard；每 10 步存 checkpoint，末尾存 final。</p>
-        <p class="flag orange">◆ 已加 --eval-every 20：训练中定期 greedy 闭环评估（固定 16 任务子集），最优存 out/best——final 之外多一个选择依据。</p>
+        <h3>记录 · 评估 · 续训</h3>
+        <p>每步写 jsonl + TensorBoard；每 20 步存 checkpoint，末尾存 final。</p>
+        <p class="mini"><b>best 机制</b>：每 20 步在 40 题固定尺子上 greedy 闭环评估，最优存 out/best。<b>续训三件套</b>：--resume（挂 adapter）+ --init-step（步号偏移，TB 拼同一条线）+ --init-sched-steps（调度器快进，lr 逐位续接）。</p>
+        <p class="flag red">● stop-drop 保险丝已关（2026-11-23 用户令）：0.05 阈值在 40 题尺子（σ≈8pp）上三次噪声误杀（每"次掉分"仅 3 题）。best 存档机制仍在，最终以 best + 新鲜终评为准。</p>
       </div>
     </li>
   </ol>
 
-  <p class="tail text-small">修复前基线（旧版 100 步实测，信号受 env bug 污染）：reward 0.822→0.793，success 0.525→0.450，均在噪声区间。修复后需重跑验证。</p>
+  <p class="tail text-small">v2 全程实测（200 步）：训练池 success 36%→52%（20 步窗口）；训练中评估 42.5→67.5→60→<b>75.0（best@80）</b>→后段 62.5–70 平台；新鲜 80 题终评 best@80 = 67.5%、final@200 = 66.2%（base 45.0%，+22.5pp）；全程 KL 累计 0.41 无跑飞；偷懒审计干净（做对题里"真算"占 91%，无跳代码/刷格式分倾向）。逐项明细见 outputs/eval/math_summary.md。</p>
 </div>
 
 <style>
@@ -127,7 +125,6 @@
 }
 #grpo-flow .trace .sep { color: var(--muted-foreground); opacity: 0.55; }
 #grpo-flow .trace .here { color: var(--viz-series-1); font-weight: 500; }
-#grpo-flow .trace .undone { opacity: 0.55; text-decoration: line-through; }
 
 #grpo-flow .stages { list-style: none; margin: 0; padding: 0; }
 #grpo-flow .stage { display: grid; grid-template-columns: 34px minmax(0, 1fr); gap: 14px; }
@@ -173,14 +170,13 @@
 #grpo-flow .step em { font-style: normal; font-size: 11px; color: var(--muted-foreground); }
 #grpo-flow .arr { align-self: center; color: var(--border); }
 
-#grpo-flow .gates { display: grid; gap: 4px; font-size: 12px; color: var(--muted-foreground); }
-#grpo-flow .gates strong { color: var(--foreground); font-weight: 500; }
+#grpo-flow .forwards { display: grid; gap: 4px; font-size: 12px; color: var(--muted-foreground); }
+#grpo-flow .forwards strong { color: var(--foreground); font-weight: 500; }
 #grpo-flow .gtag {
   display: inline-block; min-width: 44px; margin-right: 6px;
   font-size: 11px; color: var(--foreground); background: var(--muted);
   border-radius: 4px; padding: 0 6px; text-align: center;
 }
-#grpo-flow .forwards { display: grid; gap: 4px; font-size: 12px; color: var(--muted-foreground); }
 
 #grpo-flow .tail { margin-top: 6px; color: var(--muted-foreground); border-top: 1px solid var(--border); padding-top: 10px; }
 

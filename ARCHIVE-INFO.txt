@@ -29,3 +29,12 @@
 2. 顺序：convert_tora.py → split_grpo_pool.py → check_mask.py → train_qlora.py →
    merge_lora.py → train_grpo.py --mode math → eval_math.py
 3. 8GB 显存红线与六项修复见 AGENTS.md（bs=1、非 paged adamw_8bit、分块 CE、摘视觉塔等，勿回退）
+
+## 2026-11 增补：GRPO v2 重训（本包后续开发，未重新冻结）
+
+- v2：probe 任务池（2914 题筛 p∈[0.05,0.95]）+ 难度感知采样器 + G=8，200 步跑满，
+  产物 outputs/grpo-v2/（best=step80、final=step200、checkpoint-20…200），日志 logs/grpo_v2/
+- 训练中 40 题尺子：42.5 → 67.5 → 60 → 75.0（best@80）→ 后段 62.5–70 平台
+- 续训三件套 --resume/--init-step/--init-sched-steps（train_grpo.py 新增）保证
+  TB 曲线多段拼成同一条；自愈工具 scripts/tools/{train_alive,train_kill,train_resume,train_watchdog}.py
+- 评测汇总仍以 outputs/eval/math_summary.md 为准（v2 各行随终评更新）

@@ -1,0 +1,57 @@
+check: probed 235/450, new mixed 103 (total ~344), probe=dead, log_stale=1min
+!! 探针不在且未达标 → 自动重拉
+relaunched probe (gen-batch 4)
+check: probed 235/450, new mixed 103 (total ~344), probe=alive1, log_stale=2min
+check: probed 238/450, new mixed 104 (total ~345), probe=alive1, log_stale=0min
+check: probed 242/450, new mixed 105 (total ~346), probe=alive1, log_stale=1min
+check: probed 244/450, new mixed 106 (total ~347), probe=alive1, log_stale=3min
+check: probed 249/450, new mixed 111 (total ~352), probe=alive1, log_stale=1min
+check: probed 250/450, new mixed 111 (total ~352), probe=alive1, log_stale=1min
+check: probed 255/450, new mixed 115 (total ~356), probe=alive1, log_stale=1min
+check: probed 259/450, new mixed 118 (total ~359), probe=alive1, log_stale=3min
+check: probed 260/450, new mixed 118 (total ~359), probe=alive1, log_stale=2min
+check: probed 264/450, new mixed 120 (total ~361), probe=alive1, log_stale=0min
+check: probed 266/450, new mixed 121 (total ~362), probe=alive1, log_stale=1min
+check: probed 268/450, new mixed 122 (total ~363), probe=alive1, log_stale=4min
+check: probed 270/450, new mixed 123 (total ~364), probe=alive1, log_stale=0min
+check: probed 275/450, new mixed 126 (total ~367), probe=alive1, log_stale=0min
+check: probed 278/450, new mixed 129 (total ~370), probe=alive1, log_stale=2min
+check: probed 280/450, new mixed 130 (total ~371), probe=alive1, log_stale=0min
+check: probed 282/450, new mixed 131 (total ~372), probe=alive1, log_stale=0min
+check: probed 285/450, new mixed 133 (total ~374), probe=alive1, log_stale=0min
+check: probed 288/450, new mixed 136 (total ~377), probe=alive1, log_stale=3min
+check: probed 289/450, new mixed 136 (total ~377), probe=alive1, log_stale=4min
+check: probed 293/450, new mixed 138 (total ~379), probe=alive1, log_stale=0min
+check: probed 295/450, new mixed 138 (total ~379), probe=alive1, log_stale=2min
+check: probed 296/450, new mixed 139 (total ~380), probe=alive1, log_stale=3min
+check: probed 298/450, new mixed 140 (total ~381), probe=alive1, log_stale=1min
+check: probed 301/450, new mixed 142 (total ~383), probe=alive1, log_stale=1min
+check: probed 302/450, new mixed 143 (total ~384), probe=alive1, log_stale=1min
+check: probed 306/450, new mixed 146 (total ~387), probe=alive1, log_stale=2min
+check: probed 311/450, new mixed 150 (total ~391), probe=alive1, log_stale=1min
+check: probed 313/450, new mixed 151 (total ~392), probe=alive1, log_stale=2min
+check: probed 315/450, new mixed 151 (total ~392), probe=alive1, log_stale=1min
+check: probed 315/450, new mixed 151 (total ~392), probe=alive1, log_stale=6min
+check: probed 319/450, new mixed 153 (total ~394), probe=alive1, log_stale=0min
+check: probed 323/450, new mixed 157 (total ~398), probe=alive1, log_stale=0min
+check: probed 324/450, new mixed 157 (total ~398), probe=alive1, log_stale=2min
+check: probed 325/450, new mixed 157 (total ~398), probe=alive1, log_stale=0min
+check: probed 329/450, new mixed 159 (total ~400), probe=alive1, log_stale=1min
+check: probed 334/450, new mixed 161 (total ~402), probe=alive1, log_stale=0min
+check: probed 335/450, new mixed 161 (total ~402), probe=alive1, log_stale=3min
+check: probed 337/450, new mixed 161 (total ~402), probe=alive1, log_stale=4min
+check: probed 341/450, new mixed 164 (total ~405), probe=alive1, log_stale=1min
+check: probed 344/450, new mixed 165 (total ~406), probe=alive1, log_stale=1min
+== 阈值达成，停止探针：probed 344, 新增半会 165, 总池 ~406 ==
+训练池 grpo_train_nodev: 3094 题
+已测量 844 | 半会 399（中带 p∈[0.25,0.75] 212，其中新口径可信 193）
+dev_v2 100 题 | eval_v2 80 题（两集不相交，均已排除 L1）
+
+== 落盘 data/grpo_v2 ==
+difficulty_v2.json 844 题 | pool_train_v2 2914 | dev_v2 100 | eval_v2 80
+训练池内半会题: 219（抽题主战场）
+dev_v2 level 分布 {'Level 3': 51, 'Level 4': 29, 'Level 5': 10, 'Level 2': 10}，p 均值 0.50
+eval_v2 level 分布 {'Level 4': 37, 'Level 5': 5, 'Level 3': 30, 'Level 2': 8}，p 均值 0.49
+校验全部通过：两尺子不相交、均∈池、与旧 dev/eval 全不相交、全部带测量且为半会
+
+== 题集构建完成，已无缝启动 GRPO v2 训练（日志 logs/grpo_v2_run.log）==

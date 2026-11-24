@@ -1,0 +1,210 @@
+[transformers] The fast path is not available because one of the required library is not installed. Falling back to torch implementation. To install follow https://github.com/fla-org/flash-linear-attention#installation and https://github.com/Dao-AILab/causal-conv1d
+Loading weights:   0%|          | 0/723 [00:00<?, ?it/s]Loading weights:   0%|          | 1/723 [00:00<11:22,  1.06it/s]Loading weights:   1%|          | 6/723 [00:01<01:50,  6.50it/s]Loading weights:   2%|▏         | 11/723 [00:01<00:56, 12.53it/s]Loading weights:   2%|▏         | 14/723 [00:01<00:50, 14.12it/s]Loading weights:   4%|▎         | 26/723 [00:01<00:22, 30.83it/s]Loading weights:   4%|▍         | 31/723 [00:01<00:20, 33.99it/s]Loading weights:   5%|▌         | 39/723 [00:01<00:15, 43.76it/s]Loading weights:   6%|▌         | 45/723 [00:01<00:17, 39.64it/s]Loading weights:   7%|▋         | 50/723 [00:02<00:16, 41.71it/s]Loading weights:   8%|▊         | 61/723 [00:02<00:12, 52.65it/s]Loading weights:   9%|▉         | 67/723 [00:02<00:20, 31.88it/s]Loading weights:  11%|█         | 76/723 [00:02<00:17, 36.77it/s]Loading weights:  11%|█         | 81/723 [00:02<00:17, 36.03it/s]Loading weights:  13%|█▎        | 92/723 [00:03<00:14, 43.86it/s]Loading weights:  13%|█▎        | 97/723 [00:03<00:20, 31.04it/s]Loading weights:  14%|█▍        | 101/723 [00:03<00:20, 29.83it/s]Loading weights:  15%|█▍        | 106/723 [00:03<00:21, 28.28it/s]Loading weights:  16%|█▌        | 115/723 [00:03<00:15, 38.34it/s]Loading weights:  17%|█▋        | 120/723 [00:04<00:18, 32.31it/s]Loading weights:  18%|█▊        | 132/723 [00:04<00:12, 47.15it/s]Loading weights:  19%|█▉        | 138/723 [00:04<00:15, 36.86it/s]Loading weights:  20%|█▉        | 143/723 [00:04<00:17, 32.83it/s]Loading weights:  20%|██        | 148/723 [00:05<00:21, 26.46it/s]Loading weights:  21%|██        | 152/723 [00:05<00:21, 26.37it/s]Loading weights:  22%|██▏       | 157/723 [00:05<00:19, 28.83it/s]Loading weights:  23%|██▎       | 167/723 [00:05<00:14, 37.75it/s]Loading weights:  24%|██▍       | 172/723 [00:05<00:17, 31.82it/s]Loading weights:  25%|██▌       | 181/723 [00:05<00:14, 36.79it/s]Loading weights:  26%|██▌       | 185/723 [00:06<00:14, 36.61it/s]Loading weights:  27%|██▋       | 195/723 [00:06<00:11, 47.33it/s]Loading weights:  28%|██▊       | 201/723 [00:06<00:12, 43.40it/s]Loading weights:  28%|██▊       | 206/723 [00:06<00:12, 43.08it/s]Loading weights:  30%|███       | 220/723 [00:06<00:07, 64.34it/s]Loading weights:  32%|███▏      | 228/723 [00:06<00:08, 59.89it/s]Loading weights:  33%|███▎      | 238/723 [00:06<00:07, 67.25it/s]Loading weights:  34%|███▍      | 248/723 [00:06<00:06, 72.79it/s]Loading weights:  35%|███▌      | 256/723 [00:07<00:07, 62.40it/s]Loading weights:  36%|███▋      | 263/723 [00:07<00:08, 56.43it/s]Loading weights:  38%|███▊      | 274/723 [00:07<00:06, 66.65it/s]Loading weights:  39%|███▉      | 282/723 [00:07<00:07, 58.33it/s]Loading weights:  40%|████      | 291/723 [00:07<00:07, 61.49it/s]Loading weights:  42%|████▏     | 301/723 [00:07<00:06, 65.56it/s]Loading weights:  43%|████▎     | 308/723 [00:07<00:07, 55.73it/s]Loading weights:  43%|████▎     | 314/723 [00:08<00:07, 52.37it/s]Loading weights:  45%|████▌     | 326/723 [00:08<00:06, 65.21it/s]Loading weights:  46%|████▌     | 333/723 [00:08<00:07, 53.55it/s]Loading weights:  48%|████▊     | 344/723 [00:08<00:06, 61.04it/s]Loading weights:  49%|████▉     | 354/723 [00:08<00:05, 64.59it/s]Loading weights:  50%|████▉     | 361/723 [00:08<00:06, 55.60it/s]Loading weights:  51%|█████     | 367/723 [00:09<00:06, 52.33it/s]Loading weights:  52%|█████▏    | 379/723 [00:09<00:05, 64.82it/s]Loading weights:  53%|█████▎    | 386/723 [00:09<00:06, 55.59it/s]Loading weights:  55%|█████▍    | 397/723 [00:09<00:05, 63.38it/s]Loading weights:  56%|█████▋    | 407/723 [00:09<00:04, 65.90it/s]Loading weights:  57%|█████▋    | 414/723 [00:09<00:05, 57.01it/s]Loading weights:  58%|█████▊    | 421/723 [00:09<00:05, 54.73it/s]Loading weights:  61%|██████    | 440/723 [00:10<00:03, 84.52it/s]Loading weights:  66%|██████▋   | 480/723 [00:10<00:01, 157.76it/s]Loading weights:  72%|███████▏  | 521/723 [00:10<00:00, 221.39it/s]Loading weights:  78%|███████▊  | 564/723 [00:10<00:00, 270.89it/s]Loading weights:  83%|████████▎ | 602/723 [00:10<00:00, 299.44it/s]Loading weights:  89%|████████▉ | 646/723 [00:10<00:00, 333.69it/s]Loading weights:  95%|█████████▍| 684/723 [00:10<00:00, 345.79it/s]Loading weights: 100%|█████████▉| 720/723 [00:10<00:00, 329.84it/s]Loading weights: 100%|██████████| 723/723 [00:10<00:00, 67.16it/s] 
+探针: 200 题 × G=4（data/tora_sft/band_l4_sft.jsonl）
+  [1/200] math-test-1485 1/4 (103.5s)
+  [2/200] math-test-3339 4/4 (23.3s)
+  [3/200] math-test-2436 0/4 (275.8s)
+  [4/200] math-test-1582 4/4 (58.2s)
+  [5/200] math-test-470 4/4 (47.7s)
+  [6/200] math-test-4443 4/4 (34.0s)
+  [7/200] math-test-166 3/4 (37.8s)
+  [8/200] math-test-4791 0/4 (100.5s)
+  [9/200] math-test-516 1/4 (27.1s)
+  [10/200] math-test-298 4/4 (20.1s)
+  [11/200] math-test-1041 2/4 (38.9s)
+  [12/200] math-test-231 4/4 (38.3s)
+  [13/200] math-test-2394 2/4 (76.0s)
+  [14/200] math-test-1010 4/4 (36.6s)
+  [15/200] math-test-2283 2/4 (153.1s)
+  [16/200] math-test-4167 3/4 (28.1s)
+  [17/200] math-test-4592 4/4 (31.4s)
+  [18/200] math-test-535 3/4 (41.8s)
+  [19/200] math-test-2753 1/4 (114.9s)
+  [20/200] math-test-1213 1/4 (43.2s)
+  [21/200] math-test-2116 4/4 (10.4s)
+  [22/200] math-test-3777 4/4 (16.0s)
+  [23/200] math-test-3906 3/4 (29.7s)
+  [24/200] math-test-4379 0/4 (48.8s)
+  [25/200] math-test-1992 4/4 (27.3s)
+  [26/200] math-test-1595 0/4 (45.6s)
+  [27/200] math-test-1183 0/4 (36.3s)
+  [28/200] math-test-4307 1/4 (126.6s)
+  [29/200] math-test-3232 4/4 (35.2s)
+  [30/200] math-test-2651 0/4 (79.8s)
+  [31/200] math-test-2994 1/4 (73.0s)
+  [32/200] math-test-1170 4/4 (83.3s)
+  [33/200] math-test-1332 4/4 (42.3s)
+  [34/200] math-test-463 0/4 (26.3s)
+  [35/200] math-test-2709 3/4 (31.5s)
+  [36/200] math-test-860 4/4 (26.0s)
+  [37/200] math-test-161 4/4 (28.2s)
+  [38/200] math-test-1191 3/4 (24.8s)
+  [39/200] math-test-1711 0/4 (19.5s)
+  [40/200] math-test-3469 2/4 (98.3s)
+  [41/200] math-test-4223 0/4 (54.4s)
+  [42/200] math-test-4344 3/4 (25.7s)
+  [43/200] math-test-3670 4/4 (24.7s)
+  [44/200] math-test-4009 4/4 (19.4s)
+  [45/200] math-test-3125 4/4 (25.8s)
+  [46/200] math-test-369 3/4 (102.1s)
+  [47/200] math-test-3079 3/4 (79.9s)
+  [48/200] math-test-4653 4/4 (25.0s)
+  [49/200] math-test-1750 2/4 (76.2s)
+  [50/200] math-test-357 4/4 (16.2s)
+  [51/200] math-test-3209 3/4 (13.0s)
+  [52/200] math-test-4437 3/4 (12.5s)
+  [53/200] math-test-910 4/4 (17.2s)
+  [54/200] math-test-3920 1/4 (54.8s)
+  [55/200] math-test-4763 3/4 (30.4s)
+  [56/200] math-test-3388 4/4 (24.4s)
+  [57/200] math-test-3589 1/4 (49.6s)
+  [58/200] math-test-157 4/4 (34.8s)
+  [59/200] math-test-1960 1/4 (47.5s)
+  [60/200] math-test-270 3/4 (39.1s)
+  [61/200] math-test-4117 1/4 (40.7s)
+  [62/200] math-test-89 4/4 (55.5s)
+  [63/200] math-test-640 4/4 (29.1s)
+  [64/200] math-test-2174 4/4 (42.8s)
+  [65/200] math-test-3743 4/4 (25.8s)
+  [66/200] math-test-3980 0/4 (36.1s)
+  [67/200] math-test-828 4/4 (34.1s)
+  [68/200] math-test-2888 4/4 (22.8s)
+  [69/200] math-test-1112 4/4 (18.8s)
+  [70/200] math-test-3581 2/4 (15.3s)
+  [71/200] math-test-444 3/4 (14.6s)
+  [72/200] math-test-2291 0/4 (18.2s)
+  [73/200] math-test-2673 1/4 (71.1s)
+  [74/200] math-test-3169 3/4 (65.2s)
+  [75/200] math-test-2037 3/4 (25.9s)
+  [76/200] math-test-3173 4/4 (23.4s)
+  [77/200] math-test-191 4/4 (25.9s)
+  [78/200] math-test-438 3/4 (41.8s)
+  [79/200] math-test-1129 3/4 (39.2s)
+  [80/200] math-test-3735 1/4 (151.1s)
+  [81/200] math-test-982 4/4 (24.6s)
+  [82/200] math-test-3978 4/4 (16.0s)
+  [83/200] math-test-1370 4/4 (26.6s)
+  [84/200] math-test-3900 3/4 (34.7s)
+  [85/200] math-test-3420 4/4 (8.1s)
+  [86/200] math-test-4221 3/4 (13.6s)
+  [87/200] math-test-668 1/4 (22.2s)
+  [88/200] math-test-1428 0/4 (17.1s)
+  [89/200] math-test-135 2/4 (17.6s)
+  [90/200] math-test-3569 0/4 (39.9s)
+  [91/200] math-test-1634 4/4 (12.9s)
+  [92/200] math-test-222 0/4 (23.9s)
+  [93/200] math-test-3270 4/4 (15.7s)
+  [94/200] math-test-3712 2/4 (44.7s)
+  [95/200] math-test-1158 0/4 (25.7s)
+  [96/200] math-test-3548 0/4 (23.3s)
+  [97/200] math-test-174 4/4 (63.1s)
+  [98/200] math-test-359 3/4 (36.0s)
+  [99/200] math-test-3277 0/4 (89.5s)
+  [100/200] math-test-748 4/4 (28.7s)
+  [101/200] math-test-1081 4/4 (44.8s)
+  [102/200] math-test-1291 2/4 (80.2s)
+  [103/200] math-test-2795 0/4 (29.0s)
+  [104/200] math-test-2562 4/4 (32.4s)
+  [105/200] math-test-2935 4/4 (18.9s)
+  [106/200] math-test-4294 4/4 (15.6s)
+  [107/200] math-test-1701 0/4 (11.8s)
+  [108/200] math-test-460 4/4 (13.5s)
+  [109/200] math-test-467 4/4 (14.8s)
+  [110/200] math-test-3304 4/4 (14.0s)
+  [111/200] math-test-3384 3/4 (85.4s)
+  [112/200] math-test-1645 2/4 (33.0s)
+  [113/200] math-test-2678 4/4 (21.9s)
+  [114/200] math-test-4320 4/4 (20.9s)
+  [115/200] math-test-3196 2/4 (181.6s)
+  [116/200] math-test-736 2/4 (120.9s)
+  [117/200] math-test-2427 0/4 (37.7s)
+  [118/200] math-test-1251 3/4 (17.6s)
+  [119/200] math-test-666 4/4 (13.2s)
+  [120/200] math-test-1966 0/4 (92.1s)
+  [121/200] math-test-4453 4/4 (15.8s)
+  [122/200] math-test-3217 4/4 (16.7s)
+  [123/200] math-test-4104 4/4 (19.0s)
+  [124/200] math-test-182 4/4 (33.5s)
+  [125/200] math-test-727 2/4 (94.1s)
+  [126/200] math-test-230 3/4 (31.5s)
+  [127/200] math-test-4984 2/4 (147.8s)
+  [128/200] math-test-850 2/4 (73.1s)
+  [129/200] math-test-265 2/4 (113.4s)
+  [130/200] math-test-1675 2/4 (19.2s)
+  [131/200] math-test-815 4/4 (14.6s)
+  [132/200] math-test-165 2/4 (38.3s)
+  [133/200] math-test-969 4/4 (18.8s)
+  [134/200] math-test-2880 3/4 (84.8s)
+  [135/200] math-test-582 4/4 (22.8s)
+  [136/200] math-test-3747 3/4 (22.9s)
+  [137/200] math-test-3375 3/4 (57.8s)
+  [138/200] math-test-2501 3/4 (79.2s)
+  [139/200] math-test-2241 3/4 (72.4s)
+  [140/200] math-test-1643 4/4 (33.2s)
+  [141/200] math-test-606 0/4 (148.2s)
+  [142/200] math-test-1678 1/4 (33.3s)
+  [143/200] math-test-750 4/4 (15.7s)
+  [144/200] math-test-3159 4/4 (13.2s)
+  [145/200] math-test-1224 0/4 (55.3s)
+  [146/200] math-test-442 4/4 (19.0s)
+  [147/200] math-test-408 4/4 (15.1s)
+  [148/200] math-test-3659 4/4 (20.4s)
+  [149/200] math-test-851 1/4 (99.0s)
+  [150/200] math-test-274 1/4 (40.3s)
+  [151/200] math-test-621 3/4 (26.9s)
+  [152/200] math-test-3265 4/4 (68.5s)
+  [153/200] math-test-2347 3/4 (46.0s)
+  [154/200] math-test-3409 0/4 (29.9s)
+  [155/200] math-test-3426 4/4 (22.6s)
+  [156/200] math-test-2329 3/4 (26.6s)
+  [157/200] math-test-3824 4/4 (35.5s)
+  [158/200] math-test-389 4/4 (31.8s)
+  [159/200] math-test-596 4/4 (13.0s)
+  [160/200] math-test-4843 3/4 (28.3s)
+  [161/200] math-test-4390 0/4 (26.1s)
+  [162/200] math-test-4007 4/4 (12.5s)
+  [163/200] math-test-1178 0/4 (20.7s)
+  [164/200] math-test-2138 3/4 (31.2s)
+  [165/200] math-test-4190 3/4 (29.3s)
+  [166/200] math-test-4363 2/4 (43.5s)
+  [167/200] math-test-3350 4/4 (23.8s)
+  [168/200] math-test-1617 4/4 (20.5s)
+  [169/200] math-test-3463 4/4 (19.8s)
+  [170/200] math-test-2920 4/4 (24.9s)
+  [171/200] math-test-3608 3/4 (22.1s)
+  [172/200] math-test-3951 4/4 (17.6s)
+  [173/200] math-test-3627 3/4 (25.4s)
+  [174/200] math-test-4612 1/4 (38.9s)
+  [175/200] math-test-1516 4/4 (22.1s)
+  [176/200] math-test-1434 0/4 (17.0s)
+  [177/200] math-test-68 0/4 (139.5s)
+  [178/200] math-test-3761 4/4 (28.6s)
+  [179/200] math-test-901 3/4 (29.0s)
+  [180/200] math-test-4288 3/4 (18.9s)
+  [181/200] math-test-1111 1/4 (21.6s)
+  [182/200] math-test-3620 4/4 (10.5s)
+  [183/200] math-test-2973 0/4 (78.1s)
+  [184/200] math-test-1196 2/4 (23.9s)
+  [185/200] math-test-1006 3/4 (16.3s)
+  [186/200] math-test-3890 3/4 (68.8s)
+  [187/200] math-test-4305 3/4 (24.1s)
+  [188/200] math-test-3842 4/4 (14.9s)
+  [189/200] math-test-935 4/4 (23.5s)
+  [190/200] math-test-680 1/4 (157.2s)
+  [191/200] math-test-92 4/4 (20.1s)
+  [192/200] math-test-4135 4/4 (21.4s)
+  [193/200] math-test-4345 3/4 (21.8s)
+  [194/200] math-test-1800 4/4 (29.3s)
+  [195/200] math-test-4381 2/4 (18.2s)
+  [196/200] math-test-4377 4/4 (16.3s)
+  [197/200] math-test-3550 2/4 (25.1s)
+  [198/200] math-test-3932 4/4 (24.3s)
+  [199/200] math-test-1884 3/4 (44.7s)
+  [200/200] math-test-695 2/4 (105.6s)
+
+=== 汇总 ===
+题数 200 | 平均 p = 0.671
+混合组 0<k<G : 86/200 = 43.0%
+全错 p=0     : 14.5%
+全对 p=1     : 42.5%
+总耗时 141.1 分钟

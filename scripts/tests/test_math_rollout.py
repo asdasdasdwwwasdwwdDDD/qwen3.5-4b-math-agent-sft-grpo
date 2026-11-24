@@ -2,7 +2,6 @@
 """math_env.rollout 离线集成测试：用 mock 模型按剧本吐 assistant 文本，
 验证多轮消息流（代码→受限执行→tool 回填→终答）、模板渲染与打分。不需要 GPU。
 用法（仓库根运行）: python -m scripts.tests.test_math_rollout 或 python scripts/tests/test_math_rollout.py"""
-import json
 import os
 import sys
 from types import SimpleNamespace
@@ -123,8 +122,8 @@ def main():
     assert trajectory["ended"] == "limit" and env.n_exec == 2  # 3 回合上限：前 2 回合执行、第 3 回合收尾判定
     reward, detail = score_trajectory(trajectory, env)
     assert not detail["correct"] and detail["pred"] is None and detail["ended"] == "limit", detail
-    # 新打分：无终答、无部分分，只剩"执行全程无报错"的 0.05
-    assert abs(reward - 0.05) < 1e-6, reward
+    # 三级打分：没交卷 → 0（哪怕代码跑通了也不给分，堵住"算出答案不交卷"的套利）
+    assert abs(reward - 0.0) < 1e-6, reward
     print("场景3（回合上限未终答）OK reward=%.2f" % reward)
 
     # ---- 场景 4：代码算对但收尾写错（部分分生效）----
@@ -133,10 +132,11 @@ def main():
     trajectory = rollout(model, tokenizer, env, max_turns=4, max_new_tokens=512, temperature=1.0,
                          top_p=1.0, max_len=2048, do_sample=False, grad_ckpt=False)
     reward, detail = score_trajectory(trajectory, env)
-    # 0.15（执行输出命中 gt "42"）+ 0.10（有 boxed）+ 0.05（执行无报错）；正确性 0
+    # 三级打分：答错但交了卷、也跑过代码 → 0.10（code_hit 只记录，不再进奖励）
     assert not detail["correct"] and detail["code_hit"] and detail["exec_clean"], detail
-    assert abs(reward - 0.30) < 1e-6, (detail, reward)
-    print("场景4（答案错误但代码算对）OK reward=%.2f（含 0.15 部分分）" % reward)
+    assert detail["submitted"] and detail["used_tool"], detail
+    assert abs(reward - 0.10) < 1e-6, (detail, reward)
+    print("场景4（答案错误但代码算对）OK reward=%.2f（认真做但没做对）" % reward)
 
     # ---- 场景 5：rollout_group 组批量采样（首回合一次出 G 条 + eos 截断去 pad）----
     model = MockGroupModel(tokenizer, [

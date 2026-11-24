@@ -73,6 +73,11 @@ _BOXED_PAT = re.compile(r"\\boxed\{([^{}]*(?:\{[^{}]*\}[^{}]*)*)\}")
 
 
 # ---------------------------------------------------------------- 受限执行 ----
+# Windows：探针/训练常以无控制台方式后台运行，子进程必须显式 CREATE_NO_WINDOW，
+# 否则系统为每段被执行的模型代码新分配控制台——采样时黑窗闪个不停（2026-11-22）。
+_NO_WINDOW = subprocess.CREATE_NO_WINDOW if os.name == "nt" else 0
+
+
 def run_python_code(code, timeout=20):
     """在隔离子进程中执行模型生成的 Python，返回 (回填文本, 是否无报错)。
 
@@ -89,7 +94,8 @@ def run_python_code(code, timeout=20):
         try:
             cp = subprocess.run([sys.executable, "-I", script], capture_output=True,
                                 text=True, timeout=timeout, cwd=tmp, env=env,
-                                encoding="utf-8", errors="replace")
+                                encoding="utf-8", errors="replace",
+                                creationflags=_NO_WINDOW)
             output_text, ok = cp.stdout or "", cp.returncode == 0
             if not ok:
                 err = (cp.stderr or "").strip() or f"exit code {cp.returncode}"
@@ -348,23 +354,38 @@ def _gt_in_exec_output(env, gt):
 def score_trajectory(trajectory, env):
     """整条轨迹打分（0~1）与明细。
 
-    reward = 0.70×答案正确 + 0.15×执行输出命中 gt + 0.10×给出 boxed 终答
-             + 0.05×执行全程无报错
-    设计要点（2026-11-10 修订）：
-      - 正确性仍主导，但不再是唯一的高分来源；"算对但收尾写错"能拿到 0.15 部分分，
-        给难题组制造与正确性正相关的组内方差（旧版只有格式分，等于教模型"快而自信地错"）。
-      - 旧的 0.1「执行过一次就加分」改为「执行全程无报错才加 0.05」：不再奖励乱试错；
-        但仍保留一点无条件可得的格式分（正确性为 0 的组里必须有方差，否则整步零梯度）。
-    detail.success = 端到端做题正确（评测口径，等价于 correct）。"""
+    reward = 1.00  答案正确
+             0.10  答案错误，但「交了卷」且「真的跑过代码」
+             0.00  其余（没交卷 / 没用代码直接猜 / 空轨迹）
+
+    设计要点（2026-11-11 重写，取代 11-10 的四项加权）：
+      - 只有一个优化方向：正确性。0.10 那档是"认真做了但没做对"，且是一维合取条件
+        （必须同时交卷 + 跑过代码），无法拆成几个维度分别刷分。
+      - 删除 code_hit（0.15）：实测制造「算出答案但不交卷」套利——不交卷+命中 gt
+        得 0.20，交卷但算错只得 0.15；dose100 里 5.7% 轨迹走了这条路。
+      - 删除 exec_clean（无报错才加分）：把"试一试"定价为负，实测每题执行次数
+        1.30→1.13、回合数 2.31→1.95，模型学会少写代码。报错是真实反馈，不该扣分。
+      - 删除单独的 boxed 加分：交卷是得分的必要条件，已被 correct 完全隐含；
+        单独奖励它只会同时造出「不交卷拿分」和「乱交卷拿分」两种套利。
+      - 组内标准化会把任何"方向恒定的小分项"放大成与正确性同量级的梯度，所以
+        格式项的绝对权重不重要，维度数量才重要（6 档 → 2 档）。
+    detail.success = 端到端做题正确（评测口径，等价于 correct）。
+    code_hit / exec_clean 仍照常记录到审计日志，只作观测，不进奖励。"""
     final_text = trajectory["turns"][-1]["text"] if trajectory["turns"] else ""
     pred = extract_boxed(final_text)
     correct = answers_equal(pred, env.task["gt"])
-    code_hit = _gt_in_exec_output(env, env.task["gt"])
-    exec_clean = env.n_exec > 0 and env.n_error == 0
-    reward = 0.70 * float(correct) + 0.15 * float(code_hit) \
-        + 0.10 * float(pred is not None) + 0.05 * float(exec_clean)
+    submitted = pred is not None
+    used_tool = env.n_exec > 0
+    if correct:
+        reward = 1.00
+    elif submitted and used_tool:
+        reward = 0.10
+    else:
+        reward = 0.0
     detail = {"success": bool(correct), "correct": bool(correct),
-              "code_hit": bool(code_hit), "exec_clean": bool(exec_clean),
+              "submitted": bool(submitted), "used_tool": bool(used_tool),
+              "code_hit": bool(_gt_in_exec_output(env, env.task["gt"])),
+              "exec_clean": bool(used_tool and env.n_error == 0),
               "pred": pred, "gt": env.task["gt"],
               "ended": trajectory["ended"], "n_turns": len(trajectory["turns"]),
               "n_exec": env.n_exec, "n_error": env.n_error}

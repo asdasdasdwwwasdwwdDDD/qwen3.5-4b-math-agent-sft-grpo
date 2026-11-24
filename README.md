@@ -2,7 +2,7 @@
 
 用 ToRA 数学推理轨迹对 **Qwen3.5-4B** 做两阶段对齐：先 SFT 学会「写 Python → 看执行结果 → \boxed 作答」的解题链路，再用**整条链路 GRPO**（模型自己走完整条链路，代码经受限子进程**真实执行**，按整条轨迹的答案正确性做组内验证对齐）继续提升。全部流程在消费级 **8GB 显存笔记本 GPU** 上完成，自研训练循环（不依赖 TRL）。
 
-本项目是 2026-10-24 的阶段封存快照：100 题持出集上 base ~0% → **SFT 37.0%** → **GRPO 44.0%**。
+本项目是 2026-10-24 的阶段封存快照：100 题持出集上 base ~0% → **SFT 37.0%** → **GRPO 44.0%**。2026-11 用 probe 任务池 + 难度感知采样器重训 **GRPO v2** 至 200 步（见下文"v2 重训"）。
 
 ## 成果（100 题持出集，4bit 部署口径）
 
@@ -14,6 +14,16 @@
 
 GRPO 的收益集中在高难度层（L4 4.5%→18.2%、L5 11.5%→23.1%）与行为质量（报错率 −13.4pp、未终答清零）。
 完整评测汇总见 [`outputs/eval/math_summary.md`](outputs/eval/math_summary.md)。
+
+## v2 重训（2026-11，200 步）
+
+从 merged-tora 出发的第二轮 GRPO：**probe 任务池**（2914 题摸底筛 p∈[0.05,0.95]，只训有梯度信号的中段题）+ **难度感知采样器**（按每题成功率估计加权抽题，冷却 40 步、同题≤3 次、全零组重抽，难度表每步回写）+ G=8 深组。P=2×G=8，lr 1e-5 cosine，KL β=0.05，T=0.8，reward = 0.8×正确 + 0.1×boxed + 0.1×执行无误，约 9.5 分钟/步，峰值显存 7.03GB。
+
+- **训练池 success 36%→52%**（20 步窗口），执行报错率 26.8%→23.3%
+- **训练中 40 题固定尺子**（每 20 步 greedy）：42.5 → 67.5 → 60 → **75.0（best@80）** → 后段 62.5–70 平台，final@200 = 67.5
+- 全程 KL 累计 0.41，无跑飞；偷懒审计干净（做对题里"真算"91%，无跳代码/刷格式分倾向）
+- 工程配套：续训三件套（`--resume` + `--init-step` + `--init-sched-steps`）保证 TB 曲线三段拼成同一条；本地看门狗 `scripts/tools/train_watchdog.py` 每 5 分钟自愈，不占模型额度
+- **新鲜 80 题终评**（eval_v2，与训练池零重叠）：**best@80 = 67.5%、final@200 = 66.2%，vs base 45.0%（+22.5pp）**——泛化提升坐实；执行报错率 45.0%→15.9%，未终答 7.5%→0%。训练中尺子的 0.750 在新鲜尺子上读数 67.5%，赢者诅咒被挤出但提升真实
 
 ## 方案
 
@@ -85,7 +95,18 @@ python -m scripts.training.train_grpo --model outputs/merged-tora \
 # （可选）PPO μ=4 重放 + 首回合批量采样：--epochs 4 --gen-batch 4，写新目录勿覆写封存结果
 python -m scripts.evaluation.eval_math --model outputs/merged-tora \
     --adapter outputs/grpo-tora/best --tag grpo
-cat outputs/eval/math_summary.md                          # 三方对比表
+
+# 5. GRPO v2（probe 任务池 + 难度感知采样器，200 步 ≈ 32h）
+python -m scripts.training.train_grpo --model outputs/merged-tora \
+    --out outputs/grpo-v2 --data data/grpo_v2/pool_train_v2.jsonl \
+    --difficulty data/grpo_v2/difficulty_v2.json --eval-data data/grpo_v2/dev_v2.jsonl \
+    --max-steps 200 --num-generations 8 --gen-batch 8 --prompts-per-step 2 \
+    --lr 1e-5 --beta 0.05 --eval-every 20 --eval-n 40 --save-steps 20
+# 意外中断后续训（自动扫日志找断点，TB 曲线保持同一条）：
+python -m scripts.tools.train_resume        # 本地看门狗：python -m scripts.tools.train_watchdog
+python -m scripts.evaluation.eval_math --model outputs/merged-tora \
+    --adapter outputs/grpo-v2/best --data data/grpo_v2/eval_v2.jsonl --n 80 --tag v2-best
+cat outputs/eval/math_summary.md                          # 全部评测对比表
 ```
 
 **不想跑训练？** 关键 adapter 权重在本仓库 [Release](../../releases/tag/archive-2026-10-24)：SFT ckpt-2000 与 GRPO best 两个 adapter（含 config），下载放回对应目录后从上面第 3 步开始即可（merge_lora 十分钟复现完整模型）。

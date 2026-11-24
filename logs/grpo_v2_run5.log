@@ -1,0 +1,122 @@
+W1123 22:31:22.716000 6680 site-packages\torch\distributed\elastic\multiprocessing\redirects.py:29] NOTE: Redirects are currently not supported in Windows or MacOs.
+D:\anaconda\envs\pytorch\Lib\site-packages\requests\__init__.py:113: RequestsDependencyWarning: urllib3 (2.6.3) or chardet (6.0.0.post1)/charset_normalizer (3.4.4) doesn't match a supported version!
+  warnings.warn(
+加载 NF4 量化 merged 模型 ...
+Loading weights:   0%|          | 0/723 [00:00<?, ?it/s]Loading weights:   0%|          | 1/723 [00:01<18:11,  1.51s/it]Loading weights:   1%|          | 6/723 [00:01<02:42,  4.41it/s]Loading weights:   2%|▏         | 12/723 [00:01<01:11,  9.93it/s]Loading weights:   3%|▎         | 23/723 [00:01<00:31, 21.97it/s]Loading weights:   4%|▍         | 29/723 [00:02<00:25, 26.84it/s]Loading weights:   6%|▌         | 40/723 [00:02<00:17, 39.53it/s]Loading weights:   7%|▋         | 47/723 [00:02<00:18, 37.19it/s]Loading weights:   8%|▊         | 61/723 [00:02<00:11, 55.32it/s]Loading weights:  10%|▉         | 70/723 [00:02<00:11, 56.90it/s]Loading weights:  11%|█         | 79/723 [00:02<00:10, 61.62it/s]Loading weights:  12%|█▏        | 89/723 [00:02<00:09, 67.62it/s]Loading weights:  13%|█▎        | 97/723 [00:03<00:10, 61.06it/s]Loading weights:  14%|█▍        | 104/723 [00:03<00:10, 56.64it/s]Loading weights:  16%|█▌        | 117/723 [00:03<00:08, 71.20it/s]Loading weights:  17%|█▋        | 125/723 [00:03<00:08, 70.33it/s]Loading weights:  18%|█▊        | 133/723 [00:03<00:09, 63.72it/s]Loading weights:  20%|██        | 145/723 [00:03<00:07, 73.91it/s]Loading weights:  21%|██        | 153/723 [00:04<00:10, 51.94it/s]Loading weights:  23%|██▎       | 167/723 [00:04<00:08, 67.74it/s]Loading weights:  24%|██▍       | 176/723 [00:04<00:08, 62.44it/s]Loading weights:  26%|██▌       | 185/723 [00:04<00:08, 65.25it/s]Loading weights:  27%|██▋       | 195/723 [00:04<00:07, 69.58it/s]Loading weights:  28%|██▊       | 203/723 [00:04<00:08, 61.89it/s]Loading weights:  29%|██▉       | 210/723 [00:04<00:08, 57.98it/s]Loading weights:  31%|███       | 221/723 [00:04<00:07, 68.60it/s]Loading weights:  32%|███▏      | 229/723 [00:05<00:07, 63.92it/s]Loading weights:  33%|███▎      | 238/723 [00:05<00:07, 67.02it/s]Loading weights:  34%|███▍      | 248/723 [00:05<00:06, 70.96it/s]Loading weights:  35%|███▌      | 256/723 [00:05<00:07, 60.86it/s]Loading weights:  36%|███▋      | 263/723 [00:05<00:08, 56.76it/s]Loading weights:  38%|███▊      | 276/723 [00:05<00:06, 71.16it/s]Loading weights:  39%|███▉      | 284/723 [00:05<00:06, 67.67it/s]Loading weights:  40%|████      | 292/723 [00:06<00:07, 60.12it/s]Loading weights:  42%|████▏     | 304/723 [00:06<00:05, 70.85it/s]Loading weights:  43%|████▎     | 312/723 [00:06<00:07, 53.10it/s]Loading weights:  45%|████▌     | 326/723 [00:06<00:05, 69.55it/s]Loading weights:  46%|████▋     | 335/723 [00:06<00:06, 63.48it/s]Loading weights:  48%|████▊     | 344/723 [00:06<00:05, 66.31it/s]Loading weights:  49%|████▉     | 354/723 [00:07<00:05, 69.71it/s]Loading weights:  50%|█████     | 362/723 [00:07<00:05, 60.34it/s]Loading weights:  51%|█████     | 369/723 [00:07<00:06, 56.40it/s]Loading weights:  53%|█████▎    | 380/723 [00:07<00:05, 66.00it/s]Loading weights:  54%|█████▎    | 388/723 [00:07<00:05, 62.10it/s]Loading weights:  55%|█████▍    | 397/723 [00:07<00:04, 65.42it/s]Loading weights:  56%|█████▋    | 407/723 [00:07<00:04, 71.29it/s]Loading weights:  57%|█████▋    | 415/723 [00:08<00:04, 62.93it/s]Loading weights:  58%|█████▊    | 422/723 [00:08<00:05, 57.52it/s]Loading weights:  63%|██████▎   | 454/723 [00:08<00:02, 115.92it/s]Loading weights:  69%|██████▉   | 502/723 [00:08<00:01, 203.62it/s]Loading weights:  77%|███████▋  | 554/723 [00:08<00:00, 280.40it/s]Loading weights:  84%|████████▍ | 610/723 [00:08<00:00, 352.66it/s]Loading weights:  91%|█████████▏| 660/723 [00:08<00:00, 389.77it/s]Loading weights:  98%|█████████▊| 710/723 [00:08<00:00, 409.86it/s]Loading weights: 100%|██████████| 723/723 [00:08<00:00, 81.48it/s] 
+已移除视觉塔 | 当前显存 2.90GB
+冻结 fp32 权重压回 bf16: 178 个张量 | 当前显存 2.90GB
+续训 adapter: outputs/grpo-v2/checkpoint-100
+trainable params: 32,464,896 || all params: 4,238,216,192 || trainable%: 0.7660
+可用任务 2897（初始 prompt <= 600 tokens）
+重放遍数 μ=1（>1 时同批数据重放多遍，PPO 裁剪上岗）| 首回合批量 gen_batch=8
+D:\NLP\ft-qwen3.5-4b-agent-grpo-ARCHIVE-20261024\scripts\training\train_grpo.py:745: UserWarning: Detected call of `lr_scheduler.step()` before `optimizer.step()`. In PyTorch 1.1.0 and later, you should call them in the opposite order: `optimizer.step()` before `lr_scheduler.step()`.  Failure to do this will result in PyTorch skipping the first value of the learning rate schedule. See more details at https://pytorch.org/docs/stable/optim.html#how-to-adjust-learning-rate
+  sched.step()
+续训：步号从 111 起，调度器快进 88 次 (lr=6.3870e-06)
+训练中闭环评估: 40 个任务（data/grpo_v2/dev_v2.jsonl），每 20 步一次
+难度定向采样: 已知部分会做 235 题 | 探索比例 0.5 | 全错冷却 40 次抽签 | 单题至多抽 3 次（低放回）（全错/全对的题只按探索比例抽到）
+继承上一轮 best（success=0.750 reward=0.775）-> outputs/grpo-v2\best；本轮只有超过该分数才会覆盖
+[transformers] `causal_conv1d_fn` is falling back to its reference PyTorch implementation because `causal_conv1d` is not installed. This is correct but much slower; install `causal_conv1d` for the optimized kernel.
+[transformers] `causal_conv1d_update` is falling back to its reference PyTorch implementation because `causal_conv1d` is not installed. This is correct but much slower; install `causal_conv1d` for the optimized kernel.
+[step 111/200] reward=0.719 success=69% turns=2.0 exec_err=0% kl=0.0017 loss=0.0002 gnorm=10.91 lr=6.31e-06 mem=5.66GB (122.8s)
+[step 112/200] reward=0.719 success=69% turns=2.0 exec_err=0% kl=0.0013 loss=0.0003 gnorm=8.24 lr=6.23e-06 mem=5.66GB (217.9s)
+[step 113/200] reward=0.944 success=94% turns=2.0 exec_err=0% kl=0.0045 loss=-0.0000 gnorm=23.83 lr=6.15e-06 mem=5.66GB (161.2s)
+[step 114/200] reward=0.550 success=50% turns=2.0 exec_err=50% kl=0.0000 loss=0.0000 gnorm=0.00 lr=6.15e-06 mem=5.66GB (186.0s)
+[step 115/200] reward=0.113 success=6% turns=2.31 exec_err=82% kl=0.0021 loss=0.0004 gnorm=6.98 lr=6.07e-06 mem=7.03GB (955.4s)
+[step 116/200] reward=0.094 success=0% turns=2.0 exec_err=12% kl=0.0000 loss=0.0000 gnorm=0.00 lr=6.07e-06 mem=7.03GB (344.6s)
+[step 117/200] reward=0.775 success=75% turns=2.0 exec_err=12% kl=0.0027 loss=0.0002 gnorm=14.06 lr=5.99e-06 mem=7.03GB (212.5s)
+[step 118/200] reward=0.519 success=50% turns=1.94 exec_err=40% kl=0.0000 loss=0.0000 gnorm=0.00 lr=5.99e-06 mem=7.03GB (471.0s)
+[step 119/200] reward=0.775 success=75% turns=2.0 exec_err=31% kl=0.0037 loss=0.0002 gnorm=12.34 lr=5.90e-06 mem=7.03GB (222.6s)
+  [eval@120] success=0.675 reward=0.708
+[step 120/200] reward=0.656 success=62% turns=2.31 exec_err=38% kl=0.0026 loss=0.0003 gnorm=13.90 lr=5.82e-06 mem=7.03GB (1918.5s)
+  已保存 outputs/grpo-v2\checkpoint-120
+[step 121/200] reward=0.425 success=38% turns=1.88 exec_err=21% kl=0.0022 loss=0.0004 gnorm=13.08 lr=5.74e-06 mem=7.03GB (237.6s)
+[step 122/200] reward=0.381 success=31% turns=2.0 exec_err=38% kl=0.0045 loss=0.0005 gnorm=22.03 lr=5.66e-06 mem=7.03GB (344.3s)
+[step 123/200] reward=0.550 success=50% turns=2.0 exec_err=6% kl=0.0000 loss=0.0000 gnorm=0.00 lr=5.66e-06 mem=7.03GB (171.5s)
+[step 124/200] reward=0.494 success=44% turns=2.12 exec_err=56% kl=0.0043 loss=0.0005 gnorm=23.54 lr=5.58e-06 mem=7.03GB (217.9s)
+[step 125/200] reward=0.150 success=6% turns=2.19 exec_err=32% kl=0.0022 loss=0.0001 gnorm=15.42 lr=5.49e-06 mem=7.03GB (535.1s)
+[step 126/200] reward=0.081 success=0% turns=1.81 exec_err=0% kl=0.0000 loss=0.0000 gnorm=0.00 lr=5.49e-06 mem=7.03GB (209.3s)
+[step 127/200] reward=0.600 success=56% turns=2.0 exec_err=31% kl=0.0028 loss=0.0001 gnorm=17.40 lr=5.41e-06 mem=7.03GB (259.8s)
+[step 128/200] reward=0.438 success=38% turns=2.19 exec_err=16% kl=0.0035 loss=0.0004 gnorm=15.06 lr=5.33e-06 mem=7.03GB (316.9s)
+[step 129/200] reward=0.600 success=56% turns=2.44 exec_err=48% kl=0.0032 loss=0.0002 gnorm=12.39 lr=5.25e-06 mem=7.03GB (423.0s)
+[step 130/200] reward=0.138 success=6% turns=1.81 exec_err=0% kl=0.0052 loss=-0.0002 gnorm=29.53 lr=5.16e-06 mem=7.03GB (187.5s)
+[step 131/200] reward=0.688 success=69% turns=2.06 exec_err=58% kl=0.0021 loss=-0.0001 gnorm=12.28 lr=5.08e-06 mem=7.03GB (356.3s)
+[step 132/200] reward=0.369 success=31% turns=2.0 exec_err=19% kl=0.0036 loss=0.0004 gnorm=18.54 lr=5.00e-06 mem=7.03GB (131.5s)
+[step 133/200] reward=0.438 success=38% turns=2.0 exec_err=38% kl=0.0040 loss=0.0002 gnorm=22.68 lr=4.92e-06 mem=7.03GB (198.2s)
+[step 134/200] reward=0.550 success=50% turns=2.25 exec_err=30% kl=0.0025 loss=0.0001 gnorm=16.19 lr=4.84e-06 mem=7.03GB (260.2s)
+[step 135/200] reward=0.431 success=38% turns=2.06 exec_err=59% kl=0.0037 loss=-0.0007 gnorm=18.53 lr=4.75e-06 mem=7.03GB (219.3s)
+[step 136/200] reward=0.719 success=69% turns=2.06 exec_err=6% kl=0.0020 loss=0.0006 gnorm=8.63 lr=4.67e-06 mem=7.03GB (250.3s)
+[step 137/200] reward=0.713 success=69% turns=2.12 exec_err=28% kl=0.0029 loss=-0.0001 gnorm=14.70 lr=4.59e-06 mem=7.03GB (284.3s)
+[step 138/200] reward=0.713 success=69% turns=2.12 exec_err=28% kl=0.0043 loss=-0.0003 gnorm=16.09 lr=4.51e-06 mem=7.03GB (192.2s)
+[step 139/200] reward=0.263 success=19% turns=2.25 exec_err=40% kl=0.0047 loss=0.0002 gnorm=21.05 lr=4.42e-06 mem=7.03GB (304.7s)
+  [eval@140] success=0.700 reward=0.730
+[step 140/200] reward=0.719 success=69% turns=2.12 exec_err=11% kl=0.0031 loss=-0.0003 gnorm=7.31 lr=4.34e-06 mem=7.03GB (1251.7s)
+  已保存 outputs/grpo-v2\checkpoint-140
+[step 141/200] reward=0.075 success=0% turns=2.12 exec_err=33% kl=0.0000 loss=0.0000 gnorm=0.00 lr=4.34e-06 mem=7.03GB (236.2s)
+[step 142/200] reward=0.419 success=38% turns=2.12 exec_err=72% kl=0.0039 loss=0.0005 gnorm=12.93 lr=4.26e-06 mem=7.03GB (337.6s)
+[step 143/200] reward=0.944 success=94% turns=2.0 exec_err=0% kl=0.0012 loss=0.0003 gnorm=6.78 lr=4.18e-06 mem=7.03GB (133.9s)
+[step 144/200] reward=0.544 success=50% turns=2.06 exec_err=12% kl=0.0048 loss=0.0005 gnorm=25.60 lr=4.10e-06 mem=7.03GB (233.6s)
+[step 145/200] reward=0.494 success=44% turns=2.0 exec_err=50% kl=0.0044 loss=0.0002 gnorm=26.40 lr=4.01e-06 mem=7.03GB (124.7s)
+[step 146/200] reward=0.269 success=19% turns=2.06 exec_err=12% kl=0.0035 loss=0.0004 gnorm=12.35 lr=3.93e-06 mem=7.03GB (203.6s)
+[step 147/200] reward=0.606 success=56% turns=2.06 exec_err=12% kl=0.0044 loss=0.0002 gnorm=18.39 lr=3.85e-06 mem=7.03GB (286.5s)
+[step 148/200] reward=1.000 success=100% turns=2.0 exec_err=0% kl=0.0000 loss=0.0000 gnorm=0.00 lr=3.85e-06 mem=7.03GB (138.6s)
+[step 149/200] reward=0.719 success=69% turns=2.0 exec_err=0% kl=0.0031 loss=0.0003 gnorm=21.02 lr=3.77e-06 mem=7.03GB (115.7s)
+[step 150/200] reward=0.831 success=81% turns=2.0 exec_err=0% kl=0.0027 loss=0.0005 gnorm=13.55 lr=3.69e-06 mem=7.03GB (129.4s)
+[step 151/200] reward=0.487 success=44% turns=2.06 exec_err=12% kl=0.0027 loss=0.0001 gnorm=9.52 lr=3.61e-06 mem=7.03GB (169.5s)
+[step 152/200] reward=0.087 success=0% turns=1.88 exec_err=21% kl=0.0000 loss=0.0000 gnorm=0.00 lr=3.61e-06 mem=7.03GB (202.7s)
+[step 153/200] reward=0.887 success=88% turns=2.06 exec_err=12% kl=0.0032 loss=0.0002 gnorm=20.91 lr=3.53e-06 mem=7.03GB (294.4s)
+[step 154/200] reward=0.550 success=50% turns=2.0 exec_err=0% kl=0.0000 loss=0.0000 gnorm=0.00 lr=3.53e-06 mem=7.03GB (185.7s)
+[step 155/200] reward=0.206 success=12% turns=2.25 exec_err=75% kl=0.0057 loss=0.0006 gnorm=16.74 lr=3.45e-06 mem=7.03GB (430.3s)
+[step 156/200] reward=0.206 success=12% turns=2.25 exec_err=30% kl=0.0034 loss=-0.0005 gnorm=14.58 lr=3.38e-06 mem=7.03GB (257.0s)
+[step 157/200] reward=0.719 success=69% turns=2.31 exec_err=48% kl=0.0028 loss=0.0001 gnorm=12.12 lr=3.30e-06 mem=7.03GB (210.5s)
+[step 158/200] reward=0.831 success=81% turns=2.0 exec_err=12% kl=0.0036 loss=0.0004 gnorm=18.61 lr=3.22e-06 mem=7.03GB (125.1s)
+[step 159/200] reward=0.075 success=0% turns=2.31 exec_err=48% kl=0.0000 loss=0.0000 gnorm=0.00 lr=3.22e-06 mem=7.03GB (350.8s)
+  [eval@160] success=0.650 reward=0.682
+[step 160/200] reward=0.825 success=81% turns=2.31 exec_err=38% kl=0.0047 loss=0.0007 gnorm=15.73 lr=3.14e-06 mem=7.03GB (1397.3s)
+  已保存 outputs/grpo-v2\checkpoint-160
+[step 161/200] reward=0.494 success=44% turns=2.12 exec_err=28% kl=0.0025 loss=0.0008 gnorm=32.52 lr=3.07e-06 mem=7.03GB (378.7s)
+[step 162/200] reward=0.656 success=62% turns=2.12 exec_err=28% kl=0.0045 loss=0.0003 gnorm=18.64 lr=2.99e-06 mem=7.03GB (268.2s)
+[step 163/200] reward=0.100 success=6% turns=1.44 exec_err=0% kl=0.0038 loss=0.0012 gnorm=16.65 lr=2.92e-06 mem=7.03GB (190.6s)
+[step 164/200] reward=0.106 success=6% turns=2.38 exec_err=61% kl=0.0040 loss=-0.0001 gnorm=16.38 lr=2.84e-06 mem=7.03GB (559.1s)
+[step 165/200] reward=0.887 success=88% turns=2.06 exec_err=12% kl=0.0024 loss=0.0005 gnorm=11.58 lr=2.77e-06 mem=7.03GB (202.3s)
+[step 166/200] reward=0.775 success=75% turns=2.0 exec_err=0% kl=0.0020 loss=0.0000 gnorm=7.29 lr=2.69e-06 mem=7.03GB (143.8s)
+[step 167/200] reward=0.887 success=88% turns=2.12 exec_err=11% kl=0.0016 loss=-0.0000 gnorm=11.40 lr=2.62e-06 mem=7.03GB (252.1s)
+[step 168/200] reward=0.831 success=81% turns=2.0 exec_err=6% kl=0.0020 loss=0.0010 gnorm=46.69 lr=2.55e-06 mem=7.03GB (179.6s)
+[step 169/200] reward=1.000 success=100% turns=2.0 exec_err=0% kl=0.0000 loss=0.0000 gnorm=0.00 lr=2.55e-06 mem=7.03GB (160.5s)
+[step 170/200] reward=0.831 success=81% turns=2.0 exec_err=0% kl=0.0036 loss=-0.0000 gnorm=16.65 lr=2.48e-06 mem=7.03GB (128.3s)
+[step 171/200] reward=0.550 success=50% turns=2.0 exec_err=19% kl=0.0000 loss=0.0000 gnorm=0.00 lr=2.48e-06 mem=7.03GB (279.5s)
+[step 172/200] reward=0.144 success=6% turns=2.31 exec_err=33% kl=0.0024 loss=0.0001 gnorm=12.29 lr=2.40e-06 mem=7.03GB (438.8s)
+[step 173/200] reward=0.875 success=88% turns=2.12 exec_err=40% kl=0.0028 loss=0.0004 gnorm=14.27 lr=2.34e-06 mem=7.03GB (316.7s)
+[step 174/200] reward=0.425 success=38% turns=2.06 exec_err=12% kl=0.0052 loss=0.0012 gnorm=23.08 lr=2.26e-06 mem=7.03GB (141.9s)
+[step 175/200] reward=0.356 success=31% turns=2.38 exec_err=59% kl=0.0050 loss=0.0000 gnorm=17.75 lr=2.20e-06 mem=7.03GB (622.4s)
+[step 176/200] reward=0.056 success=0% turns=1.75 exec_err=17% kl=0.0000 loss=0.0000 gnorm=0.00 lr=2.20e-06 mem=7.03GB (594.0s)
+[step 177/200] reward=0.944 success=94% turns=2.0 exec_err=0% kl=0.0034 loss=0.0007 gnorm=19.13 lr=2.13e-06 mem=7.03GB (267.9s)
+[step 178/200] reward=0.606 success=56% turns=2.19 exec_err=16% kl=0.0044 loss=0.0003 gnorm=22.42 lr=2.06e-06 mem=7.03GB (216.8s)
+[step 179/200] reward=0.887 success=88% turns=2.12 exec_err=22% kl=0.0043 loss=-0.0003 gnorm=14.93 lr=1.99e-06 mem=7.03GB (168.9s)
+  [eval@180] success=0.625 reward=0.660
+[step 180/200] reward=0.944 success=94% turns=2.0 exec_err=0% kl=0.0022 loss=0.0004 gnorm=9.04 lr=1.93e-06 mem=7.03GB (1361.0s)
+  已保存 outputs/grpo-v2\checkpoint-180
+[step 181/200] reward=0.600 success=56% turns=2.12 exec_err=28% kl=0.0028 loss=-0.0004 gnorm=14.44 lr=1.86e-06 mem=7.03GB (265.8s)
+[step 182/200] reward=0.938 success=94% turns=2.12 exec_err=17% kl=0.0032 loss=0.0000 gnorm=7.23 lr=1.80e-06 mem=7.03GB (234.5s)
+[step 183/200] reward=0.494 success=44% turns=2.0 exec_err=12% kl=0.0036 loss=-0.0001 gnorm=14.92 lr=1.74e-06 mem=7.03GB (193.6s)
+[step 184/200] reward=0.831 success=81% turns=2.0 exec_err=0% kl=0.0016 loss=0.0004 gnorm=35.33 lr=1.68e-06 mem=7.03GB (157.4s)
+[step 185/200] reward=0.144 success=6% turns=2.5 exec_err=62% kl=0.0046 loss=0.0004 gnorm=15.21 lr=1.61e-06 mem=7.03GB (501.2s)
+[step 186/200] reward=0.594 success=56% turns=2.38 exec_err=41% kl=0.0025 loss=-0.0001 gnorm=11.55 lr=1.55e-06 mem=7.03GB (367.2s)
+[step 187/200] reward=0.069 success=0% turns=2.12 exec_err=28% kl=0.0000 loss=0.0000 gnorm=0.00 lr=1.55e-06 mem=7.03GB (358.9s)
+[step 188/200] reward=1.000 success=100% turns=2.0 exec_err=0% kl=0.0000 loss=0.0000 gnorm=0.00 lr=1.55e-06 mem=7.03GB (131.4s)
+[step 189/200] reward=0.544 success=50% turns=2.19 exec_err=21% kl=0.0000 loss=0.0000 gnorm=0.00 lr=1.55e-06 mem=7.03GB (234.5s)
+[step 190/200] reward=0.138 success=6% turns=2.44 exec_err=42% kl=0.0047 loss=0.0004 gnorm=25.41 lr=1.49e-06 mem=7.03GB (476.5s)
+[step 191/200] reward=0.525 success=50% turns=2.12 exec_err=33% kl=0.0021 loss=0.0003 gnorm=8.24 lr=1.44e-06 mem=7.03GB (379.6s)
+[step 192/200] reward=0.719 success=69% turns=2.19 exec_err=32% kl=0.0032 loss=0.0005 gnorm=11.78 lr=1.38e-06 mem=7.03GB (292.4s)
+[step 193/200] reward=0.606 success=56% turns=2.0 exec_err=0% kl=0.0024 loss=0.0002 gnorm=17.29 lr=1.32e-06 mem=7.03GB (165.8s)
+[step 194/200] reward=0.662 success=62% turns=2.0 exec_err=0% kl=0.0034 loss=0.0004 gnorm=12.55 lr=1.27e-06 mem=7.03GB (149.0s)
+[step 195/200] reward=0.600 success=56% turns=2.19 exec_err=21% kl=0.0031 loss=0.0001 gnorm=17.94 lr=1.21e-06 mem=7.03GB (223.7s)
+[step 196/200] reward=0.431 success=38% turns=2.12 exec_err=22% kl=0.0015 loss=0.0008 gnorm=14.30 lr=1.16e-06 mem=7.03GB (395.0s)
+[step 197/200] reward=0.887 success=88% turns=2.19 exec_err=16% kl=0.0023 loss=-0.0001 gnorm=12.49 lr=1.11e-06 mem=7.03GB (251.3s)
+[step 198/200] reward=0.269 success=19% turns=2.06 exec_err=6% kl=0.0022 loss=0.0003 gnorm=5.49 lr=1.05e-06 mem=7.03GB (266.9s)
+[step 199/200] reward=0.550 success=50% turns=2.0 exec_err=38% kl=0.0000 loss=0.0000 gnorm=0.00 lr=1.05e-06 mem=7.03GB (412.8s)
+  [eval@200] success=0.675 reward=0.703
+[step 200/200] reward=0.438 success=38% turns=2.0 exec_err=0% kl=0.0035 loss=-0.0007 gnorm=15.23 lr=1.00e-06 mem=7.03GB (1491.9s)
+  已保存 outputs/grpo-v2\checkpoint-200
+本轮未超过继承门槛 success=0.750 reward=0.775，outputs/grpo-v2\best 保持为续训起点
+难度表已更新（可直接作为下一轮 --difficulty）-> outputs/grpo-v2\difficulty_updated.json
+GRPO 完成 -> outputs/grpo-v2\final

@@ -1,0 +1,2965 @@
+{
+ "pool": 3094,
+ "measured": 844,
+ "mixed_total": 399,
+ "band_a": 212,
+ "mixed_in_train_pool": 219,
+ "dev_n": 100,
+ "eval_n": 80,
+ "dev_level": {
+  "Level 3": 51,
+  "Level 4": 29,
+  "Level 5": 10,
+  "Level 2": 10
+ },
+ "eval_level": {
+  "Level 4": 37,
+  "Level 5": 5,
+  "Level 3": 30,
+  "Level 2": 8
+ },
+ "dev_p": [
+  0.75,
+  0.25,
+  0.625,
+  0.75,
+  0.25,
+  0.643,
+  0.312,
+  0.375,
+  0.375,
+  0.393,
+  0.5,
+  0.583,
+  0.625,
+  0.625,
+  0.5,
+  0.25,
+  0.583,
+  0.625,
+  0.75,
+  0.75,
+  0.625,
+  0.25,
+  0.375,
+  0.625,
+  0.458,
+  0.75,
+  0.607,
+  0.25,
+  0.55,
+  0.5,
+  0.25,
+  0.625,
+  0.583,
+  0.5,
+  0.5,
+  0.475,
+  0.346,
+  0.25,
+  0.688,
+  0.75,
+  0.375,
+  0.75,
+  0.625,
+  0.75,
+  0.75,
+  0.536,
+  0.25,
+  0.25,
+  0.75,
+  0.25,
+  0.679,
+  0.375,
+  0.25,
+  0.375,
+  0.75,
+  0.45,
+  0.75,
+  0.375,
+  0.429,
+  0.25,
+  0.75,
+  0.5,
+  0.375,
+  0.375,
+  0.375,
+  0.5,
+  0.5,
+  0.625,
+  0.312,
+  0.562,
+  0.5,
+  0.562,
+  0.708,
+  0.75,
+  0.4,
+  0.25,
+  0.375,
+  0.333,
+  0.5,
+  0.562,
+  0.321,
+  0.275,
+  0.375,
+  0.5,
+  0.625,
+  0.625,
+  0.75,
+  0.275,
+  0.625,
+  0.25,
+  0.594,
+  0.75,
+  0.5,
+  0.75,
+  0.281,
+  0.531,
+  0.25,
+  0.469,
+  0.292,
+  0.75
+ ],
+ "eval_p": [
+  0.25,
+  0.75,
+  0.575,
+  0.25,
+  0.688,
+  0.25,
+  0.5,
+  0.4,
+  0.5,
+  0.5,
+  0.625,
+  0.375,
+  0.75,
+  0.5,
+  0.5,
+  0.5,
+  0.75,
+  0.75,
+  0.25,
+  0.25,
+  0.625,
+  0.4,
+  0.375,
+  0.375,
+  0.5,
+  0.375,
+  0.5,
+  0.5,
+  0.625,
+  0.625,
+  0.75,
+  0.75,
+  0.25,
+  0.688,
+  0.375,
+  0.469,
+  0.5,
+  0.75,
+  0.625,
+  0.25,
+  0.389,
+  0.417,
+  0.5,
+  0.625,
+  0.625,
+  0.25,
+  0.75,
+  0.375,
+  0.5,
+  0.5,
+  0.25,
+  0.625,
+  0.25,
+  0.25,
+  0.714,
+  0.625,
+  0.25,
+  0.5,
+  0.75,
+  0.375,
+  0.5,
+  0.375,
+  0.5,
+  0.5,
+  0.35,
+  0.75,
+  0.536,
+  0.333,
+  0.625,
+  0.438,
+  0.357,
+  0.375,
+  0.583,
+  0.25,
+  0.625,
+  0.594,
+  0.312,
+  0.375,
+  0.75,
+  0.625
+ ],
+ "sources": {
+  "math-test-10": {
+   "g8": 3
+  },
+  "math-test-1015": {
+   "old": 1,
+   "g8": 1,
+   "mid100": 3
+  },
+  "math-test-1018": {
+   "probe_v2": 1
+  },
+  "math-test-1020": {
+   "probe_v2": 1
+  },
+  "math-test-1024": {
+   "probe_v2": 1
+  },
+  "math-test-103": {
+   "old": 1,
+   "g8": 2,
+   "mid100": 3
+  },
+  "math-test-1033": {
+   "old": 1,
+   "mid100": 3
+  },
+  "math-test-1036": {
+   "g8": 2
+  },
+  "math-test-1045": {
+   "probe_v2": 1
+  },
+  "math-test-1060": {
+   "old": 1,
+   "mid100": 3
+  },
+  "math-test-1078": {
+   "old": 1,
+   "g8": 1,
+   "mid100": 3
+  },
+  "math-test-1092": {
+   "old": 1,
+   "mid100": 3
+  },
+  "math-test-1095": {
+   "probe_v2": 1
+  },
+  "math-test-1098": {
+   "old": 1,
+   "g8": 1
+  },
+  "math-test-1105": {
+   "old": 1,
+   "g8": 2,
+   "mid100": 3
+  },
+  "math-test-1139": {
+   "old": 1
+  },
+  "math-test-114": {
+   "probe_v2": 1
+  },
+  "math-test-1142": {
+   "old": 1
+  },
+  "math-test-1145": {
+   "probe:l4_grpo_40.jsonl": 1
+  },
+  "math-test-1162": {
+   "g8": 1
+  },
+  "math-test-1169": {
+   "old": 1
+  },
+  "math-test-1176": {
+   "old": 1
+  },
+  "math-test-1182": {
+   "probe:l4_grpo_40.jsonl": 1
+  },
+  "math-test-1189": {
+   "old": 1
+  },
+  "math-test-1202": {
+   "old": 1
+  },
+  "math-test-1203": {
+   "old": 1
+  },
+  "math-test-1208": {
+   "old": 1
+  },
+  "math-test-1212": {
+   "old": 1,
+   "g8": 2
+  },
+  "math-test-1222": {
+   "probe_v2": 1
+  },
+  "math-test-1227": {
+   "old": 1,
+   "g8": 1,
+   "mid100": 3
+  },
+  "math-test-123": {
+   "probe_v2": 1
+  },
+  "math-test-1232": {
+   "old": 1
+  },
+  "math-test-1237": {
+   "old": 1,
+   "mid100": 3
+  },
+  "math-test-124": {
+   "probe_v2": 1
+  },
+  "math-test-1241": {
+   "old": 1
+  },
+  "math-test-1249": {
+   "old": 1,
+   "g8": 2,
+   "mid100": 3
+  },
+  "math-test-1250": {
+   "old": 1
+  },
+  "math-test-1252": {
+   "old": 1,
+   "g8": 2
+  },
+  "math-test-1256": {
+   "old": 1,
+   "g8": 1,
+   "mid100": 3
+  },
+  "math-test-1257": {
+   "probe_v2": 1
+  },
+  "math-test-1264": {
+   "probe_v2": 1
+  },
+  "math-test-127": {
+   "old": 1
+  },
+  "math-test-1275": {
+   "probe_v2": 1
+  },
+  "math-test-1286": {
+   "probe_v2": 1
+  },
+  "math-test-1288": {
+   "old": 1
+  },
+  "math-test-1289": {
+   "probe_v2": 1
+  },
+  "math-test-1290": {
+   "old": 1
+  },
+  "math-test-1304": {
+   "old": 1
+  },
+  "math-test-132": {
+   "old": 1,
+   "g8": 2
+  },
+  "math-test-1323": {
+   "probe_v2": 1
+  },
+  "math-test-1330": {
+   "g8": 1
+  },
+  "math-test-1338": {
+   "old": 1,
+   "g8": 1,
+   "mid100": 3
+  },
+  "math-test-1346": {
+   "probe_v2": 1
+  },
+  "math-test-1349": {
+   "probe_v2": 1
+  },
+  "math-test-1351": {
+   "old": 1
+  },
+  "math-test-1358": {
+   "old": 1
+  },
+  "math-test-1366": {
+   "old": 1,
+   "g8": 3
+  },
+  "math-test-1371": {
+   "old": 1,
+   "g8": 2
+  },
+  "math-test-1373": {
+   "old": 1
+  },
+  "math-test-1389": {
+   "old": 1
+  },
+  "math-test-139": {
+   "probe_v2": 1
+  },
+  "math-test-1394": {
+   "old": 1,
+   "mid100": 3
+  },
+  "math-test-1399": {
+   "probe_v2": 1
+  },
+  "math-test-1402": {
+   "probe_v2": 1
+  },
+  "math-test-1406": {
+   "g8": 1
+  },
+  "math-test-1408": {
+   "old": 1
+  },
+  "math-test-1412": {
+   "old": 1
+  },
+  "math-test-1413": {
+   "old": 1,
+   "g8": 1,
+   "mid100": 3
+  },
+  "math-test-1415": {
+   "old": 1,
+   "g8": 2,
+   "mid100": 3
+  },
+  "math-test-1427": {
+   "old": 1,
+   "g8": 1
+  },
+  "math-test-1430": {
+   "old": 1,
+   "g8": 1
+  },
+  "math-test-1445": {
+   "probe_v2": 1
+  },
+  "math-test-1451": {
+   "old": 1,
+   "g8": 1
+  },
+  "math-test-1453": {
+   "old": 1
+  },
+  "math-test-1457": {
+   "old": 1,
+   "g8": 2
+  },
+  "math-test-1463": {
+   "probe_v2": 1
+  },
+  "math-test-1468": {
+   "probe_v2": 1
+  },
+  "math-test-1473": {
+   "old": 1
+  },
+  "math-test-1482": {
+   "old": 1
+  },
+  "math-test-1486": {
+   "old": 1
+  },
+  "math-test-1488": {
+   "old": 1,
+   "g8": 2,
+   "mid100": 3
+  },
+  "math-test-1490": {
+   "probe_v2": 1
+  },
+  "math-test-150": {
+   "g8": 1
+  },
+  "math-test-1501": {
+   "old": 1,
+   "g8": 2,
+   "mid100": 3
+  },
+  "math-test-1510": {
+   "old": 1
+  },
+  "math-test-1524": {
+   "probe_v2": 1
+  },
+  "math-test-1528": {
+   "old": 1,
+   "g8": 1
+  },
+  "math-test-1535": {
+   "probe:l4_grpo_40.jsonl": 1
+  },
+  "math-test-1537": {
+   "probe_v2": 1
+  },
+  "math-test-1539": {
+   "probe_v2": 1
+  },
+  "math-test-154": {
+   "old": 1,
+   "g8": 2
+  },
+  "math-test-1545": {
+   "probe_v2": 1
+  },
+  "math-test-1546": {
+   "probe_v2": 1
+  },
+  "math-test-1550": {
+   "probe_v2": 1
+  },
+  "math-test-1559": {
+   "probe_v2": 1
+  },
+  "math-test-1560": {
+   "probe:l4_grpo_40.jsonl": 1
+  },
+  "math-test-1562": {
+   "old": 1
+  },
+  "math-test-1581": {
+   "old": 1,
+   "g8": 1,
+   "mid100": 3
+  },
+  "math-test-1605": {
+   "g8": 1
+  },
+  "math-test-1613": {
+   "g8": 1
+  },
+  "math-test-1624": {
+   "old": 1
+  },
+  "math-test-1627": {
+   "probe_v2": 1
+  },
+  "math-test-1633": {
+   "probe_v2": 1
+  },
+  "math-test-1641": {
+   "probe_v2": 1
+  },
+  "math-test-1642": {
+   "probe_v2": 1
+  },
+  "math-test-1650": {
+   "old": 1
+  },
+  "math-test-1659": {
+   "g8": 1
+  },
+  "math-test-1662": {
+   "old": 1,
+   "g8": 1
+  },
+  "math-test-1664": {
+   "probe_v2": 1
+  },
+  "math-test-1670": {
+   "old": 1
+  },
+  "math-test-1672": {
+   "probe_v2": 1
+  },
+  "math-test-1679": {
+   "old": 1
+  },
+  "math-test-1680": {
+   "probe_v2": 1
+  },
+  "math-test-1686": {
+   "old": 1
+  },
+  "math-test-1694": {
+   "probe_v2": 1
+  },
+  "math-test-1696": {
+   "old": 1
+  },
+  "math-test-1703": {
+   "old": 1
+  },
+  "math-test-1707": {
+   "probe:l4_grpo_40.jsonl": 1
+  },
+  "math-test-1718": {
+   "old": 1
+  },
+  "math-test-1720": {
+   "probe_v2": 1
+  },
+  "math-test-1722": {
+   "probe_v2": 1
+  },
+  "math-test-1723": {
+   "probe_v2": 1
+  },
+  "math-test-1725": {
+   "probe:l4_grpo_40.jsonl": 1
+  },
+  "math-test-1726": {
+   "g8": 1
+  },
+  "math-test-1728": {
+   "old": 1
+  },
+  "math-test-1735": {
+   "g8": 1
+  },
+  "math-test-1747": {
+   "old": 1
+  },
+  "math-test-1770": {
+   "probe_v2": 1
+  },
+  "math-test-1778": {
+   "old": 1,
+   "g8": 1
+  },
+  "math-test-1785": {
+   "old": 1,
+   "g8": 4,
+   "mid100": 3
+  },
+  "math-test-1792": {
+   "old": 1
+  },
+  "math-test-1795": {
+   "g8": 1
+  },
+  "math-test-18": {
+   "g8": 2
+  },
+  "math-test-1801": {
+   "old": 1
+  },
+  "math-test-1808": {
+   "g8": 1
+  },
+  "math-test-1815": {
+   "old": 1
+  },
+  "math-test-1817": {
+   "old": 1,
+   "g8": 1
+  },
+  "math-test-1819": {
+   "probe_v2": 1
+  },
+  "math-test-1821": {
+   "old": 1,
+   "g8": 2,
+   "mid100": 3
+  },
+  "math-test-1826": {
+   "probe_v2": 1
+  },
+  "math-test-183": {
+   "probe_v2": 1
+  },
+  "math-test-1835": {
+   "probe_v2": 1
+  },
+  "math-test-1843": {
+   "g8": 2
+  },
+  "math-test-1848": {
+   "old": 1
+  },
+  "math-test-1863": {
+   "old": 1
+  },
+  "math-test-1873": {
+   "old": 1
+  },
+  "math-test-1876": {
+   "old": 1
+  },
+  "math-test-1880": {
+   "old": 1,
+   "g8": 3
+  },
+  "math-test-1882": {
+   "g8": 1
+  },
+  "math-test-1885": {
+   "old": 1
+  },
+  "math-test-1888": {
+   "old": 1
+  },
+  "math-test-1895": {
+   "old": 1
+  },
+  "math-test-1897": {
+   "old": 1,
+   "g8": 1
+  },
+  "math-test-190": {
+   "probe_v2": 1
+  },
+  "math-test-1906": {
+   "probe:l4_grpo_40.jsonl": 1
+  },
+  "math-test-1907": {
+   "old": 1
+  },
+  "math-test-1912": {
+   "probe_v2": 1
+  },
+  "math-test-1916": {
+   "probe_v2": 1
+  },
+  "math-test-1917": {
+   "old": 1,
+   "g8": 1
+  },
+  "math-test-192": {
+   "old": 1,
+   "g8": 1
+  },
+  "math-test-1920": {
+   "probe_v2": 1
+  },
+  "math-test-1922": {
+   "probe_v2": 1
+  },
+  "math-test-1943": {
+   "probe_v2": 1
+  },
+  "math-test-1946": {
+   "probe_v2": 1
+  },
+  "math-test-1947": {
+   "old": 1,
+   "g8": 1
+  },
+  "math-test-1957": {
+   "g8": 1
+  },
+  "math-test-1963": {
+   "old": 1,
+   "g8": 2,
+   "mid100": 3
+  },
+  "math-test-1967": {
+   "old": 1,
+   "g8": 1,
+   "mid100": 3
+  },
+  "math-test-1970": {
+   "old": 1,
+   "g8": 1,
+   "mid100": 3
+  },
+  "math-test-198": {
+   "probe_v2": 1
+  },
+  "math-test-1980": {
+   "old": 1
+  },
+  "math-test-1986": {
+   "probe_v2": 1
+  },
+  "math-test-1990": {
+   "probe_v2": 1
+  },
+  "math-test-1997": {
+   "old": 1
+  },
+  "math-test-1998": {
+   "old": 1,
+   "mid100": 3
+  },
+  "math-test-2008": {
+   "g8": 1
+  },
+  "math-test-2019": {
+   "probe_v2": 1
+  },
+  "math-test-2021": {
+   "g8": 1
+  },
+  "math-test-2023": {
+   "probe:l4_grpo_40.jsonl": 1
+  },
+  "math-test-2024": {
+   "probe_v2": 1
+  },
+  "math-test-2025": {
+   "probe_v2": 1
+  },
+  "math-test-2028": {
+   "probe_v2": 1
+  },
+  "math-test-2033": {
+   "probe_v2": 1
+  },
+  "math-test-2039": {
+   "old": 1
+  },
+  "math-test-2042": {
+   "probe_v2": 1
+  },
+  "math-test-2043": {
+   "g8": 1
+  },
+  "math-test-205": {
+   "probe_v2": 1
+  },
+  "math-test-2050": {
+   "old": 1,
+   "g8": 1,
+   "mid100": 3
+  },
+  "math-test-2057": {
+   "old": 1
+  },
+  "math-test-2062": {
+   "probe_v2": 1
+  },
+  "math-test-2063": {
+   "old": 1
+  },
+  "math-test-2070": {
+   "old": 1,
+   "mid100": 3
+  },
+  "math-test-2071": {
+   "old": 1,
+   "g8": 1
+  },
+  "math-test-2073": {
+   "probe_v2": 1
+  },
+  "math-test-2076": {
+   "g8": 1
+  },
+  "math-test-2079": {
+   "old": 1
+  },
+  "math-test-2088": {
+   "g8": 3
+  },
+  "math-test-2091": {
+   "g8": 1
+  },
+  "math-test-2095": {
+   "old": 1
+  },
+  "math-test-2097": {
+   "old": 1,
+   "g8": 1,
+   "mid100": 3
+  },
+  "math-test-2100": {
+   "probe_v2": 1
+  },
+  "math-test-2103": {
+   "probe_v2": 1
+  },
+  "math-test-2106": {
+   "old": 1
+  },
+  "math-test-2109": {
+   "g8": 1
+  },
+  "math-test-2111": {
+   "old": 1
+  },
+  "math-test-2117": {
+   "old": 1,
+   "g8": 1,
+   "mid100": 3
+  },
+  "math-test-2122": {
+   "old": 1
+  },
+  "math-test-2123": {
+   "probe_v2": 1
+  },
+  "math-test-2131": {
+   "probe_v2": 1
+  },
+  "math-test-2135": {
+   "old": 1
+  },
+  "math-test-2142": {
+   "probe:l4_grpo_40.jsonl": 1
+  },
+  "math-test-2143": {
+   "probe_v2": 1
+  },
+  "math-test-2144": {
+   "probe_v2": 1
+  },
+  "math-test-2147": {
+   "probe_v2": 1
+  },
+  "math-test-2159": {
+   "g8": 1
+  },
+  "math-test-216": {
+   "probe_v2": 1
+  },
+  "math-test-2167": {
+   "old": 1,
+   "g8": 2
+  },
+  "math-test-2181": {
+   "old": 1,
+   "g8": 1,
+   "mid100": 3
+  },
+  "math-test-2182": {
+   "probe_v2": 1
+  },
+  "math-test-2184": {
+   "old": 1
+  },
+  "math-test-2193": {
+   "probe_v2": 1
+  },
+  "math-test-2199": {
+   "old": 1,
+   "g8": 3
+  },
+  "math-test-220": {
+   "probe_v2": 1
+  },
+  "math-test-2205": {
+   "probe_v2": 1
+  },
+  "math-test-2210": {
+   "probe_v2": 1
+  },
+  "math-test-2218": {
+   "g8": 1
+  },
+  "math-test-2228": {
+   "g8": 1
+  },
+  "math-test-223": {
+   "probe_v2": 1
+  },
+  "math-test-2230": {
+   "probe_v2": 1
+  },
+  "math-test-2232": {
+   "probe_v2": 1
+  },
+  "math-test-2247": {
+   "old": 1,
+   "mid100": 3
+  },
+  "math-test-225": {
+   "probe_v2": 1
+  },
+  "math-test-2255": {
+   "g8": 2
+  },
+  "math-test-2260": {
+   "old": 1
+  },
+  "math-test-2261": {
+   "probe_v2": 1
+  },
+  "math-test-2269": {
+   "old": 1
+  },
+  "math-test-2271": {
+   "probe:l4_grpo_40.jsonl": 1
+  },
+  "math-test-2276": {
+   "old": 1
+  },
+  "math-test-2278": {
+   "old": 1,
+   "mid100": 3
+  },
+  "math-test-2287": {
+   "probe_v2": 1
+  },
+  "math-test-2292": {
+   "probe_v2": 1
+  },
+  "math-test-2299": {
+   "old": 1
+  },
+  "math-test-23": {
+   "old": 1
+  },
+  "math-test-2303": {
+   "probe_v2": 1
+  },
+  "math-test-2306": {
+   "g8": 1
+  },
+  "math-test-2314": {
+   "old": 1,
+   "g8": 1,
+   "mid100": 3
+  },
+  "math-test-2315": {
+   "probe_v2": 1
+  },
+  "math-test-2316": {
+   "g8": 1
+  },
+  "math-test-2328": {
+   "probe_v2": 1
+  },
+  "math-test-2333": {
+   "old": 1
+  },
+  "math-test-2336": {
+   "old": 1
+  },
+  "math-test-2338": {
+   "probe_v2": 1
+  },
+  "math-test-235": {
+   "old": 1,
+   "g8": 1
+  },
+  "math-test-2354": {
+   "old": 1,
+   "g8": 3,
+   "mid100": 3
+  },
+  "math-test-2365": {
+   "probe_v2": 1
+  },
+  "math-test-2367": {
+   "old": 1
+  },
+  "math-test-2370": {
+   "probe_v2": 1
+  },
+  "math-test-2371": {
+   "old": 1
+  },
+  "math-test-2380": {
+   "old": 1
+  },
+  "math-test-2381": {
+   "old": 1
+  },
+  "math-test-2391": {
+   "probe_v2": 1
+  },
+  "math-test-2393": {
+   "probe:l4_grpo_40.jsonl": 1
+  },
+  "math-test-2400": {
+   "probe_v2": 1
+  },
+  "math-test-2402": {
+   "probe_v2": 1
+  },
+  "math-test-2406": {
+   "probe:l4_grpo_40.jsonl": 1
+  },
+  "math-test-2407": {
+   "old": 1
+  },
+  "math-test-2409": {
+   "probe_v2": 1
+  },
+  "math-test-2415": {
+   "probe_v2": 1
+  },
+  "math-test-2418": {
+   "old": 1,
+   "mid100": 3
+  },
+  "math-test-2419": {
+   "g8": 1
+  },
+  "math-test-2420": {
+   "old": 1
+  },
+  "math-test-2422": {
+   "old": 1,
+   "g8": 3,
+   "mid100": 3
+  },
+  "math-test-2433": {
+   "old": 1
+  },
+  "math-test-2435": {
+   "probe_v2": 1
+  },
+  "math-test-2437": {
+   "probe_v2": 1
+  },
+  "math-test-2442": {
+   "g8": 1
+  },
+  "math-test-2445": {
+   "old": 1
+  },
+  "math-test-2449": {
+   "g8": 2
+  },
+  "math-test-2454": {
+   "probe_v2": 1
+  },
+  "math-test-2456": {
+   "old": 1
+  },
+  "math-test-2465": {
+   "old": 1
+  },
+  "math-test-247": {
+   "g8": 2
+  },
+  "math-test-2475": {
+   "old": 1,
+   "g8": 1,
+   "mid100": 3
+  },
+  "math-test-2480": {
+   "probe_v2": 1
+  },
+  "math-test-2486": {
+   "probe_v2": 1
+  },
+  "math-test-2497": {
+   "probe_v2": 1
+  },
+  "math-test-2499": {
+   "probe_v2": 1
+  },
+  "math-test-2511": {
+   "probe_v2": 1
+  },
+  "math-test-2512": {
+   "g8": 1
+  },
+  "math-test-2513": {
+   "probe_v2": 1
+  },
+  "math-test-2519": {
+   "g8": 2
+  },
+  "math-test-2520": {
+   "probe_v2": 1
+  },
+  "math-test-2527": {
+   "probe_v2": 1
+  },
+  "math-test-2530": {
+   "old": 1
+  },
+  "math-test-2538": {
+   "g8": 1
+  },
+  "math-test-2540": {
+   "old": 1
+  },
+  "math-test-2546": {
+   "old": 1,
+   "g8": 1
+  },
+  "math-test-2551": {
+   "old": 1,
+   "g8": 1,
+   "mid100": 3
+  },
+  "math-test-2552": {
+   "probe:l4_grpo_40.jsonl": 1
+  },
+  "math-test-2554": {
+   "probe_v2": 1
+  },
+  "math-test-256": {
+   "old": 1
+  },
+  "math-test-2566": {
+   "probe_v2": 1
+  },
+  "math-test-2568": {
+   "old": 1,
+   "g8": 1
+  },
+  "math-test-2571": {
+   "old": 1
+  },
+  "math-test-2576": {
+   "probe_v2": 1
+  },
+  "math-test-2578": {
+   "probe_v2": 1
+  },
+  "math-test-2582": {
+   "old": 1
+  },
+  "math-test-2586": {
+   "probe_v2": 1
+  },
+  "math-test-2590": {
+   "old": 1
+  },
+  "math-test-2592": {
+   "old": 1
+  },
+  "math-test-2600": {
+   "g8": 1
+  },
+  "math-test-2602": {
+   "probe_v2": 1
+  },
+  "math-test-2605": {
+   "probe_v2": 1
+  },
+  "math-test-2613": {
+   "old": 1
+  },
+  "math-test-2619": {
+   "probe_v2": 1
+  },
+  "math-test-263": {
+   "old": 1,
+   "mid100": 3
+  },
+  "math-test-2631": {
+   "old": 1,
+   "g8": 1
+  },
+  "math-test-2646": {
+   "old": 1,
+   "probe:l4_grpo_40.jsonl": 1
+  },
+  "math-test-2648": {
+   "probe_v2": 1
+  },
+  "math-test-2649": {
+   "probe_v2": 1
+  },
+  "math-test-2652": {
+   "probe_v2": 1
+  },
+  "math-test-2655": {
+   "probe_v2": 1
+  },
+  "math-test-2657": {
+   "probe_v2": 1
+  },
+  "math-test-2662": {
+   "probe_v2": 1
+  },
+  "math-test-2669": {
+   "g8": 3
+  },
+  "math-test-2674": {
+   "probe_v2": 1
+  },
+  "math-test-2685": {
+   "old": 1
+  },
+  "math-test-2686": {
+   "probe_v2": 1
+  },
+  "math-test-2691": {
+   "old": 1
+  },
+  "math-test-2700": {
+   "g8": 1
+  },
+  "math-test-2708": {
+   "g8": 1
+  },
+  "math-test-271": {
+   "probe_v2": 1
+  },
+  "math-test-2715": {
+   "old": 1
+  },
+  "math-test-2717": {
+   "probe_v2": 1
+  },
+  "math-test-2718": {
+   "old": 1
+  },
+  "math-test-2730": {
+   "old": 1
+  },
+  "math-test-2734": {
+   "probe_v2": 1
+  },
+  "math-test-2739": {
+   "g8": 1
+  },
+  "math-test-2741": {
+   "old": 1,
+   "g8": 4,
+   "mid100": 3
+  },
+  "math-test-275": {
+   "probe_v2": 1
+  },
+  "math-test-2751": {
+   "old": 1,
+   "mid100": 3
+  },
+  "math-test-2754": {
+   "old": 1,
+   "g8": 1,
+   "mid100": 3
+  },
+  "math-test-2759": {
+   "old": 1
+  },
+  "math-test-2769": {
+   "probe_v2": 1
+  },
+  "math-test-2779": {
+   "probe_v2": 1
+  },
+  "math-test-2784": {
+   "old": 1,
+   "g8": 2,
+   "mid100": 3
+  },
+  "math-test-2785": {
+   "old": 1
+  },
+  "math-test-2788": {
+   "old": 1,
+   "g8": 2
+  },
+  "math-test-2789": {
+   "probe_v2": 1
+  },
+  "math-test-2793": {
+   "old": 1,
+   "mid100": 3
+  },
+  "math-test-2794": {
+   "g8": 2
+  },
+  "math-test-280": {
+   "old": 1,
+   "g8": 1,
+   "mid100": 3
+  },
+  "math-test-2803": {
+   "probe_v2": 1
+  },
+  "math-test-2804": {
+   "g8": 1
+  },
+  "math-test-2821": {
+   "probe_v2": 1
+  },
+  "math-test-2824": {
+   "old": 1
+  },
+  "math-test-2827": {
+   "old": 1
+  },
+  "math-test-2836": {
+   "probe_v2": 1
+  },
+  "math-test-2842": {
+   "probe_v2": 1
+  },
+  "math-test-2857": {
+   "old": 1
+  },
+  "math-test-2858": {
+   "old": 1
+  },
+  "math-test-2874": {
+   "probe_v2": 1
+  },
+  "math-test-2881": {
+   "old": 1
+  },
+  "math-test-2885": {
+   "g8": 1
+  },
+  "math-test-2895": {
+   "probe_v2": 1
+  },
+  "math-test-2896": {
+   "old": 1
+  },
+  "math-test-2899": {
+   "probe_v2": 1
+  },
+  "math-test-2905": {
+   "old": 1
+  },
+  "math-test-2906": {
+   "probe_v2": 1
+  },
+  "math-test-2919": {
+   "g8": 2
+  },
+  "math-test-2928": {
+   "old": 1,
+   "g8": 1
+  },
+  "math-test-2949": {
+   "probe_v2": 1
+  },
+  "math-test-2955": {
+   "probe_v2": 1
+  },
+  "math-test-2959": {
+   "g8": 1
+  },
+  "math-test-296": {
+   "probe_v2": 1
+  },
+  "math-test-2960": {
+   "old": 1,
+   "mid100": 3
+  },
+  "math-test-2963": {
+   "probe_v2": 1
+  },
+  "math-test-2971": {
+   "probe_v2": 1
+  },
+  "math-test-2982": {
+   "probe_v2": 1
+  },
+  "math-test-2985": {
+   "old": 1
+  },
+  "math-test-2986": {
+   "old": 1
+  },
+  "math-test-299": {
+   "old": 1,
+   "g8": 1
+  },
+  "math-test-2993": {
+   "old": 1,
+   "g8": 3,
+   "mid100": 3
+  },
+  "math-test-2997": {
+   "g8": 1
+  },
+  "math-test-2999": {
+   "old": 1
+  },
+  "math-test-30": {
+   "probe_v2": 1
+  },
+  "math-test-3004": {
+   "probe_v2": 1
+  },
+  "math-test-301": {
+   "old": 1
+  },
+  "math-test-3010": {
+   "probe_v2": 1
+  },
+  "math-test-3014": {
+   "probe_v2": 1
+  },
+  "math-test-3021": {
+   "probe_v2": 1
+  },
+  "math-test-3022": {
+   "g8": 1
+  },
+  "math-test-303": {
+   "probe_v2": 1
+  },
+  "math-test-3031": {
+   "probe_v2": 1
+  },
+  "math-test-3034": {
+   "probe_v2": 1
+  },
+  "math-test-3038": {
+   "old": 1
+  },
+  "math-test-305": {
+   "probe_v2": 1
+  },
+  "math-test-3057": {
+   "probe:l4_grpo_40.jsonl": 1
+  },
+  "math-test-3061": {
+   "g8": 1
+  },
+  "math-test-3063": {
+   "old": 1,
+   "mid100": 3
+  },
+  "math-test-3065": {
+   "probe_v2": 1
+  },
+  "math-test-3069": {
+   "old": 1
+  },
+  "math-test-3077": {
+   "probe_v2": 1
+  },
+  "math-test-3085": {
+   "probe_v2": 1
+  },
+  "math-test-310": {
+   "g8": 1
+  },
+  "math-test-3112": {
+   "g8": 3
+  },
+  "math-test-3114": {
+   "probe_v2": 1
+  },
+  "math-test-3123": {
+   "old": 1
+  },
+  "math-test-3124": {
+   "old": 1
+  },
+  "math-test-3128": {
+   "old": 1,
+   "g8": 2,
+   "mid100": 3
+  },
+  "math-test-3134": {
+   "probe_v2": 1
+  },
+  "math-test-314": {
+   "probe_v2": 1
+  },
+  "math-test-315": {
+   "old": 1
+  },
+  "math-test-3156": {
+   "probe_v2": 1
+  },
+  "math-test-316": {
+   "probe_v2": 1
+  },
+  "math-test-3161": {
+   "old": 1
+  },
+  "math-test-3191": {
+   "old": 1
+  },
+  "math-test-3201": {
+   "probe_v2": 1
+  },
+  "math-test-3211": {
+   "old": 1,
+   "g8": 2
+  },
+  "math-test-3212": {
+   "probe_v2": 1
+  },
+  "math-test-3219": {
+   "probe_v2": 1
+  },
+  "math-test-3236": {
+   "old": 1,
+   "g8": 1,
+   "mid100": 3
+  },
+  "math-test-3241": {
+   "probe_v2": 1
+  },
+  "math-test-3242": {
+   "probe_v2": 1
+  },
+  "math-test-3243": {
+   "probe_v2": 1
+  },
+  "math-test-3246": {
+   "old": 1,
+   "g8": 3,
+   "mid100": 3
+  },
+  "math-test-3258": {
+   "probe_v2": 1
+  },
+  "math-test-3269": {
+   "probe_v2": 1
+  },
+  "math-test-3279": {
+   "old": 1,
+   "g8": 5
+  },
+  "math-test-3286": {
+   "probe:l4_grpo_40.jsonl": 1
+  },
+  "math-test-3288": {
+   "probe_v2": 1
+  },
+  "math-test-3297": {
+   "old": 1
+  },
+  "math-test-3299": {
+   "probe_v2": 1
+  },
+  "math-test-33": {
+   "g8": 1
+  },
+  "math-test-3300": {
+   "probe_v2": 1
+  },
+  "math-test-3302": {
+   "old": 1,
+   "g8": 2,
+   "mid100": 3
+  },
+  "math-test-3303": {
+   "old": 1,
+   "g8": 1
+  },
+  "math-test-3307": {
+   "g8": 1
+  },
+  "math-test-3309": {
+   "old": 1
+  },
+  "math-test-331": {
+   "probe_v2": 1
+  },
+  "math-test-3311": {
+   "probe_v2": 1
+  },
+  "math-test-3312": {
+   "probe_v2": 1
+  },
+  "math-test-3340": {
+   "old": 1,
+   "g8": 2
+  },
+  "math-test-3347": {
+   "old": 1,
+   "g8": 1
+  },
+  "math-test-335": {
+   "probe_v2": 1
+  },
+  "math-test-3366": {
+   "probe_v2": 1
+  },
+  "math-test-3377": {
+   "g8": 1
+  },
+  "math-test-338": {
+   "probe_v2": 1
+  },
+  "math-test-3381": {
+   "old": 1
+  },
+  "math-test-3382": {
+   "old": 1,
+   "g8": 2
+  },
+  "math-test-3390": {
+   "probe_v2": 1
+  },
+  "math-test-3392": {
+   "probe_v2": 1
+  },
+  "math-test-3397": {
+   "old": 1,
+   "g8": 3,
+   "mid100": 3
+  },
+  "math-test-3398": {
+   "probe_v2": 1
+  },
+  "math-test-34": {
+   "probe_v2": 1
+  },
+  "math-test-340": {
+   "probe_v2": 1
+  },
+  "math-test-3400": {
+   "old": 1
+  },
+  "math-test-3401": {
+   "old": 1
+  },
+  "math-test-3412": {
+   "old": 1
+  },
+  "math-test-3424": {
+   "old": 1,
+   "g8": 1,
+   "mid100": 3
+  },
+  "math-test-3425": {
+   "probe_v2": 1
+  },
+  "math-test-3430": {
+   "probe_v2": 1
+  },
+  "math-test-3449": {
+   "old": 1,
+   "g8": 1,
+   "mid100": 3
+  },
+  "math-test-3457": {
+   "old": 1
+  },
+  "math-test-3458": {
+   "old": 1
+  },
+  "math-test-3461": {
+   "old": 1,
+   "g8": 1,
+   "mid100": 3
+  },
+  "math-test-3464": {
+   "probe_v2": 1
+  },
+  "math-test-3470": {
+   "probe_v2": 1
+  },
+  "math-test-3471": {
+   "probe_v2": 1
+  },
+  "math-test-3479": {
+   "old": 1
+  },
+  "math-test-3493": {
+   "g8": 5
+  },
+  "math-test-3497": {
+   "old": 1
+  },
+  "math-test-3502": {
+   "g8": 1
+  },
+  "math-test-3513": {
+   "probe_v2": 1
+  },
+  "math-test-352": {
+   "old": 1,
+   "mid100": 3
+  },
+  "math-test-3521": {
+   "old": 1
+  },
+  "math-test-3540": {
+   "probe_v2": 1
+  },
+  "math-test-3546": {
+   "probe_v2": 1
+  },
+  "math-test-3558": {
+   "old": 1
+  },
+  "math-test-3562": {
+   "probe_v2": 1
+  },
+  "math-test-3565": {
+   "probe_v2": 1
+  },
+  "math-test-3566": {
+   "old": 1,
+   "g8": 1,
+   "mid100": 3
+  },
+  "math-test-3577": {
+   "old": 1
+  },
+  "math-test-3583": {
+   "old": 1
+  },
+  "math-test-3591": {
+   "old": 1
+  },
+  "math-test-3593": {
+   "probe_v2": 1
+  },
+  "math-test-3598": {
+   "probe_v2": 1
+  },
+  "math-test-3599": {
+   "probe_v2": 1
+  },
+  "math-test-360": {
+   "old": 1,
+   "g8": 1
+  },
+  "math-test-3614": {
+   "old": 1,
+   "g8": 3
+  },
+  "math-test-3628": {
+   "probe_v2": 1
+  },
+  "math-test-3632": {
+   "probe_v2": 1
+  },
+  "math-test-3634": {
+   "old": 1
+  },
+  "math-test-3643": {
+   "probe_v2": 1
+  },
+  "math-test-3662": {
+   "g8": 1
+  },
+  "math-test-3673": {
+   "old": 1,
+   "mid100": 3
+  },
+  "math-test-368": {
+   "old": 1,
+   "mid100": 3
+  },
+  "math-test-3683": {
+   "old": 1
+  },
+  "math-test-3688": {
+   "probe_v2": 1
+  },
+  "math-test-3690": {
+   "g8": 1
+  },
+  "math-test-3693": {
+   "old": 1
+  },
+  "math-test-3697": {
+   "old": 1,
+   "g8": 2,
+   "mid100": 3
+  },
+  "math-test-3699": {
+   "probe_v2": 1
+  },
+  "math-test-3701": {
+   "old": 1,
+   "g8": 1,
+   "mid100": 3
+  },
+  "math-test-3706": {
+   "probe_v2": 1
+  },
+  "math-test-3714": {
+   "g8": 1
+  },
+  "math-test-3739": {
+   "old": 1,
+   "mid100": 3
+  },
+  "math-test-3746": {
+   "probe_v2": 1
+  },
+  "math-test-3749": {
+   "old": 1,
+   "g8": 1
+  },
+  "math-test-3751": {
+   "old": 1
+  },
+  "math-test-3753": {
+   "old": 1
+  },
+  "math-test-3754": {
+   "old": 1
+  },
+  "math-test-3759": {
+   "old": 1
+  },
+  "math-test-3776": {
+   "old": 1
+  },
+  "math-test-3784": {
+   "probe_v2": 1
+  },
+  "math-test-3789": {
+   "old": 1
+  },
+  "math-test-3790": {
+   "old": 1,
+   "g8": 3,
+   "mid100": 3
+  },
+  "math-test-3827": {
+   "old": 1
+  },
+  "math-test-3839": {
+   "probe_v2": 1
+  },
+  "math-test-3841": {
+   "old": 1,
+   "g8": 2
+  },
+  "math-test-3861": {
+   "probe_v2": 1
+  },
+  "math-test-3862": {
+   "old": 1,
+   "mid100": 3
+  },
+  "math-test-3863": {
+   "old": 1
+  },
+  "math-test-3868": {
+   "probe_v2": 1
+  },
+  "math-test-3874": {
+   "probe_v2": 1
+  },
+  "math-test-3876": {
+   "probe_v2": 1
+  },
+  "math-test-3879": {
+   "probe_v2": 1
+  },
+  "math-test-388": {
+   "probe_v2": 1
+  },
+  "math-test-3881": {
+   "probe_v2": 1
+  },
+  "math-test-3883": {
+   "old": 1,
+   "g8": 1
+  },
+  "math-test-3891": {
+   "g8": 1
+  },
+  "math-test-3893": {
+   "probe_v2": 1
+  },
+  "math-test-3899": {
+   "probe_v2": 1
+  },
+  "math-test-39": {
+   "old": 1
+  },
+  "math-test-3908": {
+   "old": 1,
+   "mid100": 3
+  },
+  "math-test-392": {
+   "old": 1
+  },
+  "math-test-3922": {
+   "probe_v2": 1
+  },
+  "math-test-393": {
+   "old": 1
+  },
+  "math-test-3943": {
+   "probe_v2": 1
+  },
+  "math-test-3947": {
+   "old": 1,
+   "g8": 1,
+   "mid100": 3
+  },
+  "math-test-3949": {
+   "old": 1,
+   "g8": 1,
+   "mid100": 3
+  },
+  "math-test-3952": {
+   "probe_v2": 1
+  },
+  "math-test-3953": {
+   "old": 1
+  },
+  "math-test-3954": {
+   "old": 1,
+   "mid100": 3
+  },
+  "math-test-3956": {
+   "old": 1
+  },
+  "math-test-3957": {
+   "old": 1
+  },
+  "math-test-3961": {
+   "old": 1
+  },
+  "math-test-3964": {
+   "g8": 2
+  },
+  "math-test-3973": {
+   "probe_v2": 1
+  },
+  "math-test-3989": {
+   "old": 1
+  },
+  "math-test-3992": {
+   "probe_v2": 1
+  },
+  "math-test-4003": {
+   "old": 1
+  },
+  "math-test-4013": {
+   "old": 1
+  },
+  "math-test-4017": {
+   "old": 1
+  },
+  "math-test-4025": {
+   "old": 1
+  },
+  "math-test-4026": {
+   "old": 1
+  },
+  "math-test-4038": {
+   "old": 1,
+   "mid100": 3
+  },
+  "math-test-4046": {
+   "old": 1
+  },
+  "math-test-4057": {
+   "g8": 2
+  },
+  "math-test-4062": {
+   "probe_v2": 1
+  },
+  "math-test-407": {
+   "old": 1
+  },
+  "math-test-4085": {
+   "old": 1,
+   "g8": 1,
+   "mid100": 3
+  },
+  "math-test-4086": {
+   "probe_v2": 1
+  },
+  "math-test-4093": {
+   "probe_v2": 1
+  },
+  "math-test-411": {
+   "probe_v2": 1
+  },
+  "math-test-4114": {
+   "probe_v2": 1
+  },
+  "math-test-412": {
+   "g8": 1
+  },
+  "math-test-4134": {
+   "probe_v2": 1
+  },
+  "math-test-4152": {
+   "old": 1
+  },
+  "math-test-4162": {
+   "old": 1,
+   "g8": 2,
+   "mid100": 3
+  },
+  "math-test-4166": {
+   "old": 1,
+   "mid100": 3
+  },
+  "math-test-4169": {
+   "old": 1
+  },
+  "math-test-417": {
+   "old": 1,
+   "mid100": 3
+  },
+  "math-test-4178": {
+   "old": 1
+  },
+  "math-test-4186": {
+   "old": 1
+  },
+  "math-test-4193": {
+   "probe_v2": 1
+  },
+  "math-test-4212": {
+   "g8": 1
+  },
+  "math-test-4215": {
+   "g8": 1
+  },
+  "math-test-4229": {
+   "probe_v2": 1
+  },
+  "math-test-4235": {
+   "probe_v2": 1
+  },
+  "math-test-4246": {
+   "g8": 1
+  },
+  "math-test-4252": {
+   "old": 1,
+   "g8": 1
+  },
+  "math-test-4255": {
+   "g8": 1
+  },
+  "math-test-4260": {
+   "old": 1,
+   "g8": 1
+  },
+  "math-test-4263": {
+   "old": 1
+  },
+  "math-test-4264": {
+   "probe_v2": 1
+  },
+  "math-test-4266": {
+   "old": 1
+  },
+  "math-test-4271": {
+   "old": 1,
+   "g8": 1,
+   "mid100": 3
+  },
+  "math-test-4278": {
+   "probe_v2": 1
+  },
+  "math-test-4282": {
+   "old": 1,
+   "g8": 2
+  },
+  "math-test-4283": {
+   "old": 1,
+   "mid100": 3
+  },
+  "math-test-4286": {
+   "probe_v2": 1
+  },
+  "math-test-429": {
+   "probe_v2": 1
+  },
+  "math-test-4292": {
+   "old": 1
+  },
+  "math-test-4296": {
+   "old": 1
+  },
+  "math-test-4297": {
+   "probe_v2": 1
+  },
+  "math-test-43": {
+   "old": 1,
+   "g8": 1
+  },
+  "math-test-4300": {
+   "probe_v2": 1
+  },
+  "math-test-4308": {
+   "probe_v2": 1
+  },
+  "math-test-431": {
+   "old": 1
+  },
+  "math-test-4311": {
+   "old": 1
+  },
+  "math-test-4326": {
+   "probe_v2": 1
+  },
+  "math-test-4336": {
+   "probe_v2": 1
+  },
+  "math-test-4337": {
+   "probe_v2": 1
+  },
+  "math-test-4360": {
+   "old": 1,
+   "g8": 1
+  },
+  "math-test-4361": {
+   "old": 1
+  },
+  "math-test-4376": {
+   "old": 1,
+   "g8": 1
+  },
+  "math-test-4389": {
+   "old": 1
+  },
+  "math-test-4403": {
+   "probe_v2": 1
+  },
+  "math-test-4410": {
+   "probe_v2": 1
+  },
+  "math-test-4412": {
+   "probe:l4_grpo_40.jsonl": 1
+  },
+  "math-test-4413": {
+   "old": 1
+  },
+  "math-test-4415": {
+   "probe_v2": 1
+  },
+  "math-test-4436": {
+   "probe_v2": 1
+  },
+  "math-test-4446": {
+   "probe_v2": 1
+  },
+  "math-test-4449": {
+   "probe_v2": 1
+  },
+  "math-test-4452": {
+   "old": 1,
+   "g8": 1,
+   "mid100": 3
+  },
+  "math-test-4459": {
+   "old": 1,
+   "g8": 1,
+   "mid100": 3
+  },
+  "math-test-4460": {
+   "probe_v2": 1
+  },
+  "math-test-4461": {
+   "old": 1
+  },
+  "math-test-4463": {
+   "probe_v2": 1
+  },
+  "math-test-4466": {
+   "old": 1
+  },
+  "math-test-4474": {
+   "probe_v2": 1
+  },
+  "math-test-4478": {
+   "probe_v2": 1
+  },
+  "math-test-4479": {
+   "probe_v2": 1
+  },
+  "math-test-4480": {
+   "old": 1
+  },
+  "math-test-4489": {
+   "old": 1,
+   "g8": 1,
+   "mid100": 3
+  },
+  "math-test-4493": {
+   "g8": 1
+  },
+  "math-test-4505": {
+   "old": 1
+  },
+  "math-test-4512": {
+   "old": 1,
+   "g8": 2
+  },
+  "math-test-4513": {
+   "probe_v2": 1
+  },
+  "math-test-4526": {
+   "old": 1
+  },
+  "math-test-4528": {
+   "g8": 1
+  },
+  "math-test-4529": {
+   "old": 1
+  },
+  "math-test-4533": {
+   "probe_v2": 1
+  },
+  "math-test-4534": {
+   "probe_v2": 1
+  },
+  "math-test-4536": {
+   "probe_v2": 1
+  },
+  "math-test-4538": {
+   "probe_v2": 1
+  },
+  "math-test-4540": {
+   "probe_v2": 1
+  },
+  "math-test-4545": {
+   "old": 1
+  },
+  "math-test-4549": {
+   "probe_v2": 1
+  },
+  "math-test-455": {
+   "old": 1
+  },
+  "math-test-4551": {
+   "probe_v2": 1
+  },
+  "math-test-4553": {
+   "old": 1
+  },
+  "math-test-4574": {
+   "probe_v2": 1
+  },
+  "math-test-4578": {
+   "old": 1
+  },
+  "math-test-4582": {
+   "probe_v2": 1
+  },
+  "math-test-4584": {
+   "probe_v2": 1
+  },
+  "math-test-4587": {
+   "old": 1
+  },
+  "math-test-4589": {
+   "probe_v2": 1
+  },
+  "math-test-4595": {
+   "probe_v2": 1
+  },
+  "math-test-4602": {
+   "old": 1
+  },
+  "math-test-461": {
+   "probe_v2": 1
+  },
+  "math-test-4610": {
+   "probe_v2": 1
+  },
+  "math-test-4611": {
+   "probe_v2": 1
+  },
+  "math-test-4617": {
+   "old": 1
+  },
+  "math-test-4618": {
+   "probe_v2": 1
+  },
+  "math-test-4620": {
+   "old": 1
+  },
+  "math-test-4623": {
+   "probe_v2": 1
+  },
+  "math-test-4624": {
+   "old": 1,
+   "g8": 2,
+   "mid100": 3
+  },
+  "math-test-4625": {
+   "old": 1,
+   "g8": 2
+  },
+  "math-test-4626": {
+   "probe_v2": 1
+  },
+  "math-test-4638": {
+   "old": 1
+  },
+  "math-test-4640": {
+   "probe_v2": 1
+  },
+  "math-test-4641": {
+   "old": 1
+  },
+  "math-test-4643": {
+   "probe_v2": 1
+  },
+  "math-test-4644": {
+   "old": 1
+  },
+  "math-test-4646": {
+   "probe_v2": 1
+  },
+  "math-test-4656": {
+   "probe_v2": 1
+  },
+  "math-test-4659": {
+   "old": 1
+  },
+  "math-test-466": {
+   "old": 1,
+   "g8": 3
+  },
+  "math-test-4662": {
+   "g8": 1
+  },
+  "math-test-4666": {
+   "probe_v2": 1
+  },
+  "math-test-4678": {
+   "old": 1,
+   "g8": 1,
+   "mid100": 3
+  },
+  "math-test-4687": {
+   "g8": 1
+  },
+  "math-test-4692": {
+   "probe_v2": 1
+  },
+  "math-test-4693": {
+   "probe_v2": 1
+  },
+  "math-test-4694": {
+   "old": 1,
+   "mid100": 3
+  },
+  "math-test-4699": {
+   "probe_v2": 1
+  },
+  "math-test-47": {
+   "probe_v2": 1
+  },
+  "math-test-4700": {
+   "probe_v2": 1
+  },
+  "math-test-4711": {
+   "probe_v2": 1
+  },
+  "math-test-4713": {
+   "probe_v2": 1
+  },
+  "math-test-4727": {
+   "probe_v2": 1
+  },
+  "math-test-4736": {
+   "old": 1,
+   "g8": 2
+  },
+  "math-test-4738": {
+   "probe_v2": 1
+  },
+  "math-test-4740": {
+   "old": 1
+  },
+  "math-test-4742": {
+   "probe:l4_grpo_40.jsonl": 1
+  },
+  "math-test-4747": {
+   "old": 1
+  },
+  "math-test-475": {
+   "g8": 1
+  },
+  "math-test-4754": {
+   "old": 1
+  },
+  "math-test-4761": {
+   "old": 1,
+   "g8": 1
+  },
+  "math-test-4766": {
+   "g8": 3
+  },
+  "math-test-4768": {
+   "probe_v2": 1
+  },
+  "math-test-4772": {
+   "old": 1
+  },
+  "math-test-4776": {
+   "probe:l4_grpo_40.jsonl": 1
+  },
+  "math-test-4777": {
+   "old": 1,
+   "g8": 1,
+   "mid100": 3
+  },
+  "math-test-4784": {
+   "probe_v2": 1
+  },
+  "math-test-4788": {
+   "probe_v2": 1
+  },
+  "math-test-4789": {
+   "old": 1
+  },
+  "math-test-4792": {
+   "probe_v2": 1
+  },
+  "math-test-4797": {
+   "old": 1,
+   "g8": 4,
+   "mid100": 3
+  },
+  "math-test-4803": {
+   "old": 1
+  },
+  "math-test-4814": {
+   "old": 1
+  },
+  "math-test-4817": {
+   "old": 1,
+   "g8": 1
+  },
+  "math-test-4818": {
+   "old": 1
+  },
+  "math-test-4820": {
+   "old": 1,
+   "g8": 2
+  },
+  "math-test-4821": {
+   "probe_v2": 1
+  },
+  "math-test-4824": {
+   "probe_v2": 1
+  },
+  "math-test-4828": {
+   "old": 1
+  },
+  "math-test-4829": {
+   "probe_v2": 1
+  },
+  "math-test-4830": {
+   "old": 1
+  },
+  "math-test-4832": {
+   "old": 1,
+   "mid100": 3
+  },
+  "math-test-4837": {
+   "probe_v2": 1
+  },
+  "math-test-4838": {
+   "old": 1,
+   "mid100": 3
+  },
+  "math-test-484": {
+   "old": 1,
+   "g8": 1
+  },
+  "math-test-4840": {
+   "old": 1
+  },
+  "math-test-4842": {
+   "g8": 1
+  },
+  "math-test-4844": {
+   "probe_v2": 1
+  },
+  "math-test-4846": {
+   "probe_v2": 1
+  },
+  "math-test-4847": {
+   "old": 1
+  },
+  "math-test-4849": {
+   "probe_v2": 1
+  },
+  "math-test-4857": {
+   "old": 1,
+   "g8": 1
+  },
+  "math-test-486": {
+   "probe_v2": 1
+  },
+  "math-test-4869": {
+   "probe_v2": 1
+  },
+  "math-test-4876": {
+   "g8": 1
+  },
+  "math-test-4881": {
+   "probe_v2": 1
+  },
+  "math-test-4882": {
+   "old": 1,
+   "mid100": 3
+  },
+  "math-test-4887": {
+   "probe_v2": 1
+  },
+  "math-test-4888": {
+   "probe_v2": 1
+  },
+  "math-test-4889": {
+   "old": 1
+  },
+  "math-test-4890": {
+   "probe_v2": 1
+  },
+  "math-test-4895": {
+   "probe_v2": 1
+  },
+  "math-test-4898": {
+   "probe_v2": 1
+  },
+  "math-test-4899": {
+   "old": 1
+  },
+  "math-test-490": {
+   "old": 1
+  },
+  "math-test-4902": {
+   "old": 1
+  },
+  "math-test-4905": {
+   "g8": 1
+  },
+  "math-test-4915": {
+   "probe_v2": 1
+  },
+  "math-test-4921": {
+   "old": 1
+  },
+  "math-test-4923": {
+   "old": 1
+  },
+  "math-test-4934": {
+   "old": 1
+  },
+  "math-test-4952": {
+   "probe_v2": 1
+  },
+  "math-test-4956": {
+   "old": 1,
+   "g8": 2,
+   "mid100": 3
+  },
+  "math-test-4964": {
+   "probe_v2": 1
+  },
+  "math-test-4968": {
+   "probe_v2": 1
+  },
+  "math-test-4969": {
+   "probe_v2": 1
+  },
+  "math-test-4972": {
+   "g8": 2
+  },
+  "math-test-4973": {
+   "old": 1
+  },
+  "math-test-4974": {
+   "probe_v2": 1
+  },
+  "math-test-4976": {
+   "g8": 3
+  },
+  "math-test-4983": {
+   "g8": 3
+  },
+  "math-test-4987": {
+   "old": 1,
+   "g8": 1,
+   "mid100": 3
+  },
+  "math-test-4992": {
+   "probe_v2": 1
+  },
+  "math-test-4994": {
+   "probe_v2": 1
+  },
+  "math-test-500": {
+   "old": 1,
+   "g8": 1
+  },
+  "math-test-502": {
+   "old": 1
+  },
+  "math-test-505": {
+   "probe_v2": 1
+  },
+  "math-test-517": {
+   "old": 1
+  },
+  "math-test-528": {
+   "old": 1
+  },
+  "math-test-531": {
+   "old": 1
+  },
+  "math-test-532": {
+   "old": 1,
+   "g8": 2
+  },
+  "math-test-539": {
+   "probe_v2": 1
+  },
+  "math-test-540": {
+   "old": 1
+  },
+  "math-test-546": {
+   "old": 1
+  },
+  "math-test-554": {
+   "probe_v2": 1
+  },
+  "math-test-566": {
+   "probe_v2": 1
+  },
+  "math-test-569": {
+   "probe_v2": 1
+  },
+  "math-test-571": {
+   "old": 1
+  },
+  "math-test-59": {
+   "old": 1,
+   "g8": 2,
+   "mid100": 3
+  },
+  "math-test-594": {
+   "probe_v2": 1
+  },
+  "math-test-599": {
+   "old": 1
+  },
+  "math-test-613": {
+   "old": 1,
+   "g8": 1
+  },
+  "math-test-623": {
+   "old": 1
+  },
+  "math-test-637": {
+   "probe_v2": 1
+  },
+  "math-test-65": {
+   "old": 1,
+   "g8": 1
+  },
+  "math-test-653": {
+   "old": 1
+  },
+  "math-test-657": {
+   "probe_v2": 1
+  },
+  "math-test-667": {
+   "probe_v2": 1
+  },
+  "math-test-669": {
+   "old": 1
+  },
+  "math-test-676": {
+   "old": 1,
+   "mid100": 3
+  },
+  "math-test-691": {
+   "probe_v2": 1
+  },
+  "math-test-693": {
+   "old": 1
+  },
+  "math-test-697": {
+   "probe_v2": 1
+  },
+  "math-test-698": {
+   "old": 1,
+   "g8": 1,
+   "mid100": 3
+  },
+  "math-test-702": {
+   "probe_v2": 1
+  },
+  "math-test-705": {
+   "old": 1,
+   "mid100": 3
+  },
+  "math-test-706": {
+   "old": 1,
+   "g8": 1,
+   "mid100": 3
+  },
+  "math-test-708": {
+   "old": 1
+  },
+  "math-test-720": {
+   "probe_v2": 1
+  },
+  "math-test-725": {
+   "g8": 2
+  },
+  "math-test-726": {
+   "probe_v2": 1
+  },
+  "math-test-729": {
+   "probe_v2": 1
+  },
+  "math-test-734": {
+   "old": 1
+  },
+  "math-test-737": {
+   "old": 1
+  },
+  "math-test-739": {
+   "old": 1
+  },
+  "math-test-742": {
+   "old": 1,
+   "mid100": 3
+  },
+  "math-test-743": {
+   "g8": 3
+  },
+  "math-test-751": {
+   "old": 1
+  },
+  "math-test-754": {
+   "probe_v2": 1
+  },
+  "math-test-762": {
+   "g8": 1
+  },
+  "math-test-764": {
+   "probe_v2": 1
+  },
+  "math-test-782": {
+   "old": 1
+  },
+  "math-test-784": {
+   "old": 1
+  },
+  "math-test-794": {
+   "old": 1,
+   "g8": 2
+  },
+  "math-test-800": {
+   "probe_v2": 1
+  },
+  "math-test-810": {
+   "probe_v2": 1
+  },
+  "math-test-816": {
+   "probe_v2": 1
+  },
+  "math-test-819": {
+   "probe_v2": 1
+  },
+  "math-test-82": {
+   "old": 1
+  },
+  "math-test-821": {
+   "probe_v2": 1
+  },
+  "math-test-824": {
+   "old": 1
+  },
+  "math-test-834": {
+   "g8": 1
+  },
+  "math-test-846": {
+   "old": 1,
+   "mid100": 3
+  },
+  "math-test-85": {
+   "probe_v2": 1
+  },
+  "math-test-856": {
+   "probe_v2": 1
+  },
+  "math-test-858": {
+   "old": 1
+  },
+  "math-test-862": {
+   "probe_v2": 1
+  },
+  "math-test-863": {
+   "old": 1
+  },
+  "math-test-867": {
+   "old": 1,
+   "g8": 1
+  },
+  "math-test-871": {
+   "old": 1
+  },
+  "math-test-877": {
+   "probe_v2": 1
+  },
+  "math-test-886": {
+   "probe_v2": 1
+  },
+  "math-test-890": {
+   "g8": 1
+  },
+  "math-test-904": {
+   "probe_v2": 1
+  },
+  "math-test-906": {
+   "g8": 1
+  },
+  "math-test-913": {
+   "old": 1,
+   "mid100": 3
+  },
+  "math-test-921": {
+   "probe_v2": 1
+  },
+  "math-test-928": {
+   "probe_v2": 1
+  },
+  "math-test-929": {
+   "old": 1
+  },
+  "math-test-932": {
+   "probe_v2": 1
+  },
+  "math-test-933": {
+   "g8": 4
+  },
+  "math-test-947": {
+   "old": 1,
+   "mid100": 3
+  },
+  "math-test-95": {
+   "g8": 1
+  },
+  "math-test-952": {
+   "probe_v2": 1
+  },
+  "math-test-954": {
+   "old": 1
+  },
+  "math-test-965": {
+   "probe_v2": 1
+  },
+  "math-test-973": {
+   "old": 1,
+   "g8": 1,
+   "mid100": 3
+  },
+  "math-test-975": {
+   "old": 1
+  },
+  "math-test-978": {
+   "old": 1
+  },
+  "math-test-98": {
+   "old": 1,
+   "g8": 2,
+   "mid100": 3
+  },
+  "math-test-991": {
+   "old": 1,
+   "mid100": 3
+  },
+  "math-test-992": {
+   "probe_v2": 1
+  },
+  "math-test-994": {
+   "old": 1
+  }
+ }
+}
