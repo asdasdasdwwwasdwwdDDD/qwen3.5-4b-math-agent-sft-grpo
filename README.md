@@ -125,6 +125,7 @@ cat outputs/eval/math_summary.md                          # 全部评测对比�
 
 ## 文档
 
+- `docs/` — **讲义与图示（文档归类目录）**：[`GRPO核心代码精讲.md`](docs/GRPO核心代码精讲.md)（train_grpo.py + math_env.py 带详注的大白话精读）、[`grpo-training-flow.html`](docs/grpo-training-flow.html)（GRPO v2 训练流程讲义）、[`项目数据流图.html`](docs/项目数据流图.html)（全链路数据流）
 - `AGENTS.md` — 面向开发/维护的工程约定：显存红线细节、模板坑、已知坑、代码约定
 - `ARCHIVE-INFO.txt` — 封存时点的成果与复现要点
 - `outputs/eval/math_summary.md` — 全部评测汇总

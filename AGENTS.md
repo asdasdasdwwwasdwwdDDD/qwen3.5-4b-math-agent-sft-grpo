@@ -28,6 +28,7 @@ Qwen3.5-4B 智能体微调：QLoRA(AdaLoRA) SFT + 整条链路 GRPO。全部流�
   `cmd /c rmdir models\Qwen3.5-4B` + `cmd /c mklink /J models\Qwen3.5-4B D:\NLP\ft-qwen3.5-4b-aviation\models\Qwen3.5-4B`（rmdir 只删链接不删模型）
 - `logs/` — `sft_tora.log`（数学 SFT）、`grpo_tora_run.log`（数学 GRPO 全程）、`sel_*.log`/`merge_tora.log`/`final_evals.log`（选优/合并/终评）；GRPO 步级/轨迹审计 `grpo_log_math.jsonl`/`grpo_trajs_math.jsonl`
 - `outputs/` — 封存只含 `qlora-tora/`（SFT）、`grpo-tora/`（RL）、`eval/`；`outputs/.train.lock` 为单实例训练锁（未入包）。`merged-tora/`（8.5GB）**未入包**，merged 模型用 `scripts/training/merge_lora.py` 从 checkpoint 十分钟复现
+- `docs/` — 讲义与图示（文档归类目录）：`GRPO核心代码精讲.md`（train_grpo + math_env 带详注大白话精读）、`grpo-training-flow.html`（v2 流程讲义）、`项目数据流图.html`（全链路数据流）
 
 ## 当前状态（v1 封存 2026-10-24 + v2 重训 2026-11-24，均已完成，无待办）
 
